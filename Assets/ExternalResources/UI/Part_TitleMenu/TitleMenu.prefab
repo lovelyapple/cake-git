@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 222871879572808260}
   - component: {fileID: 114050241799568752}
   m_Layer: 5
-  m_Name: UITest_Menu
+  m_Name: TitleMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
