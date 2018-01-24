@@ -95,7 +95,6 @@
 -define:UNITY_2017
 -define:PLATFORM_ARCH_64
 -define:UNITY_64
--define:UNITY_ANALYTICS
 -define:ENABLE_AUDIO
 -define:ENABLE_CACHING
 -define:ENABLE_CLOTH
@@ -183,6 +182,7 @@
 -define:UNITY_TEAM_LICENSE
 'Assets/Script/Manager/ResourcesManager.cs'
 'Assets/Script/Manager/TableManager.cs'
+'Assets/Script/SystemBase/MainGameObject.cs'
 'Assets/Script/SystemBase/ManagerBase.cs'
 'Assets/Script/SystemBase/ProjectBehaviours.cs'
 'Assets/Script/SystemBase/ProjectObjectBase.cs'
