@@ -53,11 +53,13 @@
   <ItemGroup>
      <Compile Include="Assets\Script\Manager\ResourcesManager.cs" />
      <Compile Include="Assets\Script\Manager\TableManager.cs" />
-     <Compile Include="Assets\Script\SystemBase\GameMainObject.cs" />
+     <Compile Include="Assets\Script\Scenes\GameMainObject.cs" />
+     <Compile Include="Assets\Script\Scenes\LoadScene.cs" />
      <Compile Include="Assets\Script\SystemBase\ManagerBase.cs" />
      <Compile Include="Assets\Script\SystemBase\ProjectBehaviours.cs" />
      <Compile Include="Assets\Script\SystemBase\ProjectObjectBase.cs" />
      <Compile Include="Assets\Script\SystemBase\SingleToneBase.cs" />
+     <Compile Include="Assets\Script\SystemBase\UIUtility.cs" />
      <Compile Include="Assets\Script\Table\HogeTableImporter.cs" />
      <Compile Include="Assets\Script\UI\Test\UGUIBillboardBase.cs" />
  <Reference Include="UnityEngine.UI">

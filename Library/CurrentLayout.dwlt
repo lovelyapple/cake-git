@@ -67,10 +67,10 @@ MonoBehaviour:
     y: 30
     width: 1280
     height: 637
-  m_MinSize: {x: 583, y: 492}
-  m_MaxSize: {x: 12008, y: 14042}
+  m_MinSize: {x: 579, y: 492}
+  m_MaxSize: {x: 12004, y: 14042}
   vertical: 1
-  controlID: 26
+  controlID: 47
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -207,10 +207,10 @@ MonoBehaviour:
     y: 0
     width: 1280
     height: 366
-  m_MinSize: {x: 583, y: 221}
-  m_MaxSize: {x: 12008, y: 4021}
+  m_MinSize: {x: 579, y: 221}
+  m_MaxSize: {x: 12004, y: 4021}
   vertical: 0
-  controlID: 27
+  controlID: 48
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -229,8 +229,8 @@ MonoBehaviour:
     y: 0
     width: 610
     height: 366
-  m_MinSize: {x: 104, y: 121}
-  m_MaxSize: {x: 4004, y: 4021}
+  m_MinSize: {x: 100, y: 100}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 11}
   m_Panes:
   - {fileID: 11}
@@ -352,7 +352,8 @@ MonoBehaviour:
     m_ScenePaths: []
     m_ShowAllHits: 0
     m_SearchArea: 0
-    m_Folders: []
+    m_Folders:
+    - Assets/Script/Table
   m_ViewMode: 0
   m_StartGridSize: 16
   m_LastFolders: []
@@ -363,7 +364,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 80340000
     m_LastClickedID: 13440
-    m_ExpandedIDs: 36290000
+    m_ExpandedIDs: 542700006a27000096270000b0270000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -391,18 +392,18 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 362900004c290000742900008e290000
+    m_ExpandedIDs: 542700006a27000096270000b0270000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: MainGameObject
-      m_OriginalName: MainGameObject
+      m_Name: GameMainObject
+      m_OriginalName: GameMainObject
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 10780
+      m_UserData: 10292
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
       m_OriginalEventType: 0
@@ -509,9 +510,9 @@ MonoBehaviour:
   m_PersistentViewDataDictionary: {fileID: 0}
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 1c2a0000
+    m_SelectedIDs: 64270000
     m_LastClickedID: 0
-    m_ExpandedIDs: c4f2ffff84f3ffff0afaffff00000000
+    m_ExpandedIDs: 86fbffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

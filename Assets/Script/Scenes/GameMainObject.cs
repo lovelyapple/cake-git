@@ -9,6 +9,7 @@ public class GameMainObject : SingleToneBase<GameMainObject>
     public enum SceneName
     {
         UITest,
+        Load,
         Title,
         Game,
         Result,
@@ -16,6 +17,7 @@ public class GameMainObject : SingleToneBase<GameMainObject>
     static Dictionary<SceneName, string> SceneNameDict = new Dictionary<SceneName, string>()
     {
         {SceneName.Title,"_TitleScene"},
+        {SceneName.Load, "_LoadScene"},
         {SceneName.Game, "_GameScene"},
         {SceneName.Result, "_ResultScene"},
     };
@@ -23,7 +25,7 @@ public class GameMainObject : SingleToneBase<GameMainObject>
     {
         if (_LoadSceneCoroutine != null)
         {
-            Debug.LogError("coudl not change Scene load process is running");
+            Debug.LogError("could not change Scene load process is running");
             return;
         }
 
@@ -33,7 +35,7 @@ public class GameMainObject : SingleToneBase<GameMainObject>
     {
         if (_LoadSceneCoroutine != null)
         {
-            Debug.LogError("coudl not change Scene load process is running");
+            Debug.LogError("could not change Scene load process is running");
             return;
         }
         _LoadSceneCoroutine = StartCoroutine(ChangeScene(SceneName.Title, SceneName.Title));
@@ -42,7 +44,7 @@ public class GameMainObject : SingleToneBase<GameMainObject>
     {
         if (_LoadSceneCoroutine != null)
         {
-            Debug.LogError("coudl not change Scene load process is running");
+            Debug.LogError("could not change Scene load process is running");
             return;
         }
         _LoadSceneCoroutine = StartCoroutine(ChangeScene(SceneName.Title, SceneName.Title));
@@ -51,7 +53,7 @@ public class GameMainObject : SingleToneBase<GameMainObject>
     {
         if (_LoadSceneCoroutine != null)
         {
-            Debug.LogError("coudl not change Scene load process is running");
+            Debug.LogError("could not change Scene load process is running");
             return;
         }
         _LoadSceneCoroutine = StartCoroutine(ChangeScene(SceneName.Title, SceneName.Title));
