@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Resoures/Scenes/MainGameObject.unity
+- path: Assets/Resoures/Scenes/DontDistory.unity
   isLoaded: 1
   isActive: 1

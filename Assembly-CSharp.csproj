@@ -51,6 +51,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\ExternalResources\JellyMesh\Demo\Scripts\CameraMove.cs" />
+     <Compile Include="Assets\ExternalResources\JellyMesh\Demo\Scripts\FireObject.cs" />
+     <Compile Include="Assets\ExternalResources\JellyMesh\Demo\Scripts\JellyMeshBlobBehaviour.cs" />
+     <Compile Include="Assets\ExternalResources\JellyMesh\Demo\Scripts\JellyMeshDemoManager.cs" />
+     <Compile Include="Assets\ExternalResources\JellyMesh\Demo\Scripts\JellyMeshMouseLook.cs" />
+     <Compile Include="Assets\ExternalResources\JellyMesh\Scripts\JellyMesh.cs" />
+     <Compile Include="Assets\ExternalResources\JellyMesh\Scripts\JellyMeshReferencePoint.cs" />
      <Compile Include="Assets\Script\Manager\ResourcesManager.cs" />
      <Compile Include="Assets\Script\Manager\TableManager.cs" />
      <Compile Include="Assets\Script\Scenes\GameMainObject.cs" />
