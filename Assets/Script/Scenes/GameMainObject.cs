@@ -3,66 +3,83 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+public enum GameMode
+{
+    Debug,
+    EnterPrise,
+}
+public enum GameState
+{
+    Title,
+    Game,
+    Result,
+}
 public class GameMainObject : SingleToneBase<GameMainObject>
 {
-    Coroutine _LoadSceneCoroutine = null;
-    public enum SceneName
+    [SerializeField] GameMode _gameMode;
+    public GameMode gameMode { get { return _gameMode; } }
+    public bool IsDebugMode { get { return _gameMode == GameMode.Debug; } }
+
+    GameState gameState = GameState.Title;
+    public void ChangeStateToGame()
     {
-        UITest,
-        Load,
-        Title,
-        Game,
-        Result,
+        StartCoroutine(IeChangePhase(GameState.Game));
     }
-    static Dictionary<SceneName, string> SceneNameDict = new Dictionary<SceneName, string>()
+    public void ChangeStateToResult()
     {
-        {SceneName.Title,"_TitleScene"},
-        {SceneName.Load, "_LoadScene"},
-        {SceneName.Game, "_GameScene"},
-        {SceneName.Result, "_ResultScene"},
-    };
-    public void LoadTitleScene()
+        StartCoroutine(IeChangePhase(GameState.Result));
+    }
+    public void ChangeStateToTitile()
     {
-        if (_LoadSceneCoroutine != null)
+        StartCoroutine(IeChangePhase(GameState.Title));
+    }
+    public void RequestChangeState(GameState targetState)
+    {
+        StartCoroutine(IeChangePhase(targetState));
+    }
+    IEnumerator IeChangePhase(GameState targetState)
+    {
+        if (gameState == targetState)
         {
-            Debug.LogError("could not change Scene load process is running");
-            return;
+            Debug.LogWarning("already in the state " + targetState.ToString());
+            yield break;
+        }
+        LoadWindow loadWnd = null;
+        ResourcesManager.Get().CreateOpenWindow(WindowIndex.LoadWindow, (w) =>
+         {
+             w.MoveToTop();
+             loadWnd = (LoadWindow)w;
+         });
+
+        while (loadWnd == null)
+        {
+            yield return null;
         }
 
-        _LoadSceneCoroutine = StartCoroutine(ChangeScene(SceneName.Title, SceneName.Title));
-    }
-    public void LoadGameScene()
-    {
-        if (_LoadSceneCoroutine != null)
+        while (!loadWnd.IsFadeInFin())
         {
-            Debug.LogError("could not change Scene load process is running");
-            return;
+            yield return null;
         }
-        _LoadSceneCoroutine = StartCoroutine(ChangeScene(SceneName.Title, SceneName.Title));
-    }
-    public void LoadResultScene()
-    {
-        if (_LoadSceneCoroutine != null)
+
+        loadWnd.RunLoading();
+
+        var waitSec = 5f;
+
+        while (waitSec > 0f)
         {
-            Debug.LogError("could not change Scene load process is running");
-            return;
+            waitSec -= Time.deltaTime;
+            loadWnd.SetSLiderValue((uint)waitSec * 100, 500);
+            yield return null;
         }
-        _LoadSceneCoroutine = StartCoroutine(ChangeScene(SceneName.Title, SceneName.Title));
-    }
-    public void ReturnToTitleScene()
-    {
-        if (_LoadSceneCoroutine != null)
+
+        loadWnd.RunFadeOut();
+
+        while (!loadWnd.IsFadeOutFin())
         {
-            Debug.LogError("could not change Scene load process is running");
-            return;
+            yield return null;
         }
-        _LoadSceneCoroutine = StartCoroutine(ChangeScene(SceneName.Title, SceneName.Title));
-    }
-    IEnumerator ChangeScene(SceneName loadTarget, SceneName unloadTarget)
-    {
-        Debug.LogWarning("request change scene " + loadTarget.ToString() + " to " + unloadTarget.ToString());
-        //todo シーンの遷移処理
-        yield return null;
-        _LoadSceneCoroutine = null;
+
+        loadWnd.Close();
+        gameState = targetState;
     }
 }

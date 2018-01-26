@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Animations;
 
-public class LoadScene : SingleToneBase<LoadScene>
+public class LoadWindow : WindowBase
 {
     public enum LoadPhase
     {
@@ -15,8 +15,9 @@ public class LoadScene : SingleToneBase<LoadScene>
         FadeOutFin,
         StandBy,
     }
-    LoadPhase loadPhase = LoadPhase.StandBy;
+    LoadPhase loadPhase = LoadPhase.FadeIn;
     [SerializeField] Slider loadingSlider;
+    [SerializeField] GameObject loadSliderBarObj;
     [SerializeField] GameObject loadingIconObj;
     [SerializeField] Animator fadeSysAnimator;
     [SerializeField] Object standByAnim;
@@ -36,6 +37,12 @@ public class LoadScene : SingleToneBase<LoadScene>
         animLayer = fadeSysAnimator.GetLayerName(0);
         stateStandBy = Animator.StringToHash(animLayer + "." + standByAnim.name);
         stateEnd = Animator.StringToHash(animLayer + "." + endAnim.name);
+
+        if (GameMainObject.Get().IsDebugMode)
+        {
+            Debug.LogError(" stateStandBy " + stateStandBy);
+            Debug.LogError(" stateEnd " + stateEnd);
+        }
     }
 
     // Update is called once per frame
@@ -44,6 +51,11 @@ public class LoadScene : SingleToneBase<LoadScene>
         if (fadeSysAnimator == null) { return; }
 
         var animInfo = fadeSysAnimator.GetCurrentAnimatorStateInfo(0);
+
+        if (GameMainObject.Get().IsDebugMode)
+        {
+            Debug.LogError("animInfo.fullPathHash " + animInfo.fullPathHash);
+        }
 
         switch (loadPhase)
         {
@@ -62,7 +74,7 @@ public class LoadScene : SingleToneBase<LoadScene>
             case LoadPhase.FadeOut:
                 if (animInfo.fullPathHash == stateEnd)
                 {
-                    loadPhase = LoadPhase.FadeInFin;
+                    loadPhase = LoadPhase.FadeOutFin;
                 }
                 break;
             case LoadPhase.FadeOutFin:
@@ -70,6 +82,7 @@ public class LoadScene : SingleToneBase<LoadScene>
         }
 
         UpdateLoadingIcon();
+        UpdateLoadSlider();
     }
 
     public void RunFadeIn()
@@ -87,6 +100,7 @@ public class LoadScene : SingleToneBase<LoadScene>
     public void RunFadeOut()
     {
         loadPhase = LoadPhase.FadeOut;
+        fadeSysAnimator.SetTrigger("FadeOutStart");
     }
     public bool IsFadeOutFin()
     {
@@ -100,6 +114,10 @@ public class LoadScene : SingleToneBase<LoadScene>
     }
     void UpdateLoadingIcon()
     {
-        UIUtility.SetActive(loadingIconObj, loadPhase != LoadPhase.Loading);
+        UIUtility.SetActive(loadingIconObj, loadPhase == LoadPhase.Loading);
+    }
+    void UpdateLoadSlider()
+    {
+        UIUtility.SetActive(loadSliderBarObj, loadPhase == LoadPhase.Loading);
     }
 }

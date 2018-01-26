@@ -5,7 +5,7 @@ using UnityEngine;
 public class SingleToneBase<T> : MonoBehaviour where T : MonoBehaviour
 {
     private static T _instance;
-    public static T GeT()
+    public static T Get()
     {
         if (_instance == null)
         {

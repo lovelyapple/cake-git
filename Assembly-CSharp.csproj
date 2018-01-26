@@ -58,10 +58,11 @@
      <Compile Include="Assets\ExternalResources\JellyMesh\Demo\Scripts\JellyMeshMouseLook.cs" />
      <Compile Include="Assets\ExternalResources\JellyMesh\Scripts\JellyMesh.cs" />
      <Compile Include="Assets\ExternalResources\JellyMesh\Scripts\JellyMeshReferencePoint.cs" />
+     <Compile Include="Assets\Script\Debug\DebugWindow.cs" />
      <Compile Include="Assets\Script\Manager\ResourcesManager.cs" />
      <Compile Include="Assets\Script\Manager\TableManager.cs" />
      <Compile Include="Assets\Script\Scenes\GameMainObject.cs" />
-     <Compile Include="Assets\Script\Scenes\LoadScene.cs" />
+     <Compile Include="Assets\Script\Scenes\LoadWindow.cs" />
      <Compile Include="Assets\Script\SystemBase\ManagerBase.cs" />
      <Compile Include="Assets\Script\SystemBase\ProjectBehaviours.cs" />
      <Compile Include="Assets\Script\SystemBase\ProjectObjectBase.cs" />
@@ -69,6 +70,7 @@
      <Compile Include="Assets\Script\SystemBase\UIUtility.cs" />
      <Compile Include="Assets\Script\Table\HogeTableImporter.cs" />
      <Compile Include="Assets\Script\UI\Test\UGUIBillboardBase.cs" />
+     <Compile Include="Assets\Script\UI\WindowBase.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
