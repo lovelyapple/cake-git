@@ -63,6 +63,7 @@
      <Compile Include="Assets\Script\Manager\TableManager.cs" />
      <Compile Include="Assets\Script\Scenes\GameMainObject.cs" />
      <Compile Include="Assets\Script\Scenes\LoadWindow.cs" />
+     <Compile Include="Assets\Script\SystemBase\ConfigMgr.cs" />
      <Compile Include="Assets\Script\SystemBase\ManagerBase.cs" />
      <Compile Include="Assets\Script\SystemBase\ProjectBehaviours.cs" />
      <Compile Include="Assets\Script\SystemBase\ProjectObjectBase.cs" />
