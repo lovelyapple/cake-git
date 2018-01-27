@@ -109,6 +109,8 @@ public class ConfigMgr : SingleToneBase<ConfigMgr>
     public class GameConfigCtrl
     {
         public StirngConfig playerName = new StirngConfig("Config.PlayerName", "PlayerAAAA");
+        public IntConfig slmieHpMin = new IntConfig("Config.SlimeHpMin", 50);
+        public IntConfig slmieHpMax = new IntConfig("Config.SlmieHpMax", 200);
     }
     public GameConfigCtrl gameConfigCtrl = new GameConfigCtrl();
     //取得するときに、これ使う

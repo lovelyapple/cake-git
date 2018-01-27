@@ -10,6 +10,11 @@ public enum WindowIndex
     TitleWindow = 1,
     Max,
 }
+public enum FieldObjectIndex
+{
+    SlimeCharacter,
+    SlimeCharacterCollderController,
+}
 public class ResourcesManager : SingleToneBase<ResourcesManager>
 {
     //============= WindowManager===================//
@@ -98,4 +103,58 @@ public class ResourcesManager : SingleToneBase<ResourcesManager>
         InitWindowList();
     }
     //============= WindowManager===================//
+
+    //============= normal Load ====================//
+    [SerializeField] GameObject FieldObjectRoot;
+    Dictionary<FieldObjectIndex, string> fieldObjectPathDict = new Dictionary<FieldObjectIndex, string>()
+    {
+        {FieldObjectIndex.SlimeCharacter, "Assets/Resources/CharacterData/CharacterData_Slime00.prefab"},
+        {FieldObjectIndex.SlimeCharacterCollderController, "Assets/Resources/CharacterData/SlimeCoreHitController.prefab"}
+    };
+    Dictionary<FieldObjectIndex, GameObject> fieldObjectPrefabHolder;
+    public GameObject CreateInstance(FieldObjectIndex index)
+    {
+        GameObject parent;
+        if (FieldObjectRoot == null)
+        {
+            Debug.LogWarning("fieldObjectRoot is null ,use IGameMainObject as nstance's parent");
+            parent = this.gameObject;
+        }
+        else
+        {
+            parent = FieldObjectRoot;
+        }
+
+        GameObject prefab;
+        if (fieldObjectPrefabHolder.ContainsKey(index) && fieldObjectPrefabHolder[index] != null)
+        {
+            prefab = fieldObjectPrefabHolder[index];
+            return GameObject.Instantiate(prefab, parent.transform);
+        }
+        else
+        {
+            prefab = AssetDatabase.LoadAssetAtPath<GameObject>(fieldObjectPathDict[index]);
+
+            if (prefab == null)
+            {
+                Debug.LogError("could not load resource " + fieldObjectPathDict[index]);
+            }
+
+            if (fieldObjectPrefabHolder.ContainsKey(index))
+            {
+                fieldObjectPrefabHolder[index] = prefab;
+            }
+            else
+            {
+                fieldObjectPrefabHolder.Add(index, prefab);
+            }
+
+            prefab = fieldObjectPrefabHolder[index];
+            return GameObject.Instantiate(prefab, parent.transform);
+        }
+    }
+    public void LoadFieldObject(FieldObjectIndex index)
+    {
+
+    }
 }
