@@ -6,6 +6,7 @@ public class CharacterData : MonoBehaviour
 {
     public List<uint> HpStatusList;
     public List<float> WeightStatusList;
+    public List<float> MoveSpeedStatusList;
 
     uint? minHp;
     public uint MinHp
@@ -46,6 +47,19 @@ public class CharacterData : MonoBehaviour
         try
         {
             outData = WeightStatusList[(int)State];
+            return outData;
+        }
+        catch
+        {
+            return 0f;
+        }
+    }
+    public float GetMoveSpeed(uint State)
+    {
+        float outData = 0f;
+        try
+        {
+            outData = MoveSpeedStatusList[(int)State];
             return outData;
         }
         catch

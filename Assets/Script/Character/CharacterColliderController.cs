@@ -6,7 +6,11 @@ using UnityEngine;
 public class CharacterColliderController : MonoBehaviour
 {
     float maxDistace = 20f;
-
+	Transform targetTrasform;
+	public void SetUpController(Transform baseTarnsform)
+	{
+		targetTrasform = baseTarnsform;
+	}
     public int CountColliderHit(float radius, int? layer)
     {
         var goList = Physics.OverlapSphere(this.transform.position, radius);

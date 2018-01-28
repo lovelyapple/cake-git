@@ -5,12 +5,12 @@ using UnityEngine;
 public class LayerUtility
 {
     static Dictionary<string, int> layerDict = new Dictionary<string, int>();
-    public static int FieldEnvObjectInt()
+    public static int FieldEnvObjectLayerMask()
     {
         if (!layerDict.ContainsKey("FieldEnvObject"))
         {
             var layer = LayerMask.NameToLayer("FieldEnvObject");
-            layerDict.Add("FieldEnvObject", layer);
+            layerDict.Add("FieldEnvObject", 1 << layer);
         }
 
         return layerDict["FieldEnvObject"];
