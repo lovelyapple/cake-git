@@ -2,27 +2,96 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * Layerをキャッシュしといたクラス
+ * 基本Layerの取得はこのクラスとる。
+ */
 public class LayerUtility
 {
-    static Dictionary<string, int> layerDict = new Dictionary<string, int>();
-    public static int FieldEnvObjectLayerMask()
+    public class LayerProperty
     {
-        if (!layerDict.ContainsKey("FieldEnvObject"))
+        public string layerName;
+        public int layerIdx;
+        public int layerMask;
+        public LayerProperty(string name)
         {
-            var layer = LayerMask.NameToLayer("FieldEnvObject");
-            layerDict.Add("FieldEnvObject", 1 << layer);
+            this.layerName = name;
+            this.layerIdx = LayerMask.NameToLayer(name);
+            this.layerMask = 1 << layerIdx;
+        }
+    }
+    static Dictionary<string, LayerProperty> layerDict = new Dictionary<string, LayerProperty>()
+    {
+        {"FieldEnvObject" ,new LayerProperty("FieldEnvObject")},
+        {"Slime" ,new LayerProperty("Slime")},
+    };
+    public static int FieldEnvObjectIdx { get { return GetLayerIdx("FieldEnvObject"); } }
+    public static int FieldEnvObjectMask { get { return GetLayerMask("FieldEnvObject"); } }
+    public static int SlimeIdx { get { return GetLayerIdx("Slime"); } }
+    public static int SlimeMask { get { return GetLayerMask("Slime"); } }
+    public static LayerProperty GetNewLayer(string name)
+    {
+        Debug.LogWarning("coudl not find layer in cache looking for it " + name);
+        var newLayer = new LayerProperty(name);
+
+        if (newLayer.layerIdx < 0)
+        {
+            Debug.LogError("could not find Layer " + name);
+            return null;
         }
 
-        return layerDict["FieldEnvObject"];
+        layerDict.Add(name, newLayer);
+        return newLayer;
     }
-    public string GetFieldEnvObjectString()
+    public static int GetLayerMask(string layerName)
     {
-        if (!layerDict.ContainsKey("FieldEnvObject"))
+        LayerProperty outD;
+        if (layerDict.TryGetValue(layerName, out outD))
         {
-            var layer = LayerMask.NameToLayer("FieldEnvObject");
-            layerDict.Add("FieldEnvObject", layer);
+            return outD.layerMask;
+        }
+        else
+        {
+            outD = GetNewLayer(layerName);
+            if (outD != null)
+            {
+                return outD.layerMask;
+            }
+        }
+        return 0;
+    }
+    public static int GetLayerIdx(string layerName)
+    {
+        LayerProperty outD;
+        if (layerDict.TryGetValue(layerName, out outD))
+        {
+            return outD.layerIdx;
+        }
+        else
+        {
+            outD = GetNewLayer(layerName);
+            if (outD != null)
+            {
+                return outD.layerIdx;
+            }
+        }
+        return -1;
+    }
+    public static string GetLayeName(int idx)
+    {
+        if (idx < 0) { return string.Empty; }
+
+        foreach (var n in layerDict.Keys)
+        {
+            if (layerDict[n].layerIdx == idx)
+            {
+                return layerDict[n].layerName;
+            }
         }
 
-        return "FieldEnvObject";
+        Debug.LogError("could not find layer by idx " + idx);
+        return string.Empty;
     }
+
+
 }

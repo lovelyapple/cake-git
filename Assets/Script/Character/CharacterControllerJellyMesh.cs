@@ -70,7 +70,7 @@ public class CharacterControllerJellyMesh : MonoBehaviour
     }
     void UpdateCharacter()
     {
-        if (JellyMeshIsGrounded(LayerUtility.FieldEnvObjectLayerMask(), 1))
+        if (JellyMeshIsGrounded(LayerUtility.FieldEnvObjectMask, 1))
         {
             if (Input.GetKey(KeyCode.D))
             {

@@ -10,6 +10,7 @@ public class DebugWindow : MonoBehaviour
     /// </summary>
 	[SerializeField] WindowIndex debugWindowIndex;
     [SerializeField] GameState debugGameState;
+    [SerializeField] string debugLayer;
     void OnGUI()
     {
         if (!GameMainObject.Get().IsDebugMode) { return; }
@@ -32,5 +33,10 @@ public class DebugWindow : MonoBehaviour
         {
             GameMainObject.Get().RequestChangeState(debugGameState);
         }
+        
+        // if (GUI.Button(new Rect(0, Screen.height / 8 * 4, Screen.width / 6, Screen.height / 8), "LayerTest"))
+        // {
+        //     LayerUtility.GetLayerMask(debugLayer);
+        // }
     }
 }
