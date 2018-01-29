@@ -1,10 +1,18 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * characterの動作を制御するメインクラス
+ * キャラクタのデータはCreateCharacter(jellyMesh)が作成されるときに
+ * slimeDataPrefabで読み込まれ、
+ * charaDataに保存される。
+ * データの操作はCharacterDataで管理する。
+ */
 public class CharacterControllerJellyMesh : MonoBehaviour
 {
-    [SerializeField] CharacterData slimeData;
+    [SerializeField] CharacterData slimeDataPrefab;
     [SerializeField] JellyMesh jellyMesh;
     [SerializeField] CharacterColliderController colliderController;
     [SerializeField] GameObject jellyMeshReferenceParentObj;
@@ -12,11 +20,15 @@ public class CharacterControllerJellyMesh : MonoBehaviour
     [SerializeField] uint hp;
     [SerializeField] float jumpPower;
     [SerializeField] float weight;
-    [SerializeField] uint statusLevel = 5;
     [Range(5f, 100f)]
     public float moveSpeedTest = 50f;
-
+    public Action<CharacterData> OnStatusChanged = null;
+    public CharacterData charaData { get; private set; }
     void Start()
+    {
+        CreateCharacter();
+    }
+    public void CreateCharacter()
     {
         if (jellyMesh == null)
         {
@@ -25,12 +37,22 @@ public class CharacterControllerJellyMesh : MonoBehaviour
             if (jellyMesh == null)
             {
                 Debug.LogError("could not fine JeelyMesh");
+                return;
             }
         }
 
-        if (slimeData == null)
+        if (slimeDataPrefab == null)
         {
             Debug.Log("could not find slimeData");
+            jellyMesh = null;
+            return;
+        }
+        else
+        {
+            var go = (GameObject)(GameObject.Instantiate(slimeDataPrefab.gameObject));
+            go.transform.parent = this.transform;
+            go.transform.position = this.transform.position;
+            charaData = go.GetComponent<CharacterData>();
         }
 
         if (colliderController == null)
@@ -38,27 +60,29 @@ public class CharacterControllerJellyMesh : MonoBehaviour
             Debug.LogWarning("could not fine CollderController ad new one");
             colliderController = ResourcesManager.Get().CreateInstance(FieldObjectIndex.SlimeCharacterCollderController).GetComponent<CharacterColliderController>();
         }
-        CreateJellyMesh();
-    }
-    public void CreateJellyMesh()
-    {
-        if (jellyMesh == null) { return; }
 
         jellyMesh.CreateJelleMeshReferenceObj((res) =>
         {
             colliderController.SetUpController(jellyMesh.m_ReferencePointParent.transform);
+            charaData.ResetStatusLevel();
+            UpdateCharacterStatus();
         });
     }
-    public void UpdateCharacterStatus()
+    public void UpdateCharacterStatus(uint? targetStatusLevel = null)
     {
-        if (slimeData == null)
+        if (charaData == null)
         {
             return;
         }
 
-        weight = slimeData.GetWeight(statusLevel);
-        hp = slimeData.GetHp(statusLevel);
-        moveSpeed = slimeData.GetMoveSpeed(statusLevel);
+        if (targetStatusLevel.HasValue)
+        {
+            //今何もしない
+        }
+
+        weight = charaData.GetWeight();
+        hp = charaData.GetHp();
+        moveSpeed = charaData.GetMoveSpeed();
 
     }
     /// <summary>
@@ -70,6 +94,7 @@ public class CharacterControllerJellyMesh : MonoBehaviour
     }
     void UpdateCharacter()
     {
+        if (jellyMesh == null) { return; }
         if (JellyMeshIsGrounded(LayerUtility.FieldEnvObjectMask, 1))
         {
             if (Input.GetKey(KeyCode.D))
@@ -88,6 +113,32 @@ public class CharacterControllerJellyMesh : MonoBehaviour
         else
         {
 
+        }
+    }
+    /// キャラクタのステータスレベルを変更
+    /// targetState変更したいステータスレベル
+    public void ChangeCharacterStatusLevel(int levelDiff)
+    {
+        if (charaData == null) { return; }
+        charaData.ChangeStatusLevelDiff(levelDiff);
+
+        if (OnStatusChanged != null)
+        {
+            OnStatusChanged(charaData);
+        }
+    }
+    /// キャラクタのステータスレベルを変更
+    /// targetState変更した後のステータスレベル
+    /// 非推奨
+    public void ChangeCharacterStatusLevelTo(uint targetLevel)
+    {
+        if (charaData == null) { return; }
+        int diff = (int)(targetLevel - charaData.currentLevel);
+        charaData.ChangeStatusLevelDiff(diff);
+
+        if (OnStatusChanged != null)
+        {
+            OnStatusChanged(charaData);
         }
     }
 

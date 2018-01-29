@@ -21,6 +21,9 @@ public class DamageArea : MonoBehaviour
     }
 	void OnCollisionStay(Collision other)
 	{
-		//if(other.gameObject.layer == )
+		if(other.gameObject.layer == LayerUtility.SlimeIdx)
+		{
+			
+		}
 	}
 }

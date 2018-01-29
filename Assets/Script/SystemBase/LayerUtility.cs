@@ -12,7 +12,7 @@ public class LayerUtility
     {
         public string layerName;
         public int layerIdx;
-        public int layerMask;
+        public LayerMask layerMask;
         public LayerProperty(string name)
         {
             this.layerName = name;
@@ -26,9 +26,9 @@ public class LayerUtility
         {"Slime" ,new LayerProperty("Slime")},
     };
     public static int FieldEnvObjectIdx { get { return GetLayerIdx("FieldEnvObject"); } }
-    public static int FieldEnvObjectMask { get { return GetLayerMask("FieldEnvObject"); } }
+    public static LayerMask FieldEnvObjectMask { get { return GetLayerMask("FieldEnvObject"); } }
     public static int SlimeIdx { get { return GetLayerIdx("Slime"); } }
-    public static int SlimeMask { get { return GetLayerMask("Slime"); } }
+    public static LayerMask SlimeMask { get { return GetLayerMask("Slime"); } }
     public static LayerProperty GetNewLayer(string name)
     {
         Debug.LogWarning("coudl not find layer in cache looking for it " + name);
@@ -43,7 +43,7 @@ public class LayerUtility
         layerDict.Add(name, newLayer);
         return newLayer;
     }
-    public static int GetLayerMask(string layerName)
+    public static LayerMask GetLayerMask(string layerName)
     {
         LayerProperty outD;
         if (layerDict.TryGetValue(layerName, out outD))
