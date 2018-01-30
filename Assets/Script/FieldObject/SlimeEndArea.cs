@@ -2,17 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SlimeEndArea : MonoBehaviour
+public class SlimeEndArea : SlimeCatchArea
 {
-    [SerializeField] MeshRenderer meshRenderer;
-    // Use this for initialization
-    void Start()
-    {
-        if (meshRenderer != null)
-        {
-            meshRenderer.enabled = false;
-        }
-    }
 
     // Update is called once per frame
     void Update()
