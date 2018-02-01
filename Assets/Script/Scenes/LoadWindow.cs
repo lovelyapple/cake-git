@@ -22,6 +22,7 @@ public class LoadWindow : WindowBase
     [SerializeField] Animator fadeSysAnimator;
     [SerializeField] Object standByAnim;
     [SerializeField] Object endAnim;
+    [SerializeField] Text loadigStatusLabel;
     string animLayer;
     int stateStandBy;
     int stateEnd;
@@ -83,6 +84,7 @@ public class LoadWindow : WindowBase
 
         UpdateLoadingIcon();
         UpdateLoadSlider();
+        UpdateLoadingStatusLabel();
     }
 
     public void RunFadeIn()
@@ -106,11 +108,16 @@ public class LoadWindow : WindowBase
     {
         return loadPhase == LoadPhase.FadeOutFin;
     }
-    public void SetSLiderValue(uint v, uint max)
+    public void SetSLiderValue(uint v, uint max, string description = null)
     {
         if (loadingSlider == null) { return; }
         loadingSlider.value = v;
         loadingSlider.maxValue = max;
+
+        if (description != null)
+        {
+            loadigStatusLabel.text = description;
+        }
     }
     void UpdateLoadingIcon()
     {
@@ -119,5 +126,9 @@ public class LoadWindow : WindowBase
     void UpdateLoadSlider()
     {
         UIUtility.SetActive(loadSliderBarObj, loadPhase == LoadPhase.Loading);
+    }
+    void UpdateLoadingStatusLabel()
+    {
+        UIUtility.SetActive(loadigStatusLabel.gameObject, loadPhase == LoadPhase.Loading);
     }
 }

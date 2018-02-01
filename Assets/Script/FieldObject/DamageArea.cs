@@ -2,28 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DamageArea : MonoBehaviour
+public class DamageArea : FieldObjectBase
 {
-
-    [SerializeField] MeshRenderer meshRenderer;
-    // Use this for initialization
-    void Start()
+    /// <summary>
+    /// Update is called every frame, if the MonoBehaviour is enabled.
+    /// </summary>
+	float secOne = 1000f;
+	float timeRemaining = 1000f;
+    void Update()
     {
-        if (meshRenderer != null)
+        if (IsPlayerInside())
         {
-            meshRenderer.enabled = false;
+            var chara = FieldManager.Get().GetMainChara();
+
+            if (chara != null)
+            {
+				if(timeRemaining <= 0f)
+				{
+					chara.ChangeCharacterStatusLevel(-1);
+					timeRemaining = secOne;
+				}
+				else
+				{
+					timeRemaining -= Time.deltaTime * secOne;
+				}
+            }
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
-	void OnCollisionStay(Collision other)
-	{
-		if(other.gameObject.layer == LayerUtility.SlimeIdx)
-		{
-			
-		}
-	}
 }

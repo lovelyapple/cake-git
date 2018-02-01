@@ -19,8 +19,21 @@ public class GameMainObject : SingleToneBase<GameMainObject>
     [SerializeField] GameMode _gameMode;
     public GameMode gameMode { get { return _gameMode; } }
     public bool IsDebugMode { get { return _gameMode == GameMode.Debug; } }
+    public Action OnFadeInOver;
 
     GameState gameState = GameState.Title;
+    /// <summary>
+    /// Start is called on the frame when a script is enabled just before
+    /// any of the Update methods is called the first time.
+    /// </summary>
+    void Start()
+    {
+        ResourcesManager.Get().ChecktInitWindowList();
+        ResourcesManager.Get().CreateOpenWindow(WindowIndex.TitleWindow, (w) =>
+         {
+             gameState = GameState.Title;
+         });
+    }
     public void ChangeStateToGame()
     {
         StartCoroutine(IeChangePhase(GameState.Game));
@@ -59,6 +72,11 @@ public class GameMainObject : SingleToneBase<GameMainObject>
         while (!loadWnd.IsFadeInFin())
         {
             yield return null;
+        }
+
+        if(OnFadeInOver != null)
+        {
+            OnFadeInOver();
         }
 
         loadWnd.RunLoading();

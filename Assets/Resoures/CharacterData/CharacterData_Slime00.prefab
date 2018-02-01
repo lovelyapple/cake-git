@@ -51,10 +51,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a25b9f4be4e834894adb6dd50aac0c84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HpStatusList: 0000000000000000000000000000000000000000
+  HpStatusList: 320000004b000000640000007d00000096000000
   WeightStatusList:
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
+  - 0.5
+  - 0.75
+  - 1
+  - 1.25
+  - 1.5
+  MoveSpeedStatusList:
+  - 1.5
+  - 1.25
+  - 1
+  - 0.75
+  - 0.5

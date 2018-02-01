@@ -2,21 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SlimeEndArea : MonoBehaviour
+public class SlimeEndArea : FieldObjectBase
 {
-    [SerializeField] MeshRenderer meshRenderer;
-    // Use this for initialization
-    void Start()
+    //新しい仕様では　いらないっぽい
+    [SerializeField] float clearTime;
+    /// <summary>
+    /// Awake is called when the script instance is being loaded.
+    /// </summary>
+    void Awake()
     {
-        if (meshRenderer != null)
-        {
-            meshRenderer.enabled = false;
-        }
+        clearTime = 3f;
     }
-
     // Update is called once per frame
     void Update()
     {
-		//todo endする方法？
+        if(IsPlayerInside())
+        {
+            clearTime -= Time.deltaTime;
+
+            if(clearTime <= 0)
+            {
+                //todo 強制クリア
+            }
+        }
     }
 }
