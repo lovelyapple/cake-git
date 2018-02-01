@@ -12,5 +12,10 @@ public class FieldInfo : MonoBehaviour
 	[SerializeField] GameObject fieldEntityRoot;
 	[Header("フィールドの通常オブジェクトの親ルート")]
 	[SerializeField] GameObject fieldEvnObjRoot;
-	//public List<FieldObjectBase> fieldEnvObjList;//現状入らない
+	public List<FieldObjectBase> friendSlimeList;//現状入らない
+
+	public FieldObjectBase GetStartPoint()
+	{
+		return startPoint;
+	}
 }
