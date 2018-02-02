@@ -26,11 +26,14 @@ public class FieldManager : SingleToneBase<FieldManager>
         yield return LoadDungeon();
         yield return LoadMainCharacter();
         yield return LoadFriendCharacter();
+        yield return LoadEnemy();
+        yield return RunLoadFadeOut();
 
     }
     public IEnumerator LoadDungeon()
     {
         UpdateLoadWindow(1, maxStats, creatingMap);
+
         if (string.IsNullOrEmpty(loadDungeonName))
         {
             var go = ResourcesManager.Get().CreateInstance(FieldObjectIndex.TestDungeon, dungeonRoot.transform);
@@ -63,12 +66,12 @@ public class FieldManager : SingleToneBase<FieldManager>
         }
 
         UIUtility.SetActive(currentFieldInto.gameObject, true);
+        yield return new WaitForSeconds(2);
     }
     public IEnumerator LoadMainCharacter()
     {
         UpdateLoadWindow(2, maxStats, createMainChara);
-        yield return new WaitForSeconds(2);
-        yield break; //todo とりあえず、パス
+
         if (currentFieldInto == null)
         {
             ClearField();
@@ -83,7 +86,7 @@ public class FieldManager : SingleToneBase<FieldManager>
             yield break;
         }
 
-        var charaObj = ResourcesManager.Get().CreateInstance(FieldObjectIndex.SlimeCharacter, characterRoot.transform);
+        var charaObj = ResourcesManager.Get().CreateInstance(FieldObjectIndex.SlimeMainChara, characterRoot.transform);
         if (charaObj != null)
         {
             mainChara = charaObj.GetComponent<CharacterControllerJellyMesh>();
@@ -94,6 +97,8 @@ public class FieldManager : SingleToneBase<FieldManager>
                 ClearField();
             }
         }
+        yield return new WaitForSeconds(2);
+
     }
     public IEnumerator LoadFriendCharacter()
     {
@@ -128,6 +133,14 @@ public class FieldManager : SingleToneBase<FieldManager>
         yield return new WaitForSeconds(1);
         yield break;
     }
+    public IEnumerator RunLoadFadeOut()
+    {
+        if (!ResourcesManager.Get().IsWindowActive(WindowIndex.LoadWindow)) { yield break; }
+
+        var loadWnd = ResourcesManager.Get().GetWindow(WindowIndex.LoadWindow) as LoadWindow;
+
+        loadWnd.RunFadeOut();
+    }
     void UpdateLoadWindow(uint now, uint max, string description)
     {
         if (!ResourcesManager.Get().IsWindowActive(WindowIndex.LoadWindow)) { return; }
@@ -136,14 +149,7 @@ public class FieldManager : SingleToneBase<FieldManager>
 
         loadWnd.SetSLiderValue(now, max, description);
     }
-    void RunLoadFadeOut()
-    {
-        if (!ResourcesManager.Get().IsWindowActive(WindowIndex.LoadWindow)) { return; }
 
-        var loadWnd = ResourcesManager.Get().GetWindow(WindowIndex.LoadWindow) as LoadWindow;
-
-        loadWnd.RunFadeOut();
-    }
     public CharacterControllerJellyMesh GetMainChara()
     {
         if (mainChara == null)

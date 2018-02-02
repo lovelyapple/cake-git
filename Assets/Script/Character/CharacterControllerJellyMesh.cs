@@ -24,10 +24,6 @@ public class CharacterControllerJellyMesh : MonoBehaviour
     public float moveSpeedTest = 50f;
     public Action<CharacterData> OnStatusChanged = null;
     public CharacterData charaData { get; private set; }
-    void Start()
-    {
-        CreateCharacter();
-    }
     public void CreateCharacter()
     {
         if (jellyMesh == null)

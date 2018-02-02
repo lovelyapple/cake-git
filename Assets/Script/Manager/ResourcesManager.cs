@@ -8,11 +8,13 @@ public enum WindowIndex
 {
     TitleWindow,
     LoadWindow,
+    ResultWindow,
     Max,
 }
 public enum FieldObjectIndex
 {
-    SlimeCharacter,
+    SlimeMainChara,
+    SlimeCharacterData00,
     SlimeCharacterCollderController,
     SlimeFriend,
     TestDungeon,
@@ -30,6 +32,7 @@ public class ResourcesManager : SingleToneBase<ResourcesManager>
     {
         {WindowIndex.TitleWindow,"Assets/ExternalResources/UI/Window/TitleWindow.prefab"},
         {WindowIndex.LoadWindow,"Assets/ExternalResources/UI/Window/LoadWindow.prefab"},
+        {WindowIndex.ResultWindow,"Assets/ExternalResources/UI/Window/ResultWIndow.prefab"},
     };
 
     //サイズ分確保
@@ -143,7 +146,8 @@ public class ResourcesManager : SingleToneBase<ResourcesManager>
     [SerializeField] GameObject FieldObjectRoot;
     Dictionary<FieldObjectIndex, string> fieldObjectPathDict = new Dictionary<FieldObjectIndex, string>()
     {
-        {FieldObjectIndex.SlimeCharacter, "Assets/Resoures/CharacterData/CharacterData_Slime00.prefab"},
+        {FieldObjectIndex.SlimeMainChara, "Assets/Resoures/Character/MainSlime.prefab"},
+        {FieldObjectIndex.SlimeCharacterData00, "Assets/Resoures/CharacterData/CharacterData_Slime00.prefab"},
         {FieldObjectIndex.SlimeCharacterCollderController, "Assets/Resoures/CharacterData/SlimeCoreHitController.prefab"},
         {FieldObjectIndex.TestDungeon, "Assets/Resoures/Dungeon/Dungeon00.prefab"},
         {FieldObjectIndex.SlimeFriend,"Assets/Resoures/CharacterData/FriendSlime.prefab"},
