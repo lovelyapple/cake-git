@@ -50,6 +50,20 @@ public class GameMainObject : SingleToneBase<GameMainObject>
     {
         StartCoroutine(IeChangePhase(targetState));
     }
+    public void RequestChangeStateWithoutFade(GameState targetState,Action OnChanged)
+    {
+        if(gameState == targetState)
+        {
+            Debug.LogWarning("already in the state " + targetState.ToString());
+            return;
+        }
+
+        if(OnChanged != null)
+        {
+            OnChanged();
+        }
+
+    }
     IEnumerator IeChangePhase(GameState targetState)
     {
         if (gameState == targetState)
@@ -80,17 +94,6 @@ public class GameMainObject : SingleToneBase<GameMainObject>
         }
 
         loadWnd.RunLoading();
-
-        var waitSec = 5f;
-
-        while (waitSec > 0f)
-        {
-            waitSec -= Time.deltaTime;
-            loadWnd.SetSLiderValue((uint)waitSec * 100, 500);
-            yield return null;
-        }
-
-        loadWnd.RunFadeOut();
 
         while (!loadWnd.IsFadeOutFin())
         {

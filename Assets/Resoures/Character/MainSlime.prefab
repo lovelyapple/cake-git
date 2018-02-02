@@ -21,8 +21,8 @@ GameObject:
   - component: {fileID: 4588548828742608}
   - component: {fileID: 114445712450593582}
   m_Layer: 0
-  m_Name: FriendSmile
-  m_TagString: Untagged
+  m_Name: MainSlime
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

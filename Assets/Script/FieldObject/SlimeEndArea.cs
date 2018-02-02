@@ -16,13 +16,19 @@ public class SlimeEndArea : FieldObjectBase
     // Update is called once per frame
     void Update()
     {
-        if(IsPlayerInside())
+        if (IsPlayerInside())
         {
             clearTime -= Time.deltaTime;
 
-            if(clearTime <= 0)
+            if (clearTime <= 0)
             {
-                //todo 強制クリア
+                GameMainObject.Get().RequestChangeStateWithoutFade(GameState.Result, () =>
+                 {
+                     ResourcesManager.Get().CreateOpenWindow(WindowIndex.ResultWindow, (w) =>
+                     {
+                        //donoth
+                     });
+                 });
             }
         }
     }
