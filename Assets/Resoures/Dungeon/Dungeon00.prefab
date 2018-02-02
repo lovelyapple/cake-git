@@ -623,7 +623,7 @@ GameObject:
   - component: {fileID: 4703012888204678}
   - component: {fileID: 114010763308344746}
   m_Layer: 8
-  m_Name: Test_Dungeon00
+  m_Name: Dungeon00
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3907,6 +3907,7 @@ MonoBehaviour:
   slimeCatchArea: {fileID: 114256759211781156}
   fieldEntityRoot: {fileID: 1194644922920004}
   fieldEvnObjRoot: {fileID: 1119115140130980}
+  friendSlimeList: []
 --- !u!114 &114021770625665258
 MonoBehaviour:
   m_ObjectHideFlags: 1
