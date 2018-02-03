@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class ResultWindow : WindowBase
 {
-	public void OnClickRestart()
-	{
-		
-	}
-
+    public void OnClickRestart()
+    {
+        FieldManager.Get().ReSetMap(() =>
+        {
+            Close();
+            GameMainObject.Get().RequestChangeStateWithoutFade(GameState.Game, null);
+        }, null);
+    }
 }
