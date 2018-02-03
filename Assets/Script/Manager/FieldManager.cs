@@ -9,6 +9,7 @@ public class FieldManager : SingleToneBase<FieldManager>
     List<AIFriendSlime> friendList;
     [SerializeField] GameObject characterRoot;
     [SerializeField] GameObject dungeonRoot;
+    [SerializeField] CameraController mainCmeraCtrl;
     FieldInfo currentFieldInto;
     FieldInfo currentFieldCache;
     [SerializeField] string loadDungeonName;
