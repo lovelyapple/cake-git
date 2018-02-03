@@ -4,34 +4,30 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class PauseMenu : WindowBase {
-	public Sprite Howplay;
-	public Sprite HowgGame;
 	// Use this for initialization
 
-	private int Mode = 0;
+	//private int Mode = 0;
+	/*
 	void Update(){
-		if (Input.GetKeyDown (KeyCode.DownArrow)) {
-			if (Mode < 1) {
-				Mode += 1;
-			}
-		}
+		
+	}*/
+	public GameObject HowGame;
+	public GameObject HowPlay;
 
-		if (Input.GetKeyDown (KeyCode.UpArrow)) {
-			if (Mode > 0) {
-				Mode -= 1;
-			}
-		}
-
-		switch(Mode){
-		case 0:
-			gameObject.GetComponent<Image> ().sprite = Howplay;
-			break;
-
-		case 1:
-			gameObject.GetComponent<Image> ().sprite = HowgGame;
-			break;
-
-		}
+	// ゲーム説明
+	public void OnClickHowGame(){
+		HowGame.SetActive (true);
+		HowPlay.SetActive (false);
 	}
 
+	// 操作説明
+	public void OnClickHowPlay(){
+		HowGame.SetActive (false);
+		HowPlay.SetActive (true);
+	}
+
+	// ゲームに戻る
+	public void OnClickBack(){
+		GameMainObject.Get ().UnPauseGame ();
+	}
 }
