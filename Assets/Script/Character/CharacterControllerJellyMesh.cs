@@ -24,7 +24,7 @@ public class CharacterControllerJellyMesh : MonoBehaviour
     public float moveSpeedTest = 50f;
     public Action<CharacterData> OnStatusChanged = null;
     public CharacterData charaData { get; private set; }
-    public void CreateCharacter()
+    public void CreateCharacter(Action<GameObject> onFinished)
     {
         if (jellyMesh == null)
         {
@@ -62,6 +62,10 @@ public class CharacterControllerJellyMesh : MonoBehaviour
             colliderController.SetUpController(jellyMesh.m_ReferencePointParent.transform);
             charaData.ResetStatusLevel();
             UpdateCharacterStatus();
+            if (onFinished != null)
+            {
+                onFinished(jellyMesh.m_CentralPoint.GameObject);
+            }
         });
     }
     public void UpdateCharacterStatus(uint? targetStatusLevel = null)

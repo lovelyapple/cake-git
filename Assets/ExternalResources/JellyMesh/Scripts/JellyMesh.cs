@@ -185,7 +185,7 @@ public class JellyMesh : MonoBehaviour
     public GameObject m_ParentRoot;
 
     // Central body point
-    ReferencePoint m_CentralPoint;
+    public ReferencePoint m_CentralPoint;
 
     // List of reference point offset
     Vector3[] m_ReferencePointOffsets;

@@ -252,7 +252,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterRoot: {fileID: 1968349897}
   dungeonRoot: {fileID: 1533493285}
+  mainCameraCtrl: {fileID: 1200057551}
   loadDungeonName: 
+  cameraOffset: {x: 0, y: 0, z: -10}
 --- !u!4 &1084667033
 Transform:
   m_ObjectHideFlags: 0
@@ -309,9 +311,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 148ee556b256a466f8325529b5c4e997, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  followStlye: 2
   lookAtTarget: {fileID: 0}
   offsetTarget: {fileID: 0}
-  distacneDump: 10
+  softDumprange: 5
+  simpleFollowSpeedLevel: 0.816
+  lerpDumpingDistance: 0.5
+  lerpFarOffsetDistance: 2
+  lerpMoveEplision: 0.5
   targetCamera: {fileID: 915456907}
   lookAtTaretFlag: 1
 --- !u!1 &1533493285
