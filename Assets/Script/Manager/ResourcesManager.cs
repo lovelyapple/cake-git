@@ -6,14 +6,22 @@ using UnityEditor;
 using UnityEngine.SceneManagement;
 public enum WindowIndex
 {
-    LoadWindow = 0,
-    TitleWindow = 1,
+    TitleWindow,
+    LoadWindow,
+    ResultWindow,
     Max,
 }
 public enum FieldObjectIndex
 {
-    SlimeCharacter,
+    SlimeMainChara,
+    SlimeCharacterData00,
     SlimeCharacterCollderController,
+    SlimeFriend,
+    TestDungeon,
+}
+public enum SourceType
+{
+    Dungeon,
 }
 public class ResourcesManager : SingleToneBase<ResourcesManager>
 {
@@ -22,21 +30,25 @@ public class ResourcesManager : SingleToneBase<ResourcesManager>
 
     Dictionary<WindowIndex, string> windowPathDict = new Dictionary<WindowIndex, string>()
     {
-        {WindowIndex.TitleWindow,"Assets/ExternalResources/UI/Window/TitleMenuWindow.prefab"},
+        {WindowIndex.TitleWindow,"Assets/ExternalResources/UI/Window/TitleWindow.prefab"},
         {WindowIndex.LoadWindow,"Assets/ExternalResources/UI/Window/LoadWindow.prefab"},
+        {WindowIndex.ResultWindow,"Assets/ExternalResources/UI/Window/ResultWIndow.prefab"},
     };
 
     //サイズ分確保
     List<WindowBase> windowList;
-    void Start()
+    public void ChecktInitWindowList()
     {
-        InitWindowList();
+        if (windowList == null)
+        {
+            InitWindowList();
+        }
     }
     void InitWindowList()
     {
         windowList = new List<WindowBase>();
 
-        for (int idx = 0, idMax = (int)(WindowIndex.Max - 1); idx < idMax; idx++)
+        for (int idx = 0, idMax = (int)(WindowIndex.Max); idx < idMax; idx++)
         {
             windowList.Add(null);
         }
@@ -84,6 +96,32 @@ public class ResourcesManager : SingleToneBase<ResourcesManager>
             onLoad(windowList[(int)index]);
         }
     }
+    public bool IsWindowActive(WindowIndex index)
+    {
+        try
+        {
+            var w = windowList[(int)index];
+
+            if (w == null) { return false; }
+
+            return w.gameObject.activeInHierarchy;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+    public WindowBase GetWindow(WindowIndex index)
+    {
+        try
+        {
+            return windowList[(int)index];
+        }
+        catch
+        {
+            return null;
+        }
+    }
     public void CloseWindow(WindowIndex index)
     {
         if (windowList[(int)index] == null)
@@ -108,21 +146,18 @@ public class ResourcesManager : SingleToneBase<ResourcesManager>
     [SerializeField] GameObject FieldObjectRoot;
     Dictionary<FieldObjectIndex, string> fieldObjectPathDict = new Dictionary<FieldObjectIndex, string>()
     {
-        {FieldObjectIndex.SlimeCharacter, "Assets/Resources/CharacterData/CharacterData_Slime00.prefab"},
-        {FieldObjectIndex.SlimeCharacterCollderController, "Assets/Resources/CharacterData/SlimeCoreHitController.prefab"}
+        {FieldObjectIndex.SlimeMainChara, "Assets/Resoures/Character/MainSlime.prefab"},
+        {FieldObjectIndex.SlimeCharacterData00, "Assets/Resoures/CharacterData/CharacterData_Slime00.prefab"},
+        {FieldObjectIndex.SlimeCharacterCollderController, "Assets/Resoures/CharacterData/SlimeCoreHitController.prefab"},
+        {FieldObjectIndex.TestDungeon, "Assets/Resoures/Dungeon/Dungeon00.prefab"},
+        {FieldObjectIndex.SlimeFriend,"Assets/Resoures/CharacterData/FriendSlime.prefab"},
     };
-    Dictionary<FieldObjectIndex, GameObject> fieldObjectPrefabHolder;
-    public GameObject CreateInstance(FieldObjectIndex index)
+    Dictionary<FieldObjectIndex, GameObject> fieldObjectPrefabHolder = new Dictionary<FieldObjectIndex, GameObject>();
+    public GameObject CreateInstance(FieldObjectIndex index, Transform parent = null, bool saveCache = true)
     {
-        GameObject parent;
-        if (FieldObjectRoot == null)
+        if (parent == null)
         {
-            Debug.LogWarning("fieldObjectRoot is null ,use IGameMainObject as nstance's parent");
-            parent = this.gameObject;
-        }
-        else
-        {
-            parent = FieldObjectRoot;
+            parent = FieldObjectRoot.transform;
         }
 
         GameObject prefab;
@@ -153,8 +188,33 @@ public class ResourcesManager : SingleToneBase<ResourcesManager>
             return GameObject.Instantiate(prefab, parent.transform);
         }
     }
-    public void LoadFieldObject(FieldObjectIndex index)
+    //resource Path
+    public static string GetDungeonLoadPath(string dungeonName)
     {
+        return string.Format("Assets/Resources/Dungeon/{0}.prefab", dungeonName);
+    }
+    //ソースタイプ
 
+    //普通のロード
+    public static GameObject LoadSourcePrefab(string sourceName, SourceType type)
+    {
+        string loadPath = "";
+        switch (type)
+        {
+            case SourceType.Dungeon:
+                loadPath = GetDungeonLoadPath(sourceName);
+                break;
+        }
+
+        return AssetDatabase.LoadAssetAtPath<GameObject>(loadPath);
+    }
+    public static T CreateGetComponent<T>(GameObject prefab) where T : class
+    {
+        var instance = GameObject.Instantiate(prefab) as GameObject;
+        instance.transform.position = Vector3.zero;
+        instance.transform.rotation = Quaternion.identity;
+        instance.transform.localScale = Vector3.one;
+
+        return instance.GetComponent<T>();
     }
 }

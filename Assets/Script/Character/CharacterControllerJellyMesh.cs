@@ -24,10 +24,6 @@ public class CharacterControllerJellyMesh : MonoBehaviour
     public float moveSpeedTest = 50f;
     public Action<CharacterData> OnStatusChanged = null;
     public CharacterData charaData { get; private set; }
-    void Start()
-    {
-        CreateCharacter();
-    }
     public void CreateCharacter()
     {
         if (jellyMesh == null)
@@ -85,13 +81,11 @@ public class CharacterControllerJellyMesh : MonoBehaviour
         moveSpeed = charaData.GetMoveSpeed();
 
     }
-    /// <summary>
-    /// Update is called every frame, if the MonoBehaviour is enabled.
-    /// </summary>
     void Update()
     {
         UpdateCharacter();
     }
+    //操作関連
     void UpdateCharacter()
     {
         if (jellyMesh == null) { return; }
