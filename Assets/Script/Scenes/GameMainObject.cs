@@ -45,6 +45,7 @@ public class GameMainObject : SingleToneBase<GameMainObject>
         if (!isPausing) return;
         //todo unPause
     }
+    public bool IsGamePlaying { get { return gameState == GameState.Game; } }
     public bool IsPaussing { get { return isPausing; } }
     public void ChangeStateToGame()
     {
@@ -69,6 +70,8 @@ public class GameMainObject : SingleToneBase<GameMainObject>
             Debug.LogWarning("already in the state " + targetState.ToString());
             return;
         }
+
+        gameState = targetState;
 
         if (OnChanged != null)
         {

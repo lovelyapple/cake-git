@@ -11,23 +11,23 @@ public class DamageArea : FieldObjectBase
 	float timeRemaining = 1000f;
     void Update()
     {
-        if (IsPlayerInside())
-        {
-            var chara = FieldManager.Get().GetMainChara();
+        // if (IsPlayerInside())
+        // {
+        //     var chara = FieldManager.Get().GetMainChara();
 
-            if (chara != null)
-            {
-				if(timeRemaining <= 0f)
-				{
-					chara.ChangeCharacterStatusLevel(-1);
-					timeRemaining = secOne;
-				}
-				else
-				{
-					timeRemaining -= Time.deltaTime * secOne;
-				}
-            }
-        }
+        //     if (chara != null)
+        //     {
+		// 		if(timeRemaining <= 0f)
+		// 		{
+		// 			chara.ChangeCharacterStatusLevel(-1);
+		// 			timeRemaining = secOne;
+		// 		}
+		// 		else
+		// 		{
+		// 			timeRemaining -= Time.deltaTime * secOne;
+		// 		}
+        //     }
+        // }
     }
 
 }

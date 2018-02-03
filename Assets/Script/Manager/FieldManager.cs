@@ -22,16 +22,35 @@ public class FieldManager : SingleToneBase<FieldManager>
     string createEnemy = "敵生成中";
     public void CreateField(Action OnFinished, Action OnError)
     {
-        StartCoroutine(CreateFieldEnumerator(OnFinished, OnError));
+        StartCoroutine(CreateFieldAsync(OnFinished, OnError));
     }
-    IEnumerator CreateFieldEnumerator(Action OnFinished, Action OnError)
+    IEnumerator CreateFieldAsync(Action OnFinished, Action OnError)
     {
         yield return LoadDungeon();
         yield return LoadMainCharacter();
         yield return LoadFriendCharacter();
         yield return LoadEnemy();
         yield return RunLoadFadeOut();
-
+        if(OnFinished != null)
+        {
+            OnFinished();
+        }
+        
+    }
+    public void ReSetMap(Action OnFinished, Action OnError)
+    {
+        StartCoroutine(ReSetMapAsync(OnFinished,OnError));
+    }
+    IEnumerator ReSetMapAsync(Action OnFinished, Action OnError)
+    {
+        ClearFieldAll(true);
+        yield return LoadMainCharacter(true);
+        yield return LoadFriendCharacter(true);
+        yield return LoadEnemy(true);
+        if (OnFinished != null)
+        {
+            OnFinished();
+        }
     }
     public IEnumerator LoadDungeon()
     {
@@ -42,7 +61,7 @@ public class FieldManager : SingleToneBase<FieldManager>
             var go = ResourcesManager.Get().CreateInstance(FieldObjectIndex.TestDungeon, dungeonRoot.transform);
             if (go == null)
             {
-                ClearField();
+                ClearFieldAll();
                 yield break;
             }
             currentFieldInto = go.GetComponent<FieldInfo>();
@@ -53,7 +72,7 @@ public class FieldManager : SingleToneBase<FieldManager>
             var go = ResourcesManager.LoadSourcePrefab(loadDungeonName, SourceType.Dungeon);
             if (go == null)
             {
-                ClearField();
+                ClearFieldAll();
                 yield break;
             }
             currentFieldCache = go.GetComponent<FieldInfo>();
@@ -62,7 +81,7 @@ public class FieldManager : SingleToneBase<FieldManager>
 
             if (currentFieldInto != null)
             {
-                ClearField();
+                ClearFieldAll();
                 yield break;
             }
             currentFieldInto.transform.parent = dungeonRoot.transform;
@@ -71,13 +90,16 @@ public class FieldManager : SingleToneBase<FieldManager>
         UIUtility.SetActive(currentFieldInto.gameObject, true);
         yield return new WaitForSeconds(debugWaitSec);
     }
-    public IEnumerator LoadMainCharacter()
+    public IEnumerator LoadMainCharacter(bool isReset = false)
     {
-        UpdateLoadWindow(2, maxStats, createMainChara);
+        if (!isReset)
+        {
+            UpdateLoadWindow(2, maxStats, createMainChara);
+        }
 
         if (currentFieldInto == null)
         {
-            ClearField();
+            ClearFieldAll();
             yield break;
         }
 
@@ -85,7 +107,7 @@ public class FieldManager : SingleToneBase<FieldManager>
 
         if (startP == null)
         {
-            ClearField();
+            ClearFieldAll();
             yield break;
         }
 
@@ -105,14 +127,17 @@ public class FieldManager : SingleToneBase<FieldManager>
         }
         yield return new WaitForSeconds(debugWaitSec);
     }
-    public IEnumerator LoadFriendCharacter()
+    public IEnumerator LoadFriendCharacter(bool isReset = false)
     {
-        UpdateLoadWindow(3, maxStats, createFreind);
-        yield return new WaitForSeconds(debugWaitSec);
+        if (!isReset)
+        {
+            UpdateLoadWindow(3, maxStats, createFreind);
+            yield return new WaitForSeconds(debugWaitSec);
+        }
         yield break; //todo とりあえず、パス
         if (currentFieldInto == null)
         {
-            ClearField();
+            ClearFieldAll();
             yield break;
         }
 
@@ -122,7 +147,7 @@ public class FieldManager : SingleToneBase<FieldManager>
             var fObj = ResourcesManager.Get().CreateInstance(FieldObjectIndex.SlimeFriend, characterRoot.transform);
             if (fObj == null)
             {
-                ClearField();
+                ClearFieldAll();
                 yield break;
             }
 
@@ -130,12 +155,15 @@ public class FieldManager : SingleToneBase<FieldManager>
             friendList.Add(fAI);
         }
     }
-    public IEnumerator LoadEnemy()
+    public IEnumerator LoadEnemy(bool isReset = false)
     {
-        UpdateLoadWindow(4, maxStats, createEnemy);
-        yield return new WaitForSeconds(debugWaitSec);
-        UpdateLoadWindow(5, maxStats, createEnemy);
-        yield return new WaitForSeconds(debugWaitSec);
+        if (!isReset)
+        {
+            UpdateLoadWindow(4, maxStats, createEnemy);
+            yield return new WaitForSeconds(debugWaitSec);
+            UpdateLoadWindow(5, maxStats, createEnemy);
+            yield return new WaitForSeconds(debugWaitSec);
+        }
         yield break;
     }
     public IEnumerator RunLoadFadeOut()
@@ -165,16 +193,16 @@ public class FieldManager : SingleToneBase<FieldManager>
 
         return mainChara;
     }
-    public void ClearField()
+    public void ClearFieldAll(bool isReset = false)
     {
-        if (currentFieldInto != null)
+        if (currentFieldInto != null && !isReset)
         {
             UIUtility.SetActive(currentFieldInto.gameObject, false);
             Destroy(currentFieldInto.gameObject);
             currentFieldInto = null;
         }
 
-        if (currentFieldCache != null)
+        if (currentFieldCache != null && !isReset)
         {
             currentFieldCache = null;
         }
@@ -196,5 +224,7 @@ public class FieldManager : SingleToneBase<FieldManager>
 
             friendList.Clear();
         }
+
+        //EnemyList Reset
     }
 }
