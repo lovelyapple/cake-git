@@ -20,6 +20,7 @@ public class GameMainObject : SingleToneBase<GameMainObject>
     public GameMode gameMode { get { return _gameMode; } }
     public bool IsDebugMode { get { return _gameMode == GameMode.Debug; } }
     public Action OnFadeInOver;
+    bool isPausing;
 
     GameState gameState = GameState.Title;
     /// <summary>
@@ -34,6 +35,17 @@ public class GameMainObject : SingleToneBase<GameMainObject>
              gameState = GameState.Title;
          });
     }
+    public void PauseGame()
+    {
+        if (isPausing) return;
+        //todo pause
+    }
+    public void UnPauseGame()
+    {
+        if (!isPausing) return;
+        //todo unPause
+    }
+    public bool IsPaussing { get { return isPausing; } }
     public void ChangeStateToGame()
     {
         StartCoroutine(IeChangePhase(GameState.Game));
@@ -50,15 +62,15 @@ public class GameMainObject : SingleToneBase<GameMainObject>
     {
         StartCoroutine(IeChangePhase(targetState));
     }
-    public void RequestChangeStateWithoutFade(GameState targetState,Action OnChanged)
+    public void RequestChangeStateWithoutFade(GameState targetState, Action OnChanged)
     {
-        if(gameState == targetState)
+        if (gameState == targetState)
         {
             Debug.LogWarning("already in the state " + targetState.ToString());
             return;
         }
 
-        if(OnChanged != null)
+        if (OnChanged != null)
         {
             OnChanged();
         }
@@ -88,7 +100,7 @@ public class GameMainObject : SingleToneBase<GameMainObject>
             yield return null;
         }
 
-        if(OnFadeInOver != null)
+        if (OnFadeInOver != null)
         {
             OnFadeInOver();
         }
