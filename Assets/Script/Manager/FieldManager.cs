@@ -9,10 +9,12 @@ public class FieldManager : SingleToneBase<FieldManager>
     List<AIFriendSlime> friendList;
     [SerializeField] GameObject characterRoot;
     [SerializeField] GameObject dungeonRoot;
-    [SerializeField] CameraController mainCmeraCtrl;
+    [SerializeField] CameraController mainCameraCtrl;
     FieldInfo currentFieldInto;
     FieldInfo currentFieldCache;
     [SerializeField] string loadDungeonName;
+    [SerializeField] int debugWaitSec = 1;
+    public Vector3 cameraOffset = new Vector3(0, 0, -10f);
     uint maxStats = 5;
     string creatingMap = "フィールドデータロード中";
     string createMainChara = "メインキャラロード中";
@@ -67,7 +69,7 @@ public class FieldManager : SingleToneBase<FieldManager>
         }
 
         UIUtility.SetActive(currentFieldInto.gameObject, true);
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(debugWaitSec);
     }
     public IEnumerator LoadMainCharacter()
     {
@@ -91,20 +93,22 @@ public class FieldManager : SingleToneBase<FieldManager>
         if (charaObj != null)
         {
             mainChara = charaObj.GetComponent<CharacterControllerJellyMesh>();
-            mainChara.CreateCharacter();
-
-            if (mainChara == null)
+            mainChara.CreateCharacter((g) =>
             {
-                ClearField();
-            }
-        }
-        yield return new WaitForSeconds(2);
+                if (mainChara != null)
+                {
+                    mainCameraCtrl.SetupCamera(g, cameraOffset);
+                }
+            });
 
+
+        }
+        yield return new WaitForSeconds(debugWaitSec);
     }
     public IEnumerator LoadFriendCharacter()
     {
         UpdateLoadWindow(3, maxStats, createFreind);
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(debugWaitSec);
         yield break; //todo とりあえず、パス
         if (currentFieldInto == null)
         {
@@ -129,9 +133,9 @@ public class FieldManager : SingleToneBase<FieldManager>
     public IEnumerator LoadEnemy()
     {
         UpdateLoadWindow(4, maxStats, createEnemy);
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(debugWaitSec);
         UpdateLoadWindow(5, maxStats, createEnemy);
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(debugWaitSec);
         yield break;
     }
     public IEnumerator RunLoadFadeOut()
