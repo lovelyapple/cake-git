@@ -34,7 +34,7 @@ public class ResourcesManager : SingleToneBase<ResourcesManager>
         {WindowIndex.TitleWindow,"Assets/ExternalResources/UI/Window/TitleWindow.prefab"},
         {WindowIndex.LoadWindow,"Assets/ExternalResources/UI/Window/LoadWindow.prefab"},
         {WindowIndex.ResultWindow,"Assets/ExternalResources/UI/Window/ResultWIndow.prefab"},
-		{WindowIndex.PauseWindow,"Assets/ExternalResources/UI/Window/PauseWindow.prefab"},
+		{WindowIndex.PauseWindow,"Assets/ExternalResources/UI/Window/Part_PauseMenu/PauseWindow.prefab"},
     };
 
     //サイズ分確保
