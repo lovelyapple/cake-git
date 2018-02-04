@@ -30,7 +30,7 @@ public class MainSlimeController : MonoBehaviour
     }
     void Update()
     {
-        if (charaMeshController != null)
+        if (charaMeshController != null && !StateConfig.IsPausing)
         {
             charaMeshController.UpdateCharacterInput();
         }
