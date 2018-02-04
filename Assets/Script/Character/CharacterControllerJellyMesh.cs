@@ -85,14 +85,10 @@ public class CharacterControllerJellyMesh : MonoBehaviour
         moveSpeed = charaData.GetMoveSpeed();
 
     }
-    void Update()
-    {
-        UpdateCharacter();
-    }
     //操作関連
-    void UpdateCharacter()
+    public void UpdateCharacterInput()
     {
-        if (jellyMesh == null) { return; }
+        if (jellyMesh == null || !jellyMesh.IsMeshCreated) { return; }
         if (JellyMeshIsGrounded(LayerUtility.FieldEnvObjectMask, 1))
         {
             if (Input.GetKey(KeyCode.D))

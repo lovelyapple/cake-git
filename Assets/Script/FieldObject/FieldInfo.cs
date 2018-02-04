@@ -12,7 +12,7 @@ public class FieldInfo : MonoBehaviour
 	[SerializeField] GameObject fieldEntityRoot;
 	[Header("フィールドの通常オブジェクトの親ルート")]
 	[SerializeField] GameObject fieldEvnObjRoot;
-	public List<FieldObjectBase> friendSlimeList;//現状入らない
+	public List<GameObject> friendSlimeList;//現状入らない
 
 	public FieldObjectBase GetStartPoint()
 	{

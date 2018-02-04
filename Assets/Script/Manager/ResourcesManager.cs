@@ -152,7 +152,7 @@ public class ResourcesManager : SingleToneBase<ResourcesManager>
         {FieldObjectIndex.SlimeCharacterData00, "Assets/Resoures/CharacterData/CharacterData_Slime00.prefab"},
         {FieldObjectIndex.SlimeCharacterCollderController, "Assets/Resoures/CharacterData/SlimeCoreHitController.prefab"},
         {FieldObjectIndex.TestDungeon, "Assets/Resoures/Dungeon/Dungeon00.prefab"},
-        {FieldObjectIndex.SlimeFriend,"Assets/Resoures/CharacterData/FriendSlime.prefab"},
+        {FieldObjectIndex.SlimeFriend,"Assets/Resoures/Character/FriendSlime.prefab"},
     };
     Dictionary<FieldObjectIndex, GameObject> fieldObjectPrefabHolder = new Dictionary<FieldObjectIndex, GameObject>();
     public GameObject CreateInstance(FieldObjectIndex index, Transform parent = null, bool saveCache = true)

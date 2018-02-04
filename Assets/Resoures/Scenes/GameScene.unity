@@ -254,6 +254,7 @@ MonoBehaviour:
   dungeonRoot: {fileID: 1533493285}
   mainCameraCtrl: {fileID: 1200057551}
   loadDungeonName: 
+  debugWaitSec: 0
   cameraOffset: {x: 0, y: 0, z: -10}
 --- !u!4 &1084667033
 Transform:

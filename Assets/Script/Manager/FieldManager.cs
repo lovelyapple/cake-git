@@ -31,15 +31,15 @@ public class FieldManager : SingleToneBase<FieldManager>
         yield return LoadFriendCharacter();
         yield return LoadEnemy();
         yield return RunLoadFadeOut();
-        if(OnFinished != null)
+        if (OnFinished != null)
         {
             OnFinished();
         }
-        
+
     }
     public void ReSetMap(Action OnFinished, Action OnError)
     {
-        StartCoroutine(ReSetMapAsync(OnFinished,OnError));
+        StartCoroutine(ReSetMapAsync(OnFinished, OnError));
     }
     IEnumerator ReSetMapAsync(Action OnFinished, Action OnError)
     {
@@ -115,6 +115,7 @@ public class FieldManager : SingleToneBase<FieldManager>
         if (charaObj != null)
         {
             mainChara = charaObj.GetComponent<CharacterControllerJellyMesh>();
+            charaObj.transform.position = currentFieldInto.GetStartPoint().gameObject.transform.position;
             mainChara.CreateCharacter((g) =>
             {
                 if (mainChara != null)
@@ -134,7 +135,7 @@ public class FieldManager : SingleToneBase<FieldManager>
             UpdateLoadWindow(3, maxStats, createFreind);
             yield return new WaitForSeconds(debugWaitSec);
         }
-        yield break; //todo とりあえず、パス
+
         if (currentFieldInto == null)
         {
             ClearFieldAll();
@@ -151,7 +152,12 @@ public class FieldManager : SingleToneBase<FieldManager>
                 yield break;
             }
 
+            fObj.transform.position = friend.gameObject.transform.position;
             var fAI = fObj.GetComponent<AIFriendSlime>();
+            fAI.CreateJellyMesh((g) =>
+            {
+                //do noth
+            });
             friendList.Add(fAI);
         }
     }

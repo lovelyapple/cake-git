@@ -147,6 +147,7 @@ public class JellyMesh : MonoBehaviour
     public Transform[] m_AttachPoints = new Transform[0];
 
     public List<ReferencePoint> ReferencePoints { get { return m_ReferencePoints; } }
+    public bool IsMeshCreated { get { return m_ReferencePoints != null && m_ReferencePoints.Count > 0; } }
     public ReferencePoint CentralPoint { get { return m_CentralPoint; } }
     #endregion
 
