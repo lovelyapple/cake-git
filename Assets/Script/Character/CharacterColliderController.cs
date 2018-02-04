@@ -6,10 +6,11 @@ using UnityEngine;
 public class CharacterColliderController : MonoBehaviour
 {
     float maxDistace = 20f;
-	Transform targetTrasform;
+	[SerializeField] Transform targetTrasform;
 	public void SetUpController(Transform baseTarnsform)
 	{
 		targetTrasform = baseTarnsform;
+        this.transform.parent = baseTarnsform;
 	}
     public int CountColliderHit(float radius, int? layer)
     {

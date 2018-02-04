@@ -312,15 +312,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 148ee556b256a466f8325529b5c4e997, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  followStlye: 2
+  followStlye: 1
   lookAtTarget: {fileID: 0}
   offsetTarget: {fileID: 0}
-  softDumprange: 5
+  softDumprange: 2
+  softMoveEplision: 0.4
   simpleFollowSpeedLevel: 0.816
   lerpDumpingDistance: 0.5
   lerpFarOffsetDistance: 2
   lerpMoveEplision: 0.5
   targetCamera: {fileID: 915456907}
+  velocity: {x: 1, y: 1, z: 1}
   lookAtTaretFlag: 1
 --- !u!1 &1533493285
 GameObject:

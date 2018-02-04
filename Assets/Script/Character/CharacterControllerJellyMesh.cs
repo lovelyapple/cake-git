@@ -59,7 +59,7 @@ public class CharacterControllerJellyMesh : MonoBehaviour
 
         jellyMesh.CreateJelleMeshReferenceObj((res) =>
         {
-            colliderController.SetUpController(jellyMesh.m_ReferencePointParent.transform);
+            colliderController.SetUpController(jellyMesh.m_CentralPoint.transform);
             charaData.ResetStatusLevel();
             UpdateCharacterStatus();
             if (onFinished != null)

@@ -273,6 +273,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5569711795a04005b3966080d280005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetTrasform: {fileID: 0}
 --- !u!135 &135646515029071210
 SphereCollider:
   m_ObjectHideFlags: 1
