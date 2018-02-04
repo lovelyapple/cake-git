@@ -19,6 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4588548828742608}
+  - component: {fileID: 114294259856568014}
   - component: {fileID: 114445712450593582}
   m_Layer: 0
   m_Name: MainSlime
@@ -144,6 +145,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1688380482719208}
   m_Mesh: {fileID: 0}
+--- !u!114 &114294259856568014
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1161056717890278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4315a016a68f241b397fbe6514d6bbcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charaMeshController: {fileID: 114445712450593582}
 --- !u!114 &114445712450593582
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -260,6 +273,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5569711795a04005b3966080d280005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetTrasform: {fileID: 0}
 --- !u!135 &135646515029071210
 SphereCollider:
   m_ObjectHideFlags: 1

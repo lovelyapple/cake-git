@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Blob
+  - FriendSlime
   layers:
   - Default
   - TransparentFX

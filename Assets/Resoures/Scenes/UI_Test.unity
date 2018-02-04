@@ -458,7 +458,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterRoot: {fileID: 0}
   dungeonRoot: {fileID: 0}
+  mainCameraCtrl: {fileID: 0}
   loadDungeonName: 
+  debugWaitSec: 1
+  cameraOffset: {x: 0, y: 0, z: -10}
 --- !u!1 &2130010040
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class FieldManager : SingleToneBase<FieldManager>
 {
-    CharacterControllerJellyMesh mainChara;
+    MainSlimeController mainChara;
     List<AIFriendSlime> friendList;
     [SerializeField] GameObject characterRoot;
     [SerializeField] GameObject dungeonRoot;
@@ -31,15 +31,15 @@ public class FieldManager : SingleToneBase<FieldManager>
         yield return LoadFriendCharacter();
         yield return LoadEnemy();
         yield return RunLoadFadeOut();
-        if(OnFinished != null)
+        if (OnFinished != null)
         {
             OnFinished();
         }
-        
+        StateConfig.IsPausing = false;
     }
     public void ReSetMap(Action OnFinished, Action OnError)
     {
-        StartCoroutine(ReSetMapAsync(OnFinished,OnError));
+        StartCoroutine(ReSetMapAsync(OnFinished, OnError));
     }
     IEnumerator ReSetMapAsync(Action OnFinished, Action OnError)
     {
@@ -51,6 +51,7 @@ public class FieldManager : SingleToneBase<FieldManager>
         {
             OnFinished();
         }
+        StateConfig.IsPausing = false;
     }
     public IEnumerator LoadDungeon()
     {
@@ -114,8 +115,9 @@ public class FieldManager : SingleToneBase<FieldManager>
         var charaObj = ResourcesManager.Get().CreateInstance(FieldObjectIndex.SlimeMainChara, characterRoot.transform);
         if (charaObj != null)
         {
-            mainChara = charaObj.GetComponent<CharacterControllerJellyMesh>();
-            mainChara.CreateCharacter((g) =>
+            mainChara = charaObj.GetComponent<MainSlimeController>();
+            charaObj.transform.position = currentFieldInto.GetStartPoint().gameObject.transform.position;
+            mainChara.GetCharaMeshController().CreateCharacter((g) =>
             {
                 if (mainChara != null)
                 {
@@ -134,7 +136,7 @@ public class FieldManager : SingleToneBase<FieldManager>
             UpdateLoadWindow(3, maxStats, createFreind);
             yield return new WaitForSeconds(debugWaitSec);
         }
-        yield break; //todo とりあえず、パス
+
         if (currentFieldInto == null)
         {
             ClearFieldAll();
@@ -151,7 +153,12 @@ public class FieldManager : SingleToneBase<FieldManager>
                 yield break;
             }
 
+            fObj.transform.position = friend.gameObject.transform.position;
             var fAI = fObj.GetComponent<AIFriendSlime>();
+            fAI.CreateJellyMesh((g) =>
+            {
+                //do noth
+            });
             friendList.Add(fAI);
         }
     }
@@ -183,7 +190,7 @@ public class FieldManager : SingleToneBase<FieldManager>
         loadWnd.SetSLiderValue(now, max, description);
     }
 
-    public CharacterControllerJellyMesh GetMainChara()
+    public MainSlimeController GetMainChara()
     {
         if (mainChara == null)
         {

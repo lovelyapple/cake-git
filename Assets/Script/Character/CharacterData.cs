@@ -6,7 +6,7 @@ using UnityEngine;
 public class CharacterData : MonoBehaviour
 {
     public int maxLevel { get; private set; }
-    public uint currentLevel { get; private set; }
+    [SerializeField] uint currentLevel;
     public bool IsDead { get { return currentLevel == 0; } }
     public List<uint> HpStatusList;
     public List<float> WeightStatusList;
@@ -29,6 +29,10 @@ public class CharacterData : MonoBehaviour
     public void ChangeStatusLevelDiff(int levelDiff)
     {
         currentLevel = (uint)Mathf.Clamp(currentLevel + levelDiff, 0, maxLevel);
+    }
+    public uint GetCurrentStatusLevel()
+    {
+        return currentLevel;
     }
     public uint GetHp()
     {

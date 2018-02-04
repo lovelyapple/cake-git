@@ -14,13 +14,14 @@ public class CameraController : MonoBehaviour
     [SerializeField] GameObject lookAtTarget;
     [SerializeField] GameObject offsetTarget;
     [Range(0.1f, 5.0f)] public float softDumprange = 5.0f;
+    [Range(0.01f, 5.0f)] public float softMoveEplision = 0.1f;
     [Range(0.1f, 5.0f)] public float simpleFollowSpeedLevel = 0.5f;
     [Range(0.1f, 5.0f)] public float lerpDumpingDistance = 0.5f;
     [Range(0.1f, 5.0f)] public float lerpFarOffsetDistance = 2.0f;
     [Range(0.01f, 1.0f)] public float lerpMoveEplision = 0.1f;
     [SerializeField] Camera targetCamera;
     Vector3 offseTargetPos;
-    Vector3 velocity = Vector3.one;
+    [SerializeField] Vector3 velocity = Vector3.one;
     public bool lookAtTaretFlag = true;
 
     public void SetupCamera(GameObject targetObj, GameObject offsetObj)
@@ -49,14 +50,14 @@ public class CameraController : MonoBehaviour
                 FollowVector();
                 break;
             case FollowStlye.SoftDump:
-                FollowTheOffseTarget();
+                FollowSoftDump();
                 break;
             case FollowStlye.Lerp:
                 FollowLerp();
                 break;
         }
     }
-    void FollowTheOffseTarget()
+    void FollowSoftDump()
     {
         if (offsetTarget != null)
         {
@@ -66,6 +67,7 @@ public class CameraController : MonoBehaviour
         else
         {
             var ifxPos = lookAtTarget.transform.position + offseTargetPos;
+            if ((ifxPos - targetCamera.transform.position).magnitude < softMoveEplision) { return; }
             var curPos = Vector3.SmoothDamp(targetCamera.transform.position, ifxPos, ref velocity, softDumprange);
             targetCamera.transform.position = curPos;
         }

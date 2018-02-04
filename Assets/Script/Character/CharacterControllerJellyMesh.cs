@@ -59,7 +59,7 @@ public class CharacterControllerJellyMesh : MonoBehaviour
 
         jellyMesh.CreateJelleMeshReferenceObj((res) =>
         {
-            colliderController.SetUpController(jellyMesh.m_ReferencePointParent.transform);
+            colliderController.SetUpController(jellyMesh.m_CentralPoint.transform);
             charaData.ResetStatusLevel();
             UpdateCharacterStatus();
             if (onFinished != null)
@@ -85,14 +85,10 @@ public class CharacterControllerJellyMesh : MonoBehaviour
         moveSpeed = charaData.GetMoveSpeed();
 
     }
-    void Update()
-    {
-        UpdateCharacter();
-    }
     //操作関連
-    void UpdateCharacter()
+    public void UpdateCharacterInput()
     {
-        if (jellyMesh == null) { return; }
+        if (jellyMesh == null || !jellyMesh.IsMeshCreated) { return; }
         if (JellyMeshIsGrounded(LayerUtility.FieldEnvObjectMask, 1))
         {
             if (Input.GetKey(KeyCode.D))
@@ -128,23 +124,38 @@ public class CharacterControllerJellyMesh : MonoBehaviour
     /// キャラクタのステータスレベルを変更
     /// targetState変更した後のステータスレベル
     /// 非推奨
-    public void ChangeCharacterStatusLevelTo(uint targetLevel)
-    {
-        if (charaData == null) { return; }
-        int diff = (int)(targetLevel - charaData.currentLevel);
-        charaData.ChangeStatusLevelDiff(diff);
+    // public void ChangeCharacterStatusLevelTo(uint targetLevel)
+    // {
+    //     if (charaData == null) { return; }
+    //     int diff = (int)(targetLevel - charaData.currentLevel);
+    //     charaData.ChangeStatusLevelDiff(diff);
 
-        if (OnStatusChanged != null)
-        {
-            OnStatusChanged(charaData);
-        }
-    }
+    //     if (OnStatusChanged != null)
+    //     {
+    //         OnStatusChanged(charaData);
+    //     }
+    // }
 
     //JellyMeshのヘルパー
+    public Vector3 GetMeshPosition()
+    {
+        return colliderController.transform.parent.position;
+    }
+    public void SetMeshActive(bool active)
+    {
+        if (jellyMesh == null || jellyMesh.m_ReferencePointParent == null) { return; }
+        jellyMesh.m_ReferencePointParent.gameObject.SetActive(active);
+        this.gameObject.SetActive(active);
+    }
     public void SetJellyMeshPosition(Vector3 position, bool resetVelocity)
     {
         if (jellyMesh == null) { return; }
         jellyMesh.SetPosition(position, resetVelocity);
+    }
+    public void SetJellyMeshScale(float scaleDiff)
+    {
+        if (jellyMesh == null) { return; }
+        jellyMesh.Scale(scaleDiff);
     }
     public void SetJellyMeshKinematic(bool isKinematic, bool centralPointOnly)
     {
