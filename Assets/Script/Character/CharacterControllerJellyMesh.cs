@@ -124,17 +124,17 @@ public class CharacterControllerJellyMesh : MonoBehaviour
     /// キャラクタのステータスレベルを変更
     /// targetState変更した後のステータスレベル
     /// 非推奨
-    public void ChangeCharacterStatusLevelTo(uint targetLevel)
-    {
-        if (charaData == null) { return; }
-        int diff = (int)(targetLevel - charaData.currentLevel);
-        charaData.ChangeStatusLevelDiff(diff);
+    // public void ChangeCharacterStatusLevelTo(uint targetLevel)
+    // {
+    //     if (charaData == null) { return; }
+    //     int diff = (int)(targetLevel - charaData.currentLevel);
+    //     charaData.ChangeStatusLevelDiff(diff);
 
-        if (OnStatusChanged != null)
-        {
-            OnStatusChanged(charaData);
-        }
-    }
+    //     if (OnStatusChanged != null)
+    //     {
+    //         OnStatusChanged(charaData);
+    //     }
+    // }
 
     //JellyMeshのヘルパー
     public Vector3 GetMeshPosition()

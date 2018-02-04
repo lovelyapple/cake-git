@@ -4,19 +4,26 @@ using System.Collections.Generic;
 using UnityEngine;
 public class AIFriendSlime : AIBase
 {
-    [Range(1.0f,3.0f)] public float _disperaTime = 2.0f;
-    [Range(0.8f,1f)] public float _scaleDiff = 0.95f;
-    [Range(10f,50f)] public float _forceSpeed = 20f;
+    [Range(1.0f, 3.0f)] public float _disperaTime = 2.0f;
+    [Range(0.8f, 1f)] public float _scaleDiff = 0.95f;
+    [Range(10f, 50f)] public float _forceSpeed = 20f;
     [SerializeField] float? disperaTime;
     bool isDead = false;
+    CharacterControllerJellyMesh mainCharaCtrlJellyMesh;
+    //CharacterController mainCharaColliderCtrl;
     void Update()
     {
         if (!disperaTime.HasValue) { return; }
 
         disperaTime -= Time.deltaTime;
         charaMeshController.SetJellyMeshScale(_scaleDiff);
-        var mainChara = FieldManager.Get().GetMainChara().GetCharaMeshController();
-        var dir = mainChara.GetMeshPosition() - colliderController.transform.position;
+
+        if (mainCharaCtrlJellyMesh == null)
+        {
+            mainCharaCtrlJellyMesh = FieldManager.Get().GetMainChara().GetCharaMeshController();
+        }
+        
+        var dir = mainCharaCtrlJellyMesh.GetMeshPosition() - colliderController.transform.position;
         dir.Normalize();
         charaMeshController.JellyMeshAddForce(dir * _forceSpeed, false);
 
@@ -32,6 +39,8 @@ public class AIFriendSlime : AIBase
         {
             if (!isDead)
             {
+                mainCharaCtrlJellyMesh = FieldManager.Get().GetMainChara().GetCharaMeshController();
+                mainCharaCtrlJellyMesh.ChangeCharacterStatusLevel(1);
                 disperaTime = _disperaTime;
                 isDead = true;
             }
