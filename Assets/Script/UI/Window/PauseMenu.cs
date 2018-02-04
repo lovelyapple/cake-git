@@ -11,8 +11,8 @@ public class PauseMenu : WindowBase {
 	void Update(){
 		
 	}*/
-	public GameObject HowGame;
-	public GameObject HowPlay;
+	[SerializeField] GameObject HowGame;
+	[SerializeField] GameObject HowPlay;
 
 	// ゲーム説明
 	public void OnClickHowGame(){
