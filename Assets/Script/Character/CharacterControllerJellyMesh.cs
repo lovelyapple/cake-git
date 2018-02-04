@@ -137,10 +137,25 @@ public class CharacterControllerJellyMesh : MonoBehaviour
     }
 
     //JellyMeshのヘルパー
+    public Vector3 GetMeshPosition()
+    {
+        return colliderController.transform.parent.position;
+    }
+    public void SetMeshActive(bool active)
+    {
+        if (jellyMesh == null || jellyMesh.m_ReferencePointParent == null) { return; }
+        jellyMesh.m_ReferencePointParent.gameObject.SetActive(active);
+        this.gameObject.SetActive(active);
+    }
     public void SetJellyMeshPosition(Vector3 position, bool resetVelocity)
     {
         if (jellyMesh == null) { return; }
         jellyMesh.SetPosition(position, resetVelocity);
+    }
+    public void SetJellyMeshScale(float scaleDiff)
+    {
+        if (jellyMesh == null) { return; }
+        jellyMesh.Scale(scaleDiff);
     }
     public void SetJellyMeshKinematic(bool isKinematic, bool centralPointOnly)
     {

@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class AIBase : MonoBehaviour
 {
-    [SerializeField] CharacterControllerJellyMesh charaMeshController;
+    [SerializeField] protected CharacterControllerJellyMesh charaMeshController;
+    [SerializeField] protected CharacterColliderController colliderController;
+    protected virtual void OnTriggerEnterCheckFix(Collider col) { }
     void OnEnable()
     {
         if (charaMeshController == null)
@@ -15,6 +17,16 @@ public class AIBase : MonoBehaviour
             {
                 Debug.LogError("could not find meshCtrl");
             }
+        }
+
+        if (colliderController == null)
+        {
+            Debug.LogWarning("could not fine CollderController ad new one");
+            colliderController = ResourcesManager.Get().CreateInstance(FieldObjectIndex.SlimeCharacterCollderController).GetComponent<CharacterColliderController>();
+        }
+        else
+        {
+            colliderController.onTriggerEnterFix = OnTriggerEnterCheckFix;
         }
     }
     public void CreateJellyMesh(Action<GameObject> onFinished)

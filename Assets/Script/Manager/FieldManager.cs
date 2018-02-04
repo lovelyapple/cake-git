@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class FieldManager : SingleToneBase<FieldManager>
 {
-    CharacterControllerJellyMesh mainChara;
+    MainSlimeController mainChara;
     List<AIFriendSlime> friendList;
     [SerializeField] GameObject characterRoot;
     [SerializeField] GameObject dungeonRoot;
@@ -115,9 +115,9 @@ public class FieldManager : SingleToneBase<FieldManager>
         var charaObj = ResourcesManager.Get().CreateInstance(FieldObjectIndex.SlimeMainChara, characterRoot.transform);
         if (charaObj != null)
         {
-            mainChara = charaObj.GetComponent<CharacterControllerJellyMesh>();
+            mainChara = charaObj.GetComponent<MainSlimeController>();
             charaObj.transform.position = currentFieldInto.GetStartPoint().gameObject.transform.position;
-            mainChara.CreateCharacter((g) =>
+            mainChara.GetCharaMeshController().CreateCharacter((g) =>
             {
                 if (mainChara != null)
                 {
@@ -190,7 +190,7 @@ public class FieldManager : SingleToneBase<FieldManager>
         loadWnd.SetSLiderValue(now, max, description);
     }
 
-    public CharacterControllerJellyMesh GetMainChara()
+    public MainSlimeController GetMainChara()
     {
         if (mainChara == null)
         {

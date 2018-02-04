@@ -5,6 +5,7 @@ using UnityEngine;
 public class MainSlimeController : MonoBehaviour
 {
     [SerializeField] CharacterControllerJellyMesh charaMeshController;
+    [SerializeField] CharacterColliderController colliderController;
     void OnEnable()
     {
         if (charaMeshController == null)
@@ -13,7 +14,18 @@ public class MainSlimeController : MonoBehaviour
             if (charaMeshController == null)
             {
                 Debug.LogError("could not find meshCtrl");
+                return;
             }
+        }
+
+        if (colliderController == null)
+        {
+            Debug.LogWarning("could not fine CollderController ad new one");
+            colliderController = ResourcesManager.Get().CreateInstance(FieldObjectIndex.SlimeCharacterCollderController).GetComponent<CharacterColliderController>();
+        }
+        else
+        {
+            //colliderController.onTriggerEnterFix = OnTriggerEnterFix;
         }
     }
     void Update()
@@ -22,5 +34,9 @@ public class MainSlimeController : MonoBehaviour
         {
             charaMeshController.UpdateCharacterInput();
         }
+    }
+    public CharacterControllerJellyMesh GetCharaMeshController()
+    {
+        return charaMeshController;
     }
 }
