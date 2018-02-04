@@ -28,6 +28,7 @@ public class PauseMenu : WindowBase {
 
 	// ゲームに戻る
 	public void OnClickBack(){
-		GameMainObject.Get ().UnPauseGame ();
+		StateConfig.IsPausing = false;
+		Close();
 	}
 }

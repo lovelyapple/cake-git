@@ -14,19 +14,39 @@ public enum GameState
     Game,
     Result,
 }
+public class StateConfig
+{
+    static bool isPausing = false;
+    public static bool IsPausing
+    {
+        get { return isPausing; }
+        set
+        {
+            if (isPausing == value)
+            {
+                Debug.LogWarning("game pause is already in " + value);
+            }
+            else
+            {
+                isPausing = value;
+                Time.timeScale = isPausing ? 0 : 1;
+                if (OnPauseChanged != null)
+                {
+                    OnPauseChanged(IsPausing);
+                }
+            }
+        }
+    }
+
+    public static event Action<bool> OnPauseChanged;
+}
 public class GameMainObject : SingleToneBase<GameMainObject>
 {
     [SerializeField] GameMode _gameMode;
     public GameMode gameMode { get { return _gameMode; } }
     public bool IsDebugMode { get { return _gameMode == GameMode.Debug; } }
     public Action OnFadeInOver;
-    bool isPausing;
-
     GameState gameState = GameState.Title;
-    /// <summary>
-    /// Start is called on the frame when a script is enabled just before
-    /// any of the Update methods is called the first time.
-    /// </summary>
     void Start()
     {
         ResourcesManager.Get().ChecktInitWindowList();
@@ -35,18 +55,20 @@ public class GameMainObject : SingleToneBase<GameMainObject>
              gameState = GameState.Title;
          });
     }
-    public void PauseGame()
+    /// <summary>
+    /// Update is called every frame, if the MonoBehaviour is enabled.
+    /// </summary>
+    void Update()
     {
-        if (isPausing) return;
-        //todo pause
-    }
-    public void UnPauseGame()
-    {
-        if (!isPausing) return;
-        //todo unPause
+        if(Input.GetKeyDown(KeyCode.P))
+        {
+            ResourcesManager.Get().CreateOpenWindow(WindowIndex.PauseWindow,(w)=>
+            {
+                StateConfig.IsPausing = true;
+            });
+        }
     }
     public bool IsGamePlaying { get { return gameState == GameState.Game; } }
-    public bool IsPaussing { get { return isPausing; } }
     public void ChangeStateToGame()
     {
         StartCoroutine(IeChangePhase(GameState.Game));
