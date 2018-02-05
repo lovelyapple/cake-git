@@ -37,6 +37,7 @@ public class FieldManager : SingleToneBase<FieldManager>
         {
             OnFinished();
         }
+        RequestUpdateFieldInfo();
         StateConfig.IsPausing = false;
     }
     public void ReSetMap(Action OnFinished, Action OnError)
@@ -53,6 +54,7 @@ public class FieldManager : SingleToneBase<FieldManager>
         {
             OnFinished();
         }
+        RequestUpdateFieldInfo();
         StateConfig.IsPausing = false;
     }
     public IEnumerator LoadDungeon()
