@@ -10,6 +10,7 @@ public enum WindowIndex
     LoadWindow,
     ResultWindow,
 	PauseWindow,
+	FieldWindow,
     Max,
 }
 public enum FieldObjectIndex
@@ -35,6 +36,7 @@ public class ResourcesManager : SingleToneBase<ResourcesManager>
         {WindowIndex.LoadWindow,"Assets/ExternalResources/UI/Window/LoadWindow.prefab"},
         {WindowIndex.ResultWindow,"Assets/ExternalResources/UI/Window/ResultWIndow.prefab"},
 		{WindowIndex.PauseWindow,"Assets/ExternalResources/UI/Window/Part_PauseMenu/PauseWindow.prefab"},
+		{WindowIndex.FieldWindow,"Assets/ExternalResources/UI/Window/Part_FieldWindow/FieldWindow.prefab"},
     };
 
     //サイズ分確保
