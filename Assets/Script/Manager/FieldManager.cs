@@ -15,11 +15,12 @@ public class FieldManager : SingleToneBase<FieldManager>
     [SerializeField] string loadDungeonName;
     [SerializeField] int debugWaitSec = 1;
     public Vector3 cameraOffset = new Vector3(0, 0, -10f);
-    uint maxStats = 5;
+    uint maxLoadStats = 5;
     string creatingMap = "フィールドデータロード中";
     string createMainChara = "メインキャラロード中";
     string createFreind = "スライム生成中";
     string createEnemy = "敵生成中";
+    uint friendLeftCount;
     public void CreateField(Action OnFinished, Action OnError)
     {
         StartCoroutine(CreateFieldAsync(OnFinished, OnError));
@@ -55,7 +56,7 @@ public class FieldManager : SingleToneBase<FieldManager>
     }
     public IEnumerator LoadDungeon()
     {
-        UpdateLoadWindow(1, maxStats, creatingMap);
+        UpdateLoadWindow(1, maxLoadStats, creatingMap);
 
         if (string.IsNullOrEmpty(loadDungeonName))
         {
@@ -95,7 +96,7 @@ public class FieldManager : SingleToneBase<FieldManager>
     {
         if (!isReset)
         {
-            UpdateLoadWindow(2, maxStats, createMainChara);
+            UpdateLoadWindow(2, maxLoadStats, createMainChara);
         }
 
         if (currentFieldInto == null)
@@ -133,7 +134,7 @@ public class FieldManager : SingleToneBase<FieldManager>
     {
         if (!isReset)
         {
-            UpdateLoadWindow(3, maxStats, createFreind);
+            UpdateLoadWindow(3, maxLoadStats, createFreind);
             yield return new WaitForSeconds(debugWaitSec);
         }
 
@@ -166,9 +167,9 @@ public class FieldManager : SingleToneBase<FieldManager>
     {
         if (!isReset)
         {
-            UpdateLoadWindow(4, maxStats, createEnemy);
+            UpdateLoadWindow(4, maxLoadStats, createEnemy);
             yield return new WaitForSeconds(debugWaitSec);
-            UpdateLoadWindow(5, maxStats, createEnemy);
+            UpdateLoadWindow(5, maxLoadStats, createEnemy);
             yield return new WaitForSeconds(debugWaitSec);
         }
         yield break;
