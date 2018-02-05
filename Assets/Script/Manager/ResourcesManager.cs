@@ -152,7 +152,7 @@ public class ResourcesManager : SingleToneBase<ResourcesManager>
     {
         {FieldObjectIndex.SlimeMainChara, "Assets/Resoures/Character/MainSlime.prefab"},
         {FieldObjectIndex.SlimeCharacterData00, "Assets/Resoures/CharacterData/CharacterData_Slime00.prefab"},
-        {FieldObjectIndex.SlimeCharacterCollderController, "Assets/Resoures/CharacterData/SlimeCoreHitController.prefab"},
+        {FieldObjectIndex.SlimeCharacterCollderController, "Assets/Resoures/Character/SlimeCoreHitController.prefab"},
         {FieldObjectIndex.TestDungeon, "Assets/Resoures/Dungeon/Dungeon00.prefab"},
         {FieldObjectIndex.SlimeFriend,"Assets/Resoures/Character/FriendSlime.prefab"},
     };

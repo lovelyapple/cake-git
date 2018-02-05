@@ -12,11 +12,20 @@ public class TitleWIndow : WindowBase
             Close();
             FieldManager.Get().CreateField(() =>
             {
-                ResourcesManager.Get().CreateOpenWindow(WindowIndex.FieldMenu, (w) =>
+                var loadWindow = ResourcesManager.Get().GetWindow(WindowIndex.LoadWindow) as LoadWindow;
+                if (loadWindow != null && loadWindow.isActiveAndEnabled)
                 {
-                    var FieldMenu = w as FieldMenu;
-                    var mainCharaJellyMesh = FieldManager.Get().GetMainChara();
-                });
+                    loadWindow.OnClose = () =>
+                    {
+                        ResourcesManager.Get().CreateOpenWindow(WindowIndex.FieldMenu, (w) =>
+                        {
+                            var fieldMenu = w as FieldMenu;
+                            fieldMenu.SetupFieldData();
+                            FieldManager.Get().RequestUpdateFieldInfo();
+                        });
+                    };
+                }
+
             },
             () =>
             {

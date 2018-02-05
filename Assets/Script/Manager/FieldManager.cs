@@ -21,6 +21,7 @@ public class FieldManager : SingleToneBase<FieldManager>
     string createFreind = "スライム生成中";
     string createEnemy = "敵生成中";
     uint friendLeftCount;
+    public Action<uint> OnUpdateFriendCount;
     public void CreateField(Action OnFinished, Action OnError)
     {
         StartCoroutine(CreateFieldAsync(OnFinished, OnError));
@@ -162,6 +163,7 @@ public class FieldManager : SingleToneBase<FieldManager>
             });
             friendList.Add(fAI);
         }
+        friendLeftCount = (uint)friendList.Count;
     }
     public IEnumerator LoadEnemy(bool isReset = false)
     {
@@ -234,5 +236,48 @@ public class FieldManager : SingleToneBase<FieldManager>
         }
 
         //EnemyList Reset
+    }
+    public void RequestUpdateFieldInfo()
+    {
+        if (OnUpdateFriendCount != null)
+        {
+            OnUpdateFriendCount(friendLeftCount);
+        }
+
+        if (mainChara == null) { return; }
+        var mainJellyMeshCtrl = mainChara.GetCharaMeshController();
+        if (mainCameraCtrl == null) { return; }
+        mainJellyMeshCtrl.ChangeCharacterStatusLevel(0);
+    }
+    public void RequestInserFriendSLime(int diff)
+    {
+        RequestUpdateFriendCount(-diff);
+
+        if (mainChara == null) { return; }
+        mainChara.GetCharaMeshController().ChangeCharacterStatusLevel(diff);
+    }
+    public void RequestUpdateFriendCount(int diff)
+    {
+        var countAfter = friendLeftCount + diff;
+
+        if (countAfter < 0 || countAfter > friendList.Count)
+        {
+            Debug.LogWarning("out of friend count range !");
+            return;
+        }
+
+        friendLeftCount = (uint)countAfter;
+
+        if (OnUpdateFriendCount != null)
+        {
+            OnUpdateFriendCount(friendLeftCount);
+        }
+    }
+    public void SetUpOnUpdateMainCharaStatusLevel(Action<CharacterData> onUpdate)
+    {
+        if (mainChara == null) { return; }
+        var mainJellyMeshCtrl = mainChara.GetCharaMeshController();
+        if (mainCameraCtrl == null) { return; }
+        mainJellyMeshCtrl.OnStatusChanged = onUpdate;
     }
 }

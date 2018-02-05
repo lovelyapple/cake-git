@@ -8,14 +8,21 @@ public class FieldMenu : WindowBase
     [SerializeField] Slider hpGageSlider;
     [SerializeField] Text friendSlimeLfet;
 
+    void OnDisable()
+    {
+        FieldManager.Get().SetUpOnUpdateMainCharaStatusLevel(OnUpdateHpSlider);
+        FieldManager.Get().OnUpdateFriendCount += OnUpdateFriendSlimeLeftCount;
+    }
+
     public void OnUpdateHpSlider(CharacterData data)
     {
         if (hpGageSlider != null && data != null)
         {
             var maxHp = data.GetHp((uint)data.maxLevel);
             var currentHp = data.GetHp();
-            hpGageSlider.value = currentHp;
-            hpGageSlider.maxValue = maxHp;
+            hpGageSlider.minValue = data.GetHp(1);
+            hpGageSlider.maxValue = (float)maxHp;
+            hpGageSlider.value = (float)currentHp;
         }
     }
     public void OnUpdateFriendSlimeLeftCount(uint count)
@@ -25,16 +32,9 @@ public class FieldMenu : WindowBase
             friendSlimeLfet.text = count.ToString();
         }
     }
-
-    public void SetUpCharacterData()
+    public void SetupFieldData()
     {
-        var mainCharaJellyMesh = FieldManager.Get().GetMainChara();
-        if (mainCharaJellyMesh == null)
-        {
-            Debug.LogError("mainCharaJellyMesh is null");
-            return;
-        }
-
-		mainCharaJellyMesh.OnStatusChanged += OnUpdateHpSlider;
+        FieldManager.Get().SetUpOnUpdateMainCharaStatusLevel(OnUpdateHpSlider);
+        FieldManager.Get().OnUpdateFriendCount += OnUpdateFriendSlimeLeftCount;
     }
 }
