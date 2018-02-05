@@ -22,7 +22,7 @@ public class AIFriendSlime : AIBase
         {
             mainCharaCtrlJellyMesh = FieldManager.Get().GetMainChara().GetCharaMeshController();
         }
-        
+
         var dir = mainCharaCtrlJellyMesh.GetMeshPosition() - colliderController.transform.position;
         dir.Normalize();
         charaMeshController.JellyMeshAddForce(dir * _forceSpeed, false);
@@ -39,8 +39,7 @@ public class AIFriendSlime : AIBase
         {
             if (!isDead)
             {
-                mainCharaCtrlJellyMesh = FieldManager.Get().GetMainChara().GetCharaMeshController();
-                mainCharaCtrlJellyMesh.ChangeCharacterStatusLevel(1);
+                FieldManager.Get().RequestInserFriendSLime(1);
                 disperaTime = _disperaTime;
                 isDead = true;
             }

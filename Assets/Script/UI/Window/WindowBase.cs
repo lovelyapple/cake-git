@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class WindowBase : MonoBehaviour
 {
+    public Action OnClose = null;
     public virtual void Open()
     {
         UIUtility.SetActive(this.gameObject, true);

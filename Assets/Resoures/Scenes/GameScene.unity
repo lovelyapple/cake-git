@@ -316,7 +316,7 @@ MonoBehaviour:
   lookAtTarget: {fileID: 0}
   offsetTarget: {fileID: 0}
   softDumprange: 2
-  softMoveEplision: 0.4
+  softMoveEplision: 0.1
   simpleFollowSpeedLevel: 0.816
   lerpDumpingDistance: 0.5
   lerpFarOffsetDistance: 2

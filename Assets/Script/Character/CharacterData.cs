@@ -15,6 +15,7 @@ public class CharacterData : MonoBehaviour
     public void ResetStatusLevel()
     {
         maxLevel = HpStatusList.Count;
+        currentLevel = 1;
 
         if (maxLevel != WeightStatusList.Count)
         {
@@ -28,7 +29,7 @@ public class CharacterData : MonoBehaviour
     }
     public void ChangeStatusLevelDiff(int levelDiff)
     {
-        currentLevel = (uint)Mathf.Clamp(currentLevel + levelDiff, 0, maxLevel);
+        currentLevel = (uint)Mathf.Clamp(currentLevel + levelDiff, 1, maxLevel);
     }
     public uint GetCurrentStatusLevel()
     {
@@ -43,7 +44,7 @@ public class CharacterData : MonoBehaviour
         uint outData = 0;
         try
         {
-            outData = HpStatusList[(int)State];
+            outData = HpStatusList[(int)--State];
             return outData;
         }
         catch
@@ -60,7 +61,7 @@ public class CharacterData : MonoBehaviour
         float outData = 0f;
         try
         {
-            outData = WeightStatusList[(int)State];
+            outData = WeightStatusList[(int)--State];
             return outData;
         }
         catch
@@ -77,7 +78,7 @@ public class CharacterData : MonoBehaviour
         float outData = 0f;
         try
         {
-            outData = MoveSpeedStatusList[(int)State];
+            outData = MoveSpeedStatusList[(int)--State];
             return outData;
         }
         catch

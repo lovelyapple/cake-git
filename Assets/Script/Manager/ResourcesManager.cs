@@ -10,6 +10,7 @@ public enum WindowIndex
     LoadWindow,
     ResultWindow,
 	PauseWindow,
+    FieldMenu,
     Max,
 }
 public enum FieldObjectIndex
@@ -35,6 +36,7 @@ public class ResourcesManager : SingleToneBase<ResourcesManager>
         {WindowIndex.LoadWindow,"Assets/ExternalResources/UI/Window/LoadWindow.prefab"},
         {WindowIndex.ResultWindow,"Assets/ExternalResources/UI/Window/ResultWIndow.prefab"},
 		{WindowIndex.PauseWindow,"Assets/ExternalResources/UI/Window/Part_PauseMenu/PauseWindow.prefab"},
+        {WindowIndex.FieldMenu,"Assets/ExternalResources/UI/Window/Part_FieldMenu/FieldMenu.prefab"},
     };
 
     //サイズ分確保
@@ -150,7 +152,7 @@ public class ResourcesManager : SingleToneBase<ResourcesManager>
     {
         {FieldObjectIndex.SlimeMainChara, "Assets/Resoures/Character/MainSlime.prefab"},
         {FieldObjectIndex.SlimeCharacterData00, "Assets/Resoures/CharacterData/CharacterData_Slime00.prefab"},
-        {FieldObjectIndex.SlimeCharacterCollderController, "Assets/Resoures/CharacterData/SlimeCoreHitController.prefab"},
+        {FieldObjectIndex.SlimeCharacterCollderController, "Assets/Resoures/Character/SlimeCoreHitController.prefab"},
         {FieldObjectIndex.TestDungeon, "Assets/Resoures/Dungeon/Dungeon00.prefab"},
         {FieldObjectIndex.SlimeFriend,"Assets/Resoures/Character/FriendSlime.prefab"},
     };

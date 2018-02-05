@@ -262,6 +262,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   charaMeshController: {fileID: 114139074125724068}
+  colliderController: {fileID: 114723220806023882}
+  _disperaTime: 2
+  _scaleDiff: 0.95
+  _forceSpeed: 20
 --- !u!114 &114723220806023882
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -284,5 +288,5 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.3
+  m_Radius: 0.6
   m_Center: {x: 0, y: 0, z: 0}
