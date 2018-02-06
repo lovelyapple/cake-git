@@ -9,6 +9,7 @@ public class CharacterColliderController : MonoBehaviour
     float maxDistace = 20f;
     [SerializeField] Transform targetTrasform;
     public Action<Collider> onTriggerEnterFix = null;
+    public Action<Collider> onTriggerStayFix = null;
     public void SetUpController(Transform baseTarnsform)
     {
         targetTrasform = baseTarnsform;

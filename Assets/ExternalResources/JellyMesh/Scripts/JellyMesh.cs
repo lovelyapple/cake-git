@@ -131,6 +131,7 @@ public class JellyMesh : MonoBehaviour
     /// Used to scale the mesh size
     /// </summary>
     public Vector3 m_MeshScale = Vector3.one;
+    public float scaleHistory = 1.0f;
 
     // Whether to use 2D or 3D rigid bodies/colliders
     public bool m_2DMode = false;
@@ -627,8 +628,8 @@ public class JellyMesh : MonoBehaviour
                 UpdateRotationLock();
                 m_FirstUpdate = true;
 
+                scaleHistory = 1.0f;
                 if (OnCreated != null)
-
                 {
                     OnCreated(true);
                 }
@@ -2090,6 +2091,7 @@ public class JellyMesh : MonoBehaviour
         }
 
         m_Transform.localScale = m_Transform.localScale * scaleRatio;
+        //scaleHistory *= scaleRatio;
         index = 0;
 
         foreach (ReferencePoint refPoint in m_ReferencePoints)

@@ -8,6 +8,7 @@ public class AIBase : MonoBehaviour
     [SerializeField] protected CharacterControllerJellyMesh charaMeshController;
     [SerializeField] protected CharacterColliderController colliderController;
     protected virtual void OnTriggerEnterCheckFix(Collider col) { }
+    public uint friendId;
     void OnEnable()
     {
         if (charaMeshController == null)
@@ -29,7 +30,7 @@ public class AIBase : MonoBehaviour
             colliderController.onTriggerEnterFix = OnTriggerEnterCheckFix;
         }
     }
-    public void CreateJellyMesh(Action<GameObject> onFinished)
+    public void CreateJellyMesh(Action<JellyMesh> onFinished)
     {
         if (charaMeshController == null) { return; }
         charaMeshController.CreateCharacter(onFinished);

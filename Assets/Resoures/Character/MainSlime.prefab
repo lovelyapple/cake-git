@@ -179,6 +179,7 @@ MonoBehaviour:
   jumpPower: 0
   weight: 0
   moveSpeedTest: 50
+  facingDir: {x: 0, y: 1, z: 0}
 --- !u!114 &114649615206213080
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -256,6 +257,7 @@ MonoBehaviour:
   m_SoftBodyPivotOffset: {x: 0, y: 0, z: 0}
   m_SoftBodyRotation: {x: 0, y: 0, z: 0}
   m_MeshScale: {x: 1, y: 1, z: 1}
+  scaleHistory: 1
   m_2DMode: 0
   m_RecalculateNormals: 0
   m_AttachNeighbors: 0

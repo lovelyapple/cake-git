@@ -2,7 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/*
+ * charaDataとステータをほじするクラス
+ * index上0スタートだが、count上1スタートだけ注意
+ */
 public class CharacterData : MonoBehaviour
 {
     public int maxLevel { get; private set; }
