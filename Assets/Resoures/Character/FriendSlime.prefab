@@ -196,7 +196,7 @@ MonoBehaviour:
   m_PhysicsMaterial2D: {fileID: 0}
   m_Interpolation: 0
   m_Interpolation2D: 0
-  m_CollisionDetectionMode: 0
+  m_CollisionDetectionMode: 1
   m_CollisionDetectionMode2D: 0
   m_VertexDensity: 10
   m_SphereRadius: 0.1
@@ -222,6 +222,7 @@ MonoBehaviour:
   m_SoftBodyPivotOffset: {x: 0, y: 0, z: 0}
   m_SoftBodyRotation: {x: 0, y: 0, z: 0}
   m_MeshScale: {x: 0.7, y: 0.7, z: 0.7}
+  scaleHistory: 1
   m_2DMode: 0
   m_RecalculateNormals: 0
   m_AttachNeighbors: 0
@@ -250,6 +251,7 @@ MonoBehaviour:
   jumpPower: 0
   weight: 0
   moveSpeedTest: 50
+  facingDir: {x: 0, y: 1, z: 0}
 --- !u!114 &114395858900514254
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -263,7 +265,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   charaMeshController: {fileID: 114139074125724068}
   colliderController: {fileID: 114723220806023882}
-  _disperaTime: 2
+  friendId: 0
+  _scaleTime: 2
+  _actionBuffTime: 2
   _scaleDiff: 0.95
   _forceSpeed: 20
 --- !u!114 &114723220806023882

@@ -10,8 +10,12 @@ public class FieldMenu : WindowBase
 
     void OnDisable()
     {
-        FieldManager.Get().SetUpOnUpdateMainCharaStatusLevel(OnUpdateHpSlider);
-        FieldManager.Get().OnUpdateFriendCount += OnUpdateFriendSlimeLeftCount;
+        var mgr = FieldManager.Get();
+        if (mgr != null)
+        {
+            FieldManager.Get().SetUpOnUpdateMainCharaStatusLevel(null);
+            FieldManager.Get().OnUpdateFriendCount -= OnUpdateFriendSlimeLeftCount;
+        }
     }
 
     public void OnUpdateHpSlider(CharacterData data)

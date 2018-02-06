@@ -18,4 +18,8 @@ public class FieldInfo : MonoBehaviour
 	{
 		return startPoint;
 	}
+	public SlimeEndArea GetEndArea()
+	{
+		return endArea;
+	}
 }

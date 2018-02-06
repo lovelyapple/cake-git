@@ -24,12 +24,13 @@ public class CharacterControllerJellyMesh : MonoBehaviour
     public float moveSpeedTest = 50f;
     public Action<CharacterData> OnStatusChanged = null;
     public CharacterData charaData { get; private set; }
+    [SerializeField] Vector3 facingDir = Vector3.up;
 
     void OnDisable()
     {
         OnStatusChanged = null;
     }
-    public void CreateCharacter(Action<GameObject> onFinished)
+    public void CreateCharacter(Action<JellyMesh> onFinished)
     {
         if (jellyMesh == null)
         {
@@ -67,9 +68,10 @@ public class CharacterControllerJellyMesh : MonoBehaviour
             colliderController.SetUpController(jellyMesh.m_CentralPoint.transform);
             charaData.ResetStatusLevel();
             UpdateCharacterStatus();
+
             if (onFinished != null)
             {
-                onFinished(jellyMesh.m_CentralPoint.GameObject);
+                onFinished(jellyMesh);
             }
         });
     }
@@ -90,7 +92,7 @@ public class CharacterControllerJellyMesh : MonoBehaviour
         moveSpeed = charaData.GetMoveSpeed();
 
     }
-    //操作関連
+    //操作関連(todo 1.3で分ける)
     public void UpdateCharacterInput()
     {
         if (jellyMesh == null || !jellyMesh.IsMeshCreated) { return; }
@@ -99,10 +101,12 @@ public class CharacterControllerJellyMesh : MonoBehaviour
             if (Input.GetKey(KeyCode.D))
             {
                 JellyMeshAddForce(Vector3.right * moveSpeedTest, false);
+                facingDir = Vector3.right;
             }
             else if (Input.GetKey(KeyCode.A))
             {
                 JellyMeshAddForce(Vector3.left * moveSpeedTest, false);
+                facingDir = Vector3.left;
             }
             if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -112,6 +116,23 @@ public class CharacterControllerJellyMesh : MonoBehaviour
         else
         {
 
+        }
+
+        if (Input.GetKeyDown(KeyCode.J) && charaData.GetCurrentStatusLevel() > 1 && !FieldManager.Get().IsReachingMaxFriendAmount())
+        {
+            var pos = colliderController.transform.position;
+            pos.y += 1.0f;//test todo なんか距離とった方がいいな
+
+            var vel = jellyMesh.m_CentralPoint.GameObject.GetComponent<Rigidbody>().velocity;
+            var ai = FieldManager.Get().CreateOneFriendSlime(pos, (i) =>
+             {
+                 i.PushOutThisSlime(Vector3.zero, facingDir,vel);
+             });
+
+            if (ai != null)
+            {
+                FieldManager.Get().RequestGiveMainCharaFriendSLime(-1);
+            }
         }
     }
     /// キャラクタのステータスレベルを変更
@@ -141,14 +162,16 @@ public class CharacterControllerJellyMesh : MonoBehaviour
     //     }
     // }
 
-    //JellyMeshのヘルパー
+    //JellyMeshのヘルパー(todo 1.2で分けたい)
     public Vector3 GetMeshPosition()
     {
         return colliderController.transform.parent.position;
     }
     public void SetMeshActive(bool active)
     {
+        return;
         if (jellyMesh == null || jellyMesh.m_ReferencePointParent == null) { return; }
+
         jellyMesh.m_ReferencePointParent.gameObject.SetActive(active);
         this.gameObject.SetActive(active);
     }
@@ -156,6 +179,12 @@ public class CharacterControllerJellyMesh : MonoBehaviour
     {
         if (jellyMesh == null) { return; }
         jellyMesh.SetPosition(position, resetVelocity);
+    }
+    public void RestJellyMeshScale()
+    {
+        if (jellyMesh == null) { return; }
+        //var s = 1f / jellyMesh.scaleHistory;
+        SetJellyMeshScale(1);
     }
     public void SetJellyMeshScale(float scaleDiff)
     {
