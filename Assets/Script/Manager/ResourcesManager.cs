@@ -32,7 +32,7 @@ public class ResourcesManager : SingleToneBase<ResourcesManager>
 
     Dictionary<WindowIndex, string> windowPathDict = new Dictionary<WindowIndex, string>()
     {
-        {WindowIndex.TitleWindow,"Assets/ExternalResources/UI/Window/TitleWindow.prefab"},
+        {WindowIndex.TitleWindow,"Assets/ExternalResources/UI/Window/Part_TitleMenu/TitleWindow.prefab"},
         {WindowIndex.LoadWindow,"Assets/ExternalResources/UI/Window/LoadWindow.prefab"},
         {WindowIndex.ResultWindow,"Assets/ExternalResources/UI/Window/ResultWIndow.prefab"},
 		{WindowIndex.PauseWindow,"Assets/ExternalResources/UI/Window/Part_PauseMenu/PauseWindow.prefab"},
