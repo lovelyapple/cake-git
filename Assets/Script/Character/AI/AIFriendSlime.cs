@@ -73,7 +73,7 @@ public class AIFriendSlime : AIBase
             }
         }
     }
-    public void PushOutThisSlime(Vector3 startPos, Vector3 dir,Vector3 vel)
+    public void PushOutThisSlime(Vector3 startPos, Vector3 dir, Vector3 vel)
     {
         if (StateConfig.IsPausing) { return; }
 
@@ -101,6 +101,7 @@ public class AIFriendSlime : AIBase
                     FieldManager.Get().RequestGiveMainCharaFriendSLime(1);
                     scaleTime = _scaleTime;
                     actionState = ActionStats.Hold;
+                    SoundManager.Get().PlayOneShotSe_Catch();
                 }
                 break;
             case "CatchArea":
@@ -110,12 +111,9 @@ public class AIFriendSlime : AIBase
                     FieldManager.Get().RequestReleaseOneSlime();
                     scaleTime = _scaleTime;
                     actionState = ActionStats.Release;
-                    var endArea = FieldManager.Get().GetCurrentFieldEndArea();
 
-                    if (endArea != null)
-                    {
-                        moveTargetPos = endArea.gameObject.transform.position;
-                    }
+                    moveTargetPos = col.gameObject.transform.position;
+                    SoundManager.Get().PlayOneShotSe_Release();
                 }
                 break;
         }

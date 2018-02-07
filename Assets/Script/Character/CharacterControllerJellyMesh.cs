@@ -113,6 +113,7 @@ public class CharacterControllerJellyMesh : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 JellyMeshAddForce(Vector3.up * jumpPower, false);
+                SoundManager.Get().PlayOneShotSe_Jump();
             }
         }
         else
