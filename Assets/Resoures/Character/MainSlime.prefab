@@ -178,7 +178,7 @@ MonoBehaviour:
   hp: 0
   jumpPower: 0
   weight: 0
-  moveSpeedTest: 50
+  moveSpeedAdd: 50
   facingDir: {x: 0, y: 1, z: 0}
 --- !u!114 &114649615206213080
 MonoBehaviour:

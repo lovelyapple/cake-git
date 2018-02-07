@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class ResultWindow : WindowBase
 {
+    [SerializeField] Text savedSlimeCountLabel;
     public void OnClickRestart()
     {
         FieldManager.Get().ReSetMap(() =>
@@ -16,5 +17,12 @@ public class ResultWindow : WindowBase
             });
             Close();
         }, null);
+    }
+    public void SetUp(uint savedSlimeCount)
+    {
+        if (savedSlimeCountLabel != null)   
+        {  
+            savedSlimeCountLabel.text = savedSlimeCount.ToString();
+        }
     }
 }

@@ -22,8 +22,10 @@ public class FieldManager : SingleToneBase<FieldManager>
     string createFreind = "スライム生成中";
     string createEnemy = "敵生成中";
     uint defaultFriendLeftCount;//救えるフレンドの数
+    public uint savedFriendCount { get; private set; }//救ったスライムの数
 
     public Action<uint> OnUpdateFriendCount;
+    public Action OnSaveOnFriend;
     uint friendIdx = 0;//やらかした..くそ(挽回はできるけど、FieldObjectまで改造しまうのでとりあえずこれで)
 
 
@@ -178,6 +180,7 @@ public class FieldManager : SingleToneBase<FieldManager>
             friendIdx++;
         }
         defaultFriendLeftCount = (uint)friendList.Count;
+        savedFriendCount = 0;
     }
     public IEnumerator LoadEnemy(bool isReset = false)
     {
@@ -275,6 +278,17 @@ public class FieldManager : SingleToneBase<FieldManager>
         RequestUpdateFieldFriendCount(-diff);
         RequestUpdateMainCharaSlimeCount(diff);
     }
+    /// スライムを一個解放する
+    public void RequestReleaseOneSlime()
+    {
+        RequestUpdateFieldFriendCount(-1);
+        savedFriendCount += 1;
+
+        if (OnSaveOnFriend != null)
+        {
+            OnSaveOnFriend();
+        }
+    }
     /// フィール上のスライム数更新
     public void RequestUpdateFieldFriendCount(int diff)
     {
@@ -296,6 +310,7 @@ public class FieldManager : SingleToneBase<FieldManager>
     {
         if (mainChara == null) { return; }
         mainChara.GetCharaMeshController().ChangeCharacterStatusLevel(diff);
+        mainChara.GetCharaMeshController().UpdateCharacterStatus();
     }
     /// フィールドデータ更新イベント登録
     public void SetUpOnUpdateMainCharaStatusLevel(Action<CharacterData> onUpdate)
@@ -313,7 +328,7 @@ public class FieldManager : SingleToneBase<FieldManager>
     {
         return friendList.Count > defaultFriendLeftCount;
     }
-    /// Hold中のスライム一個作成
+    /// フレンドスライムを一個作成
     public AIFriendSlime CreateOneFriendSlime(Vector3 position, Action<AIFriendSlime> onResult)
     {
         var fObj = ResourcesManager.Get().CreateInstance(FieldObjectIndex.SlimeFriend, characterRoot.transform);

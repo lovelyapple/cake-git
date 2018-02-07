@@ -26,7 +26,9 @@ public class SlimeEndArea : FieldObjectBase
              {
                  ResourcesManager.Get().CreateOpenWindow(WindowIndex.ResultWindow, (w) =>
                  {
+                     var resWnd = w as ResultWindow;
                      clearTime = 3;
+                     resWnd.SetUp(FieldManager.Get().savedFriendCount);
                  });
              });
         }

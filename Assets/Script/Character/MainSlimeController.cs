@@ -28,6 +28,10 @@ public class MainSlimeController : MonoBehaviour
             //colliderController.onTriggerEnterFix = OnTriggerEnterFix;
         }
     }
+    void OnGUI()
+    {
+        GUI.Label(new Rect(0,0,100,20),charaMeshController.GetJellyMeshVelocity().ToString());   
+    }
     void Update()
     {
         if (charaMeshController != null && !StateConfig.IsPausing)

@@ -58,7 +58,7 @@ GameObject:
   - component: {fileID: 114112784793796462}
   m_Layer: 0
   m_Name: JellyMesh
-  m_TagString: Player
+  m_TagString: FriendSlime
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -250,7 +250,7 @@ MonoBehaviour:
   hp: 0
   jumpPower: 0
   weight: 0
-  moveSpeedTest: 50
+  moveSpeedAdd: 50
   facingDir: {x: 0, y: 1, z: 0}
 --- !u!114 &114395858900514254
 MonoBehaviour:
@@ -270,6 +270,7 @@ MonoBehaviour:
   _actionBuffTime: 2
   _scaleDiff: 0.95
   _forceSpeed: 20
+  pushForce: 800
 --- !u!114 &114723220806023882
 MonoBehaviour:
   m_ObjectHideFlags: 1

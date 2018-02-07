@@ -21,9 +21,10 @@ public class CharacterControllerJellyMesh : MonoBehaviour
     [SerializeField] float jumpPower;
     [SerializeField] float weight;
     [Range(5f, 100f)]
-    public float moveSpeedTest = 50f;
+    public float moveSpeedAdd = 50f;
     public Action<CharacterData> OnStatusChanged = null;
     public CharacterData charaData { get; private set; }
+    Rigidbody jellyMeshRigidbody;
     [SerializeField] Vector3 facingDir = Vector3.up;
 
     void OnDisable()
@@ -90,6 +91,7 @@ public class CharacterControllerJellyMesh : MonoBehaviour
         weight = charaData.GetWeight();
         hp = charaData.GetHp();
         moveSpeed = charaData.GetMoveSpeed();
+        jumpPower = (1 - charaData.GetWeight()) * 1000;
 
     }
     //操作関連(todo 1.3で分ける)
@@ -98,24 +100,31 @@ public class CharacterControllerJellyMesh : MonoBehaviour
         if (jellyMesh == null || !jellyMesh.IsMeshCreated) { return; }
         if (JellyMeshIsGrounded(LayerUtility.FieldEnvObjectMask, 1))
         {
-            if (Input.GetKey(KeyCode.D))
+            if (Input.GetKey(KeyCode.D) && GetJellyMeshVelocity().x < moveSpeed)//これ速度だぜ！
             {
-                JellyMeshAddForce(Vector3.right * moveSpeedTest, false);
+                JellyMeshAddForce(Vector3.right * moveSpeedAdd, false);
                 facingDir = Vector3.right;
             }
-            else if (Input.GetKey(KeyCode.A))
+            else if (Input.GetKey(KeyCode.A) && GetJellyMeshVelocity().x > -moveSpeed)
             {
-                JellyMeshAddForce(Vector3.left * moveSpeedTest, false);
+                JellyMeshAddForce(Vector3.left * moveSpeedAdd, false);
                 facingDir = Vector3.left;
             }
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                JellyMeshAddForce(Vector3.up * moveSpeedTest * 10, false);
+                JellyMeshAddForce(Vector3.up * jumpPower, false);
             }
         }
         else
         {
-
+            if (Input.GetKey(KeyCode.D))
+            {
+                facingDir = Vector3.right;
+            }
+            else if (Input.GetKey(KeyCode.A))
+            {
+                facingDir = Vector3.left;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.J) && charaData.GetCurrentStatusLevel() > 1 && !FieldManager.Get().IsReachingMaxFriendAmount())
@@ -123,10 +132,10 @@ public class CharacterControllerJellyMesh : MonoBehaviour
             var pos = colliderController.transform.position;
             pos.y += 1.0f;//test todo なんか距離とった方がいいな
 
-            var vel = jellyMesh.m_CentralPoint.GameObject.GetComponent<Rigidbody>().velocity;
+            var vel = GetJellyMeshVelocity();
             var ai = FieldManager.Get().CreateOneFriendSlime(pos, (i) =>
              {
-                 i.PushOutThisSlime(Vector3.zero, facingDir,vel);
+                 i.PushOutThisSlime(Vector3.zero, facingDir, vel);
              });
 
             if (ai != null)
@@ -163,6 +172,19 @@ public class CharacterControllerJellyMesh : MonoBehaviour
     // }
 
     //JellyMeshのヘルパー(todo 1.2で分けたい)
+    public Vector3 GetJellyMeshVelocity()
+    {
+        if (jellyMesh == null)
+        {
+            return Vector3.zero;
+        }
+
+        if (jellyMeshRigidbody == null)
+        {
+            jellyMeshRigidbody = jellyMesh.m_CentralPoint.GameObject.GetComponent<Rigidbody>();
+        }
+        return jellyMeshRigidbody.velocity;
+    }
     public Vector3 GetMeshPosition()
     {
         return colliderController.transform.parent.position;

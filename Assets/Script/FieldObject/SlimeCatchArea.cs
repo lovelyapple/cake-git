@@ -17,7 +17,7 @@ public class SlimeCatchArea : FieldObjectBase
         var friendAI = other.gameObject.GetComponent<AIFriendSlime>();
         if(friendAI != null)
         {
-            //todo 味方のスライムがこの中に入ってきた
+            
         }
     }
 }
