@@ -313,7 +313,7 @@ public class FieldManager : SingleToneBase<FieldManager>
     {
         return friendList.Count > defaultFriendLeftCount;
     }
-    /// Hold中のスライム一個作成
+    /// フレンドスライムを一個作成
     public AIFriendSlime CreateOneFriendSlime(Vector3 position, Action<AIFriendSlime> onResult)
     {
         var fObj = ResourcesManager.Get().CreateInstance(FieldObjectIndex.SlimeFriend, characterRoot.transform);

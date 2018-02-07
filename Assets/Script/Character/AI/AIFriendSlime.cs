@@ -11,6 +11,7 @@ public class AIFriendSlime : AIBase
     [SerializeField] float? scaleTime;
     [SerializeField] float? actionBuffTime;
     public bool IsHolding { get { return actionState == ActionStats.Hold; } }
+    public float pushForce = 800f;
     enum ActionStats
     {
         Free,
@@ -92,7 +93,7 @@ public class AIFriendSlime : AIBase
         charaMeshController.RestJellyMeshScale();
         
         //todo これ使えばいいけど
-        charaMeshController.JellyMeshAddForce(vel * 1000f, true);
+        charaMeshController.JellyMeshAddForce(vel * pushForce, true);
         freeDumpDir = dir;
     }
     protected override void OnTriggerEnterCheckFix(Collider col)
