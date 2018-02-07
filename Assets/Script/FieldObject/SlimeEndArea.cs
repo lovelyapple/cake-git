@@ -29,6 +29,7 @@ public class SlimeEndArea : FieldObjectBase
                      var resWnd = w as ResultWindow;
                      clearTime = 3;
                      resWnd.SetUp(FieldManager.Get().savedFriendCount);
+                     SoundManager.Get().PlayOneShotSe_Release();
                  });
              });
         }
