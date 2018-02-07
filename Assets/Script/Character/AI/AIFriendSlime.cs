@@ -24,7 +24,6 @@ public class AIFriendSlime : AIBase
 
     CharacterControllerJellyMesh mainCharaCtrlJellyMesh;
     Vector3 moveTargetPos = Vector3.zero;
-    Vector3? freeDumpDir;
     void Update()
     {
         if (scaleTime.HasValue)
@@ -62,10 +61,6 @@ public class AIFriendSlime : AIBase
         }
         else
         {
-            if (freeDumpDir.HasValue && actionBuffTime.HasValue)
-            {
-                //charaMeshController.JellyMeshAddForce(freeDumpDir.Value * _forceSpeed, false);
-            }
         }
 
         if (actionBuffTime.HasValue)
@@ -75,7 +70,6 @@ public class AIFriendSlime : AIBase
             if (actionBuffTime <= 0f)
             {
                 actionBuffTime = null;
-                freeDumpDir = null;
             }
         }
     }
@@ -86,15 +80,15 @@ public class AIFriendSlime : AIBase
         startPos.y += 0.5f;
         dir.y += 0.5f;
         dir.Normalize();
+        dir *= pushForce * 2;
         actionBuffTime = _actionBuffTime;
         actionState = ActionStats.Free;
         //charaMeshController.SetJellyMeshPosition(startPos, true);
         charaMeshController.SetMeshActive(true);
         charaMeshController.RestJellyMeshScale();
-        
+        var finDir = vel * pushForce + dir;
         //todo これ使えばいいけど
-        charaMeshController.JellyMeshAddForce(vel * pushForce, true);
-        freeDumpDir = dir;
+        charaMeshController.JellyMeshAddForce(finDir, true);
     }
     protected override void OnTriggerEnterCheckFix(Collider col)
     {
@@ -113,10 +107,9 @@ public class AIFriendSlime : AIBase
                 if (actionState == ActionStats.Free)
                 {
                     //フィールドのスライムカウントを一個戻す
-                    FieldManager.Get().RequestUpdateFieldFriendCount(-1);
+                    FieldManager.Get().RequestReleaseOneSlime();
                     scaleTime = _scaleTime;
                     actionState = ActionStats.Release;
-                    charaMeshController.SetJellyMeshScale(50);
                     var endArea = FieldManager.Get().GetCurrentFieldEndArea();
 
                     if (endArea != null)
