@@ -60,12 +60,16 @@ public class GameMainObject : SingleToneBase<GameMainObject>
     /// </summary>
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.P))
         {
-            ResourcesManager.Get().CreateOpenWindow(WindowIndex.PauseWindow,(w)=>
-            {
-                StateConfig.IsPausing = true;
-            });
+            ResourcesManager.Get().CreateOpenWindow(WindowIndex.PauseWindow, (w) =>
+             {
+                 StateConfig.IsPausing = true;
+             });
+        }
+        else if (Input.GetKeyDown(KeyCode.R))
+        {
+            FieldManager.Get().ReSetMap(null, null);
         }
     }
     public bool IsGamePlaying { get { return gameState == GameState.Game; } }

@@ -17,10 +17,10 @@ public class AIFriendSlime : AIBase
         Free,
         Hold,
         Release,
-        Dead,
     }
     ActionStats actionState = ActionStats.Free;
     ActionStats? actionStatsPrev;
+    public bool IsFree { get { return actionState == ActionStats.Free; } }
 
     CharacterControllerJellyMesh mainCharaCtrlJellyMesh;
     Vector3 moveTargetPos = Vector3.zero;
@@ -98,17 +98,17 @@ public class AIFriendSlime : AIBase
             case "Player":
                 if (actionState == ActionStats.Free && !actionBuffTime.HasValue)
                 {
-                    FieldManager.Get().RequestGiveMainCharaFriendSLime(1);
                     scaleTime = _scaleTime;
                     actionState = ActionStats.Hold;
                     SoundManager.Get().PlayOneShotSe_Catch();
+                    FieldManager.Get().RequestCatchSLimeFromField(1);
                 }
                 break;
             case "CatchArea":
                 if (actionState == ActionStats.Free)
                 {
                     //フィールドのスライムカウントを一個戻す
-                    FieldManager.Get().RequestReleaseOneSlime();
+                    FieldManager.Get().RequestPutOneSlimeToCatchArea(this);
                     scaleTime = _scaleTime;
                     actionState = ActionStats.Release;
 

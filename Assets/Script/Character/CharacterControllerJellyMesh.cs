@@ -26,6 +26,7 @@ public class CharacterControllerJellyMesh : MonoBehaviour
     public CharacterData charaData { get; private set; }
     Rigidbody jellyMeshRigidbody;
     [SerializeField] Vector3 facingDir = Vector3.up;
+    public AIEnemy parasitismingEnemy;
 
     void OnDisable()
     {
@@ -76,12 +77,12 @@ public class CharacterControllerJellyMesh : MonoBehaviour
             }
         });
     }
+    //
+    //キャラステータス関連
+    //
     public void UpdateCharacterStatus(uint? targetStatusLevel = null)
     {
-        if (charaData == null)
-        {
-            return;
-        }
+        if (charaData == null) { return; }
 
         if (targetStatusLevel.HasValue)
         {
@@ -93,8 +94,35 @@ public class CharacterControllerJellyMesh : MonoBehaviour
         moveSpeed = charaData.GetMoveSpeed();
         jumpPower = (1 - charaData.GetWeight()) * 1000;
 
+        if (OnStatusChanged != null)
+        {
+            OnStatusChanged(charaData);
+        }
     }
+    /// キャラクタのステータスレベルを変更
+    /// targetState変更したいステータスレベル
+    public void ChangeCharacterStatusLevel(int levelDiff)
+    {
+        if (charaData == null) { return; }
+
+        charaData.ChangeStatusLevelDiff(levelDiff);
+        UpdateCharacterStatus();
+    }
+    public bool IsCharaReachingMaxLevel()
+    {
+        if (charaData == null) { return true; }
+
+        return charaData.GetCurrentStatusLevel() == charaData.maxLevel;
+    }
+    public bool IsCharaReachingMinLevel()
+    {
+        if (charaData == null) { return true; }
+        return charaData.GetCurrentStatusLevel() == 1;//最小
+    }
+    //
     //操作関連(todo 1.3で分ける)
+    //
+
     public void UpdateCharacterInput()
     {
         if (jellyMesh == null || !jellyMesh.IsMeshCreated) { return; }
@@ -128,35 +156,40 @@ public class CharacterControllerJellyMesh : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.J) && charaData.GetCurrentStatusLevel() > 1 && !FieldManager.Get().IsReachingMaxFriendAmount())
+        if (Input.GetKeyDown(KeyCode.J))
         {
             var pos = colliderController.transform.position;
             pos.y += 1.0f;//test todo なんか距離とった方がいいな
 
             var vel = GetJellyMeshVelocity();
-            var ai = FieldManager.Get().CreateOneFriendSlime(pos, (i) =>
-             {
-                 i.PushOutThisSlime(Vector3.zero, facingDir, vel);
-             });
-
-            if (ai != null)
+            if (parasitismingEnemy != null && charaData.GetCurrentStatusLevel() > 1 && !FieldManager.Get().IsReachingMaxFriendAmount())
             {
-                FieldManager.Get().RequestGiveMainCharaFriendSLime(-1);
+                var ai = FieldManager.Get().CreateOneFriendSlime(pos, (i) =>
+                 {
+                     i.PushOutThisSlime(Vector3.zero, facingDir, vel);
+                 });
+
+                if (ai != null)
+                {
+                    FieldManager.Get().RequestCatchSLimeFromField(-1);
+                }
+            }
+            else if (parasitismingEnemy != null)
+            {
+                FieldManager.Get().RemoveOneEnemySlime(parasitismingEnemy.enemyId);
+                parasitismingEnemy = null;
+
+                pos.y += 1.0f;
+                FieldManager.Get().CreateOneEnemySlime(pos, (i) =>
+                 {
+                     i.PushOutThisSlime(Vector3.zero, facingDir, vel);
+                 });
+
+
             }
         }
     }
-    /// キャラクタのステータスレベルを変更
-    /// targetState変更したいステータスレベル
-    public void ChangeCharacterStatusLevel(int levelDiff)
-    {
-        if (charaData == null) { return; }
-        charaData.ChangeStatusLevelDiff(levelDiff);
 
-        if (OnStatusChanged != null)
-        {
-            OnStatusChanged(charaData);
-        }
-    }
     /// キャラクタのステータスレベルを変更
     /// targetState変更した後のステータスレベル
     /// 非推奨

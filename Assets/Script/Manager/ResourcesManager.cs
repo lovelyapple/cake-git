@@ -9,7 +9,7 @@ public enum WindowIndex
     TitleWindow,
     LoadWindow,
     ResultWindow,
-	PauseWindow,
+    PauseWindow,
     FieldMenu,
     Max,
 }
@@ -19,6 +19,7 @@ public enum FieldObjectIndex
     SlimeCharacterData00,
     SlimeCharacterCollderController,
     SlimeFriend,
+    SlimeEnemy,
     TestDungeon,
 }
 public enum SourceType
@@ -35,7 +36,7 @@ public class ResourcesManager : SingleToneBase<ResourcesManager>
         {WindowIndex.TitleWindow,"Assets/ExternalResources/UI/Window/Part_TitleMenu/TitleWindow.prefab"},
         {WindowIndex.LoadWindow,"Assets/ExternalResources/UI/Window/LoadWindow.prefab"},
         {WindowIndex.ResultWindow,"Assets/ExternalResources/UI/Window/ResultWIndow.prefab"},
-		{WindowIndex.PauseWindow,"Assets/ExternalResources/UI/Window/Part_PauseMenu/PauseWindow.prefab"},
+        {WindowIndex.PauseWindow,"Assets/ExternalResources/UI/Window/Part_PauseMenu/PauseWindow.prefab"},
         {WindowIndex.FieldMenu,"Assets/ExternalResources/UI/Window/Part_FieldMenu/FieldMenu.prefab"},
     };
 
@@ -155,6 +156,7 @@ public class ResourcesManager : SingleToneBase<ResourcesManager>
         {FieldObjectIndex.SlimeCharacterCollderController, "Assets/Resoures/Character/SlimeCoreHitController.prefab"},
         {FieldObjectIndex.TestDungeon, "Assets/Resoures/Dungeon/Dungeon00.prefab"},
         {FieldObjectIndex.SlimeFriend,"Assets/Resoures/Character/FriendSlime.prefab"},
+        {FieldObjectIndex.SlimeEnemy,"Assets/Resoures/Character/EnemySlime.prefab"},
     };
     Dictionary<FieldObjectIndex, GameObject> fieldObjectPrefabHolder = new Dictionary<FieldObjectIndex, GameObject>();
     public GameObject CreateInstance(FieldObjectIndex index, Transform parent = null, bool saveCache = true)

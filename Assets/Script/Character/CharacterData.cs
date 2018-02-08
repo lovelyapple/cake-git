@@ -20,7 +20,7 @@ public class CharacterData : MonoBehaviour
     public void ResetStatusLevel()
     {
         maxLevel = HpStatusList.Count;
-        currentLevel = 1;
+        currentLevel = (uint)(maxLevel / 2);
 
         if (maxLevel != WeightStatusList.Count)
         {

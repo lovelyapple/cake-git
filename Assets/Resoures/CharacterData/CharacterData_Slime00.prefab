@@ -51,8 +51,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a25b9f4be4e834894adb6dd50aac0c84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentLevel: 0
-  HpStatusList: 320000004b000000640000007d00000096000000
+  currentLevel: 3
+  HpStatusList: 19000000320000004b000000640000007d000000
   WeightStatusList:
   - 0.35
   - 0.375
