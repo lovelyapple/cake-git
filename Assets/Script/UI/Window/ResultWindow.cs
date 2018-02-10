@@ -10,7 +10,7 @@ public class ResultWindow : WindowBase
         FieldManager.Get().ReSetMap(() =>
         {
             GameMainObject.Get().RequestChangeStateWithoutFade(GameState.Game, null);
-            ResourcesManager.Get().CreateOpenWindow(WindowIndex.FieldMenu, (w) =>
+            WindowManager.Get().CreateOpenWindow(WindowIndex.FieldMenu, (w) =>
             {
                 var fieldMenu = w as FieldMenu;
                 fieldMenu.SetupFieldData();

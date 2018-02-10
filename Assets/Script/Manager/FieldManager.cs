@@ -7,18 +7,6 @@ using UnityEngine;
 public class FieldManager : SingleToneBase<FieldManager>
 {
     MainSlimeController mainChara;
-    CharacterControllerJellyMesh _mainCharaJellyMeshController;
-    public CharacterControllerJellyMesh mainCharaJellyMeshCtrl
-    {
-        get
-        {
-            if (_mainCharaJellyMeshController == null)
-            {
-                _mainCharaJellyMeshController = mainChara.GetCharaMeshController();
-            }
-            return _mainCharaJellyMeshController;
-        }
-    }
     Dictionary<uint, AIFriendSlime> friendList;
     Dictionary<uint, AIEnemy> enemyList;
     [SerializeField] GameObject characterRoot;
@@ -42,6 +30,10 @@ public class FieldManager : SingleToneBase<FieldManager>
     uint friendIdx = 0;//やらかした..くそ(挽回はできるけど、FieldObjectまで改造しまうのでとりあえずこれで)
     uint enemyIdx = 0;
 
+    void OnDisable()
+    {
+       OnUpdateFriendCount = null; 
+    }
     //
     // マップロード関連
     //
@@ -152,7 +144,7 @@ public class FieldManager : SingleToneBase<FieldManager>
         {
             mainChara = charaObj.GetComponent<MainSlimeController>();
             charaObj.transform.position = currentFieldInto.GetStartPoint().gameObject.transform.position;
-            mainChara.GetCharaMeshController().CreateCharacter((g) =>
+            mainChara.CreateCharacter((g) =>
             {
                 if (mainChara != null)
                 {
@@ -244,17 +236,17 @@ public class FieldManager : SingleToneBase<FieldManager>
     }
     public IEnumerator RunLoadFadeOut()
     {
-        if (!ResourcesManager.Get().IsWindowActive(WindowIndex.LoadWindow)) { yield break; }
+        if (!WindowManager.Get().IsWindowActive(WindowIndex.LoadWindow)) { yield break; }
 
-        var loadWnd = ResourcesManager.Get().GetWindow(WindowIndex.LoadWindow) as LoadWindow;
+        var loadWnd = WindowManager.Get().GetWindow(WindowIndex.LoadWindow) as LoadWindow;
 
         loadWnd.RunFadeOut();
     }
     void UpdateLoadWindow(uint now, uint max, string description)
     {
-        if (!ResourcesManager.Get().IsWindowActive(WindowIndex.LoadWindow)) { return; }
+        if (!WindowManager.Get().IsWindowActive(WindowIndex.LoadWindow)) { return; }
 
-        var loadWnd = ResourcesManager.Get().GetWindow(WindowIndex.LoadWindow) as LoadWindow;
+        var loadWnd = WindowManager.Get().GetWindow(WindowIndex.LoadWindow) as LoadWindow;
 
         loadWnd.SetSLiderValue(now, max, description);
     }
@@ -338,19 +330,19 @@ public class FieldManager : SingleToneBase<FieldManager>
     {
         if (OnUpdateFriendCount != null)
         {
-            OnUpdateFriendCount((uint)friendList.Count);
+            OnUpdateFriendCount(GetCurrentFriendCount());
         }
 
-        if (mainChara != null || mainCharaJellyMeshCtrl != null)
+        if (mainChara != null)
         {
-            mainCharaJellyMeshCtrl.UpdateCharacterStatus();
+            mainChara.UpdateCharacterStatus();
         }
 
     }
     /// フィールド上メインキャラがフレンドスライムを吸収する
     public bool RequestCatchSLimeFromField(int diff)
     {
-        if (mainCharaJellyMeshCtrl.IsCharaReachingMaxLevel() || mainCharaJellyMeshCtrl.IsCharaReachingMinLevel())
+        if (mainChara.IsCharaReachingMaxLevel() || mainChara.IsCharaReachingMinLevel())
         {
             return false;
         }
@@ -372,7 +364,7 @@ public class FieldManager : SingleToneBase<FieldManager>
     {
         if (mainChara == null) { return; }
 
-        mainCharaJellyMeshCtrl.ChangeCharacterStatusLevel(diff);
+        mainChara.ChangeCharacterStatusLevel(diff);
     }
     /// メインキャラにダメージを与える
     public void RequestDamageMainCharaSLime(int damage)
@@ -406,7 +398,7 @@ public class FieldManager : SingleToneBase<FieldManager>
     {
         if (mainChara == null) { return; }
 
-        var mainJellyMeshCtrl = mainChara.GetCharaMeshController();
+        var mainJellyMeshCtrl = mainChara;
 
         if (mainCameraCtrl == null) { return; }
 

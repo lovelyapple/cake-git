@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class AIBase : MonoBehaviour
 {
-    [SerializeField] protected CharacterControllerJellyMesh charaMeshController;
+    [SerializeField] protected JellyMeshController charaMeshController;
     [SerializeField] protected CharacterColliderController colliderController;
     protected virtual void OnTriggerEnterCheckFix(Collider col) { }
     public uint friendId;
@@ -13,7 +13,7 @@ public class AIBase : MonoBehaviour
     {
         if (charaMeshController == null)
         {
-            charaMeshController = GetComponent<CharacterControllerJellyMesh>();
+            charaMeshController = GetComponent<JellyMeshController>();
             if (charaMeshController == null)
             {
                 Debug.LogError("could not find meshCtrl");
