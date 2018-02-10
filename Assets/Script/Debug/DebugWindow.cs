@@ -16,18 +16,18 @@ public class DebugWindow : MonoBehaviour
         if (!GameMainObject.Get().IsDebugMode) { return; }
         if (GUI.Button(new Rect(0, 0, Screen.width / 6, Screen.height / 8), "LoadWindow"))
         {
-            WindowManager.Get().CreateOpenWindow(debugWindowIndex, (w) =>
+            WindowManager.CreateOpenWindow(debugWindowIndex, (w) =>
         {
             w.MoveToTop();
         });
         }
         if (GUI.Button(new Rect(0, Screen.height / 8, Screen.width / 6, Screen.height / 8), "CloseWindow"))
         {
-            WindowManager.Get().CloseWindow(debugWindowIndex);
+            WindowManager.CloseWindow(debugWindowIndex);
         }
         if (GUI.Button(new Rect(0, Screen.height / 8 * 2, Screen.width / 6, Screen.height / 8), "ClearWindow"))
         {
-            WindowManager.Get().CloseWindow(debugWindowIndex);
+            WindowManager.CloseWindow(debugWindowIndex);
         }
         if (GUI.Button(new Rect(0, Screen.height / 8 * 3, Screen.width / 6, Screen.height / 8), "ChangeState"))
         {

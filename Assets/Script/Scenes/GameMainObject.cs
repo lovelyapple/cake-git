@@ -50,7 +50,7 @@ public class GameMainObject : SingleToneBase<GameMainObject>
     void Start()
     {
         WindowManager.Get().ChecktInitWindowList();
-        WindowManager.Get().CreateOpenWindow(WindowIndex.TitleWindow, (w) =>
+        WindowManager.CreateOpenWindow(WindowIndex.TitleWindow, (w) =>
          {
              gameState = GameState.Title;
          });
@@ -62,7 +62,7 @@ public class GameMainObject : SingleToneBase<GameMainObject>
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            WindowManager.Get().CreateOpenWindow(WindowIndex.PauseWindow, (w) =>
+            WindowManager.CreateOpenWindow(WindowIndex.PauseWindow, (w) =>
              {
                  StateConfig.IsPausing = true;
              });
@@ -113,7 +113,7 @@ public class GameMainObject : SingleToneBase<GameMainObject>
             yield break;
         }
         LoadWindow loadWnd = null;
-        WindowManager.Get().CreateOpenWindow(WindowIndex.LoadWindow, (w) =>
+        WindowManager.CreateOpenWindow(WindowIndex.LoadWindow, (w) =>
          {
              w.MoveToTop();
              loadWnd = (LoadWindow)w;

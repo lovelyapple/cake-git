@@ -24,7 +24,7 @@ public class SlimeEndArea : FieldObjectBase
         {
             GameMainObject.Get().RequestChangeStateWithoutFade(GameState.Result, () =>
              {
-                 WindowManager.Get().CreateOpenWindow(WindowIndex.ResultWindow, (w) =>
+                 WindowManager.CreateOpenWindow(WindowIndex.ResultWindow, (w) =>
                  {
                      var resWnd = w as ResultWindow;
                      clearTime = 3;
