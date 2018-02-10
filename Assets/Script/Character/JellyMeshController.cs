@@ -179,10 +179,13 @@ public class JellyMeshController : MonoBehaviour
                 FieldManager.Get().RemoveOneEnemySlime(parasitismingEnemy.enemyId);
                 parasitismingEnemy = null;
 
-                pos.y += 1.0f;
-                FieldManager.Get().CreateOneEnemySlime(pos, (i) =>
+                facingDir.y += 1.0f;
+                facingDir.Normalize();
+
+                var setPos = GetMeshPosition() + facingDir * 1.2f;
+                FieldManager.Get().CreateOneEnemySlime(setPos, (i) =>
                  {
-                     i.PushOutThisSlime(Vector3.zero, facingDir, vel);
+                     i.PushOutThisSlime(facingDir, vel);
                  });
 
 

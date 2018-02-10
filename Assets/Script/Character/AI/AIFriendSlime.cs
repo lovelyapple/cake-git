@@ -77,13 +77,11 @@ public class AIFriendSlime : AIBase
     {
         if (StateConfig.IsPausing) { return; }
 
-        startPos.y += 0.5f;
         dir.y += 0.5f;
         dir.Normalize();
         dir *= pushForce * 2;
         actionBuffTime = _actionBuffTime;
         actionState = ActionStats.Free;
-        //charaMeshController.SetJellyMeshPosition(startPos, true);
         charaMeshController.SetMeshActive(true);
         charaMeshController.RestJellyMeshScale();
         var finDir = vel * pushForce + dir;
