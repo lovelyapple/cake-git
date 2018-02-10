@@ -10,16 +10,16 @@ using UnityEngine;
  * charaDataに保存される。
  * データの操作はCharacterDataで管理する。
  */
-public class CharacterControllerJellyMesh : MonoBehaviour
+public class JellyMeshController : MonoBehaviour
 {
-    [SerializeField] CharacterData slimeDataPrefab;
-    [SerializeField] JellyMesh jellyMesh;
-    [SerializeField] CharacterColliderController colliderController;
-    [SerializeField] GameObject jellyMeshReferenceParentObj;
-    [SerializeField] float moveSpeed;
-    [SerializeField] uint hp;
-    [SerializeField] float jumpPower;
-    [SerializeField] float weight;
+    [SerializeField] protected CharacterData slimeDataPrefab;
+    [SerializeField] protected JellyMesh jellyMesh;
+    [SerializeField] protected CharacterColliderController colliderController;
+    [SerializeField] protected GameObject jellyMeshReferenceParentObj;
+    [SerializeField] protected float moveSpeed;
+    [SerializeField] protected uint hp;
+    [SerializeField] protected float jumpPower;
+    [SerializeField] protected float weight;
     [Range(5f, 100f)]
     public float moveSpeedAdd = 50f;
     public Action<CharacterData> OnStatusChanged = null;
@@ -189,22 +189,6 @@ public class CharacterControllerJellyMesh : MonoBehaviour
             }
         }
     }
-
-    /// キャラクタのステータスレベルを変更
-    /// targetState変更した後のステータスレベル
-    /// 非推奨
-    // public void ChangeCharacterStatusLevelTo(uint targetLevel)
-    // {
-    //     if (charaData == null) { return; }
-    //     int diff = (int)(targetLevel - charaData.currentLevel);
-    //     charaData.ChangeStatusLevelDiff(diff);
-
-    //     if (OnStatusChanged != null)
-    //     {
-    //         OnStatusChanged(charaData);
-    //     }
-    // }
-
     //JellyMeshのヘルパー(todo 1.2で分けたい)
     public Vector3 GetJellyMeshVelocity()
     {

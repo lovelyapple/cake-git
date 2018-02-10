@@ -11,7 +11,7 @@ public class AIEnemy : AIBase
         Cooling,
     }
     public ActionState actionState = ActionState.StandBy;
-    CharacterControllerJellyMesh mainCharaCtrlJellyMesh;
+    MainSlimeController mainChara;
     [SerializeField] float searchRange = 2f;//todo charaData化
     [SerializeField] float releaseRange = 2.5f;
     [SerializeField] float coolingTime = 5f;
@@ -31,13 +31,13 @@ public class AIEnemy : AIBase
     /// </summary>
     void Update()
     {
-        if (mainCharaCtrlJellyMesh == null)
+        if (mainChara == null)
         {
-            mainCharaCtrlJellyMesh = FieldManager.Get().GetMainChara().GetCharaMeshController();
+            mainChara = FieldManager.Get().GetMainChara();
             return;
         }
 
-        var vec = mainCharaCtrlJellyMesh.GetMeshPosition() - colliderController.transform.position;
+        var vec = mainChara.GetMeshPosition() - colliderController.transform.position;
         var range = vec.magnitude;
 
         switch (actionState)
@@ -81,7 +81,7 @@ public class AIEnemy : AIBase
                 if (releaseRange < range)
                 {
                     catchingMainCara = false;
-                    mainCharaCtrlJellyMesh.parasitismingEnemy = null;
+                    mainChara.parasitismingEnemy = null;
                     charaMeshController.SetJellyMeshPosition(charaMeshController.GetMeshPosition(), true);
                 }
             }
@@ -99,9 +99,9 @@ public class AIEnemy : AIBase
         && charaMeshController.JellyMeshIsGrounded(LayerUtility.FieldEnvObjectMask, 1))
         {
             actionState = ActionState.Cooling;
-            if (mainCharaCtrlJellyMesh.parasitismingEnemy == null)
+            if (mainChara.parasitismingEnemy == null)
             {
-                mainCharaCtrlJellyMesh.parasitismingEnemy = this;
+                mainChara.parasitismingEnemy = this;
                 catchingMainCara = true;
                 dt = 0;
             }

@@ -22,7 +22,7 @@ public class AIFriendSlime : AIBase
     ActionStats? actionStatsPrev;
     public bool IsFree { get { return actionState == ActionStats.Free; } }
 
-    CharacterControllerJellyMesh mainCharaCtrlJellyMesh;
+    JellyMeshController mainCharaCtrlJellyMesh;
     Vector3 moveTargetPos = Vector3.zero;
     void Update()
     {
@@ -38,7 +38,7 @@ public class AIFriendSlime : AIBase
                 case ActionStats.Hold:
                     if (mainCharaCtrlJellyMesh == null)
                     {
-                        mainCharaCtrlJellyMesh = FieldManager.Get().GetMainChara().GetCharaMeshController();
+                        mainCharaCtrlJellyMesh = FieldManager.Get().GetMainChara();
                     }
 
                     dir = mainCharaCtrlJellyMesh.GetMeshPosition() - colliderController.transform.position;

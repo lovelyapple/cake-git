@@ -20,7 +20,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4588548828742608}
   - component: {fileID: 114294259856568014}
-  - component: {fileID: 114445712450593582}
   m_Layer: 0
   m_Name: MainSlime
   m_TagString: Player
@@ -154,19 +153,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4315a016a68f241b397fbe6514d6bbcb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  charaMeshController: {fileID: 114445712450593582}
-  colliderController: {fileID: 114870500294680632}
---- !u!114 &114445712450593582
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1161056717890278}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ad10bc33aa564355a084b6a5cc7cd0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   slimeDataPrefab: {fileID: 114586000658301334, guid: b668ad50bee5a429ea23f17a0293e0d4,
