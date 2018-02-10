@@ -32,7 +32,7 @@ public class FieldManager : SingleToneBase<FieldManager>
 
     void OnDisable()
     {
-       OnUpdateFriendCount = null; 
+        OnUpdateFriendCount = null;
     }
     //
     // マップロード関連
@@ -48,6 +48,7 @@ public class FieldManager : SingleToneBase<FieldManager>
         yield return LoadMainCharacter();
         yield return LoadFriendCharacter();
         yield return LoadEnemy();
+        LoadFieldUI();
         yield return RunLoadFadeOut();
         if (OnFinished != null)
         {
@@ -66,14 +67,24 @@ public class FieldManager : SingleToneBase<FieldManager>
         yield return LoadMainCharacter(true);
         yield return LoadFriendCharacter(true);
         yield return LoadEnemy(true);
+        LoadFieldUI();
         if (OnFinished != null)
         {
             OnFinished();
         }
+        mainChara.ResetCharaStatus();
         RequestUpdateFieldInfo();
         StateConfig.IsPausing = false;
     }
-
+    public void LoadFieldUI()
+    {
+        WindowManager.Get().CreateOpenWindow(WindowIndex.FieldMenu, (w) =>
+        {
+            var fieldMenu = w as FieldMenu;
+            fieldMenu.SetupFieldData();
+            FieldManager.Get().RequestUpdateFieldInfo();
+        });
+    }
     //
     //ダンジョンリソースのロード
     //
@@ -149,10 +160,13 @@ public class FieldManager : SingleToneBase<FieldManager>
                 if (mainChara != null)
                 {
                     mainCameraCtrl.SetupCamera(g.m_CentralPoint.GameObject, cameraOffset);
+                    var wnd = WindowManager.Get().GetWindow(WindowIndex.FieldMenu) as FieldMenu;
+                    if (wnd != null)
+                    {
+                        wnd.SetupFieldData();
+                    }
                 }
             });
-
-
         }
         yield return new WaitForSeconds(debugWaitSec);
     }
@@ -192,7 +206,10 @@ public class FieldManager : SingleToneBase<FieldManager>
             friendList.Add(friendIdx, fAI);
             friendIdx++;
         }
-        defaultFriendLeftCount = (uint)friendList.Count;
+
+        //所有している分をたす
+        var earned = Mathf.Max(mainChara.charaData.GetCurrentStatusLevel() - 1, 0);
+        defaultFriendLeftCount = (uint)friendList.Count + (uint)earned;
         savedFriendCount = 0;
     }
     //敵キャラの作成
@@ -407,7 +424,7 @@ public class FieldManager : SingleToneBase<FieldManager>
     ///現在のフレンドがデフォルト値以上かどうか
     public bool IsReachingMaxFriendAmount()
     {
-        return friendList.Count > defaultFriendLeftCount;
+        return GetCurrentFriendCount() >= defaultFriendLeftCount;
     }
     /// フレンドスライムを一個作成
     public AIFriendSlime CreateOneFriendSlime(Vector3 position, Action<AIFriendSlime> onResult)
