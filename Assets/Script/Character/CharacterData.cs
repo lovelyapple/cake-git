@@ -11,7 +11,7 @@ public class CharacterData : MonoBehaviour
     public int maxLevel { get; private set; }
     [SerializeField] uint currentLevel;
     public bool IsDead { get { return currentLevel == 0; } }
-    [Header("今聞かない")]
+
     public List<uint> HpStatusList;
     [Header("Jumpに影響を与える jumpPower = (1 - x) * 1000")]
     public List<float> WeightStatusList;

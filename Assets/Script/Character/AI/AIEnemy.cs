@@ -61,11 +61,10 @@ public class AIEnemy : AIBase
                 }
                 break;
             case ActionState.Cooling:
-                ct--;
+                ct -= Time.deltaTime;
 
                 if (ct <= 0)
                 {
-                    ct -= Time.deltaTime;
                     ct = 0;
                     actionState = ActionState.StandBy;
                 }
@@ -107,19 +106,18 @@ public class AIEnemy : AIBase
             }
         }
     }
-    public void PushOutThisSlime(Vector3 startPos, Vector3 dir, Vector3 vel)
+    public void PushOutThisSlime(Vector3 dir, Vector3 vel)
     {
         if (StateConfig.IsPausing) { return; }
 
-        startPos.y += 0.5f;
-        dir.y += 0.5f;
-        dir.Normalize();
-        dir *= pushForce * 2;
         actionState = ActionState.Cooling;
         ct = coolingTime;
-        var finDir = vel * pushForce + dir;
+        var power = vel.magnitude;
+        vel.Normalize();
+
+        var finDir = dir * pushForce;
         //todo これ使えばいいけど
-        charaMeshController.JellyMeshAddForce(finDir, true);
+        charaMeshController.JellyMeshAddForce(finDir, false);
         catchingMainCara = false;
     }
 }

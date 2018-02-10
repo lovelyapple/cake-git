@@ -80,6 +80,13 @@ public class JellyMeshController : MonoBehaviour
     //
     //キャラステータス関連
     //
+    public void ResetCharaStatus()
+    {
+        if (charaData == null) { return; }
+
+        charaData.ResetStatusLevel();
+        UpdateCharacterStatus();
+    }
     public void UpdateCharacterStatus(uint? targetStatusLevel = null)
     {
         if (charaData == null) { return; }
@@ -162,27 +169,29 @@ public class JellyMeshController : MonoBehaviour
             pos.y += 1.0f;//test todo なんか距離とった方がいいな
 
             var vel = GetJellyMeshVelocity();
-            if (parasitismingEnemy != null && charaData.GetCurrentStatusLevel() > 1 && !FieldManager.Get().IsReachingMaxFriendAmount())
+            var isparaNull = parasitismingEnemy == null;
+            var isCurrentStatusabove = charaData.GetCurrentStatusLevel() > 1;
+            var isReachMax = FieldManager.Get().IsReachingMaxFriendAmount();
+            if (parasitismingEnemy == null && charaData.GetCurrentStatusLevel() > 1 && !FieldManager.Get().IsReachingMaxFriendAmount())
             {
                 var ai = FieldManager.Get().CreateOneFriendSlime(pos, (i) =>
                  {
+                     FieldManager.Get().RequestCatchSLimeFromField(-1);
                      i.PushOutThisSlime(Vector3.zero, facingDir, vel);
                  });
-
-                if (ai != null)
-                {
-                    FieldManager.Get().RequestCatchSLimeFromField(-1);
-                }
             }
             else if (parasitismingEnemy != null)
             {
                 FieldManager.Get().RemoveOneEnemySlime(parasitismingEnemy.enemyId);
                 parasitismingEnemy = null;
 
-                pos.y += 1.0f;
-                FieldManager.Get().CreateOneEnemySlime(pos, (i) =>
+                facingDir.y += 1.0f;
+                facingDir.Normalize();
+
+                var setPos = GetMeshPosition() + facingDir * 1.2f;
+                FieldManager.Get().CreateOneEnemySlime(setPos, (i) =>
                  {
-                     i.PushOutThisSlime(Vector3.zero, facingDir, vel);
+                     i.PushOutThisSlime(facingDir, vel);
                  });
 
 
