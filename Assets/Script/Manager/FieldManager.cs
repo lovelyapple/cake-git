@@ -42,6 +42,10 @@ public class FieldManager : SingleToneBase<FieldManager>
     uint friendIdx = 0;//やらかした..くそ(挽回はできるけど、FieldObjectまで改造しまうのでとりあえずこれで)
     uint enemyIdx = 0;
 
+    void OnDisable()
+    {
+       OnUpdateFriendCount = null; 
+    }
     //
     // マップロード関連
     //
@@ -244,17 +248,17 @@ public class FieldManager : SingleToneBase<FieldManager>
     }
     public IEnumerator RunLoadFadeOut()
     {
-        if (!ResourcesManager.Get().IsWindowActive(WindowIndex.LoadWindow)) { yield break; }
+        if (!WindowManager.Get().IsWindowActive(WindowIndex.LoadWindow)) { yield break; }
 
-        var loadWnd = ResourcesManager.Get().GetWindow(WindowIndex.LoadWindow) as LoadWindow;
+        var loadWnd = WindowManager.Get().GetWindow(WindowIndex.LoadWindow) as LoadWindow;
 
         loadWnd.RunFadeOut();
     }
     void UpdateLoadWindow(uint now, uint max, string description)
     {
-        if (!ResourcesManager.Get().IsWindowActive(WindowIndex.LoadWindow)) { return; }
+        if (!WindowManager.Get().IsWindowActive(WindowIndex.LoadWindow)) { return; }
 
-        var loadWnd = ResourcesManager.Get().GetWindow(WindowIndex.LoadWindow) as LoadWindow;
+        var loadWnd = WindowManager.Get().GetWindow(WindowIndex.LoadWindow) as LoadWindow;
 
         loadWnd.SetSLiderValue(now, max, description);
     }

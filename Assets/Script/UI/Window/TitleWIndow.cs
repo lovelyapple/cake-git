@@ -12,12 +12,12 @@ public class TitleWIndow : WindowBase
             Close();
             FieldManager.Get().CreateField(() =>
             {
-                var loadWindow = ResourcesManager.Get().GetWindow(WindowIndex.LoadWindow) as LoadWindow;
+                var loadWindow = WindowManager.Get().GetWindow(WindowIndex.LoadWindow) as LoadWindow;
                 if (loadWindow != null && loadWindow.isActiveAndEnabled)
                 {
                     loadWindow.OnClose = () =>
                     {
-                        ResourcesManager.Get().CreateOpenWindow(WindowIndex.FieldMenu, (w) =>
+                        WindowManager.Get().CreateOpenWindow(WindowIndex.FieldMenu, (w) =>
                         {
                             var fieldMenu = w as FieldMenu;
                             fieldMenu.SetupFieldData();
