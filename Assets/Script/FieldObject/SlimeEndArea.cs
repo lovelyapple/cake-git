@@ -6,29 +6,44 @@ public class SlimeEndArea : FieldObjectBase
 {
     //新しい仕様では　いらないっぽい
     [SerializeField] float clearTime;
-    /// <summary>
-    /// Awake is called when the script instance is being loaded.
-    /// </summary>
-    void Awake()
+    [SerializeField] float resetTime = 1f;
+    [SerializeField] bool isPlayerInside;
+    void OnEnable()
     {
+        onTriggleStayFix = null;
+        onTriggleStayFix = OnPlayerStayInEnd;
         clearTime = 3f;
+    }
+    void OnPlayerStayInEnd(Collider ohter)
+    {
+        if (!GameMainObject.Get().IsGamePlaying) { return; }
+        if (ohter.gameObject.tag != "Player") { return; }
+        clearTime -= Time.deltaTime;
+
+        if (clearTime <= 0)
+        {
+            GameMainObject.Get().RequestChangeStateWithoutFade(GameState.Result, () =>
+             {
+                 ResourcesManager.Get().CreateOpenWindow(WindowIndex.ResultWindow, (w) =>
+                 {
+                     var resWnd = w as ResultWindow;
+                     clearTime = 3;
+                     resWnd.SetUp(FieldManager.Get().savedFriendCount);
+                     SoundManager.Get().PlayOneShotSe_Release();
+                 });
+             });
+        }
     }
     // Update is called once per frame
     void Update()
     {
-        if (IsPlayerInside())
+        if (clearTime < 3f && resetTime > 0 && GameMainObject.Get().IsGamePlaying)
         {
-            clearTime -= Time.deltaTime;
-
-            if (clearTime <= 0)
+            resetTime -= Time.deltaTime;
+            if (resetTime <= 0)
             {
-                GameMainObject.Get().RequestChangeStateWithoutFade(GameState.Result, () =>
-                 {
-                     ResourcesManager.Get().CreateOpenWindow(WindowIndex.ResultWindow, (w) =>
-                     {
-                        //donoth
-                     });
-                 });
+                clearTime = 3f;
+                resetTime = 1f;
             }
         }
     }

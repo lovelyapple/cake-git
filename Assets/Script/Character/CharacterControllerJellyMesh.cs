@@ -21,10 +21,18 @@ public class CharacterControllerJellyMesh : MonoBehaviour
     [SerializeField] float jumpPower;
     [SerializeField] float weight;
     [Range(5f, 100f)]
-    public float moveSpeedTest = 50f;
+    public float moveSpeedAdd = 50f;
     public Action<CharacterData> OnStatusChanged = null;
     public CharacterData charaData { get; private set; }
-    public void CreateCharacter()
+    Rigidbody jellyMeshRigidbody;
+    [SerializeField] Vector3 facingDir = Vector3.up;
+    public AIEnemy parasitismingEnemy;
+
+    void OnDisable()
+    {
+        OnStatusChanged = null;
+    }
+    public void CreateCharacter(Action<JellyMesh> onFinished)
     {
         if (jellyMesh == null)
         {
@@ -59,17 +67,22 @@ public class CharacterControllerJellyMesh : MonoBehaviour
 
         jellyMesh.CreateJelleMeshReferenceObj((res) =>
         {
-            colliderController.SetUpController(jellyMesh.m_ReferencePointParent.transform);
+            colliderController.SetUpController(jellyMesh.m_CentralPoint.transform);
             charaData.ResetStatusLevel();
             UpdateCharacterStatus();
+
+            if (onFinished != null)
+            {
+                onFinished(jellyMesh);
+            }
         });
     }
+    //
+    //キャラステータス関連
+    //
     public void UpdateCharacterStatus(uint? targetStatusLevel = null)
     {
-        if (charaData == null)
-        {
-            return;
-        }
+        if (charaData == null) { return; }
 
         if (targetStatusLevel.HasValue)
         {
@@ -79,34 +92,11 @@ public class CharacterControllerJellyMesh : MonoBehaviour
         weight = charaData.GetWeight();
         hp = charaData.GetHp();
         moveSpeed = charaData.GetMoveSpeed();
+        jumpPower = (1 - charaData.GetWeight()) * 1000;
 
-    }
-    void Update()
-    {
-        UpdateCharacter();
-    }
-    //操作関連
-    void UpdateCharacter()
-    {
-        if (jellyMesh == null) { return; }
-        if (JellyMeshIsGrounded(LayerUtility.FieldEnvObjectMask, 1))
+        if (OnStatusChanged != null)
         {
-            if (Input.GetKey(KeyCode.D))
-            {
-                JellyMeshAddForce(Vector3.right * moveSpeedTest, false);
-            }
-            else if (Input.GetKey(KeyCode.A))
-            {
-                JellyMeshAddForce(Vector3.left * moveSpeedTest, false);
-            }
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                JellyMeshAddForce(Vector3.up * moveSpeedTest * 10, false);
-            }
-        }
-        else
-        {
-
+            OnStatusChanged(charaData);
         }
     }
     /// キャラクタのステータスレベルを変更
@@ -114,33 +104,148 @@ public class CharacterControllerJellyMesh : MonoBehaviour
     public void ChangeCharacterStatusLevel(int levelDiff)
     {
         if (charaData == null) { return; }
-        charaData.ChangeStatusLevelDiff(levelDiff);
 
-        if (OnStatusChanged != null)
+        charaData.ChangeStatusLevelDiff(levelDiff);
+        UpdateCharacterStatus();
+    }
+    public bool IsCharaReachingMaxLevel()
+    {
+        if (charaData == null) { return true; }
+
+        return charaData.GetCurrentStatusLevel() == charaData.maxLevel;
+    }
+    public bool IsCharaReachingMinLevel()
+    {
+        if (charaData == null) { return true; }
+        return charaData.GetCurrentStatusLevel() == 1;//最小
+    }
+    //
+    //操作関連(todo 1.3で分ける)
+    //
+
+    public void UpdateCharacterInput()
+    {
+        if (jellyMesh == null || !jellyMesh.IsMeshCreated) { return; }
+        if (JellyMeshIsGrounded(LayerUtility.FieldEnvObjectMask, 1))
         {
-            OnStatusChanged(charaData);
+            if (Input.GetKey(KeyCode.D) && GetJellyMeshVelocity().x < moveSpeed)//これ速度だぜ！
+            {
+                JellyMeshAddForce(Vector3.right * moveSpeedAdd, false);
+                facingDir = Vector3.right;
+            }
+            else if (Input.GetKey(KeyCode.A) && GetJellyMeshVelocity().x > -moveSpeed)
+            {
+                JellyMeshAddForce(Vector3.left * moveSpeedAdd, false);
+                facingDir = Vector3.left;
+            }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                JellyMeshAddForce(Vector3.up * jumpPower, false);
+                SoundManager.Get().PlayOneShotSe_Jump();
+            }
+        }
+        else
+        {
+            if (Input.GetKey(KeyCode.D))
+            {
+                facingDir = Vector3.right;
+            }
+            else if (Input.GetKey(KeyCode.A))
+            {
+                facingDir = Vector3.left;
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            var pos = colliderController.transform.position;
+            pos.y += 1.0f;//test todo なんか距離とった方がいいな
+
+            var vel = GetJellyMeshVelocity();
+            if (parasitismingEnemy != null && charaData.GetCurrentStatusLevel() > 1 && !FieldManager.Get().IsReachingMaxFriendAmount())
+            {
+                var ai = FieldManager.Get().CreateOneFriendSlime(pos, (i) =>
+                 {
+                     i.PushOutThisSlime(Vector3.zero, facingDir, vel);
+                 });
+
+                if (ai != null)
+                {
+                    FieldManager.Get().RequestCatchSLimeFromField(-1);
+                }
+            }
+            else if (parasitismingEnemy != null)
+            {
+                FieldManager.Get().RemoveOneEnemySlime(parasitismingEnemy.enemyId);
+                parasitismingEnemy = null;
+
+                pos.y += 1.0f;
+                FieldManager.Get().CreateOneEnemySlime(pos, (i) =>
+                 {
+                     i.PushOutThisSlime(Vector3.zero, facingDir, vel);
+                 });
+
+
+            }
         }
     }
+
     /// キャラクタのステータスレベルを変更
     /// targetState変更した後のステータスレベル
     /// 非推奨
-    public void ChangeCharacterStatusLevelTo(uint targetLevel)
+    // public void ChangeCharacterStatusLevelTo(uint targetLevel)
+    // {
+    //     if (charaData == null) { return; }
+    //     int diff = (int)(targetLevel - charaData.currentLevel);
+    //     charaData.ChangeStatusLevelDiff(diff);
+
+    //     if (OnStatusChanged != null)
+    //     {
+    //         OnStatusChanged(charaData);
+    //     }
+    // }
+
+    //JellyMeshのヘルパー(todo 1.2で分けたい)
+    public Vector3 GetJellyMeshVelocity()
     {
-        if (charaData == null) { return; }
-        int diff = (int)(targetLevel - charaData.currentLevel);
-        charaData.ChangeStatusLevelDiff(diff);
-
-        if (OnStatusChanged != null)
+        if (jellyMesh == null)
         {
-            OnStatusChanged(charaData);
+            return Vector3.zero;
         }
-    }
 
-    //JellyMeshのヘルパー
+        if (jellyMeshRigidbody == null)
+        {
+            jellyMeshRigidbody = jellyMesh.m_CentralPoint.GameObject.GetComponent<Rigidbody>();
+        }
+        return jellyMeshRigidbody.velocity;
+    }
+    public Vector3 GetMeshPosition()
+    {
+        return colliderController.transform.parent.position;
+    }
+    public void SetMeshActive(bool active)
+    {
+        return;
+        if (jellyMesh == null || jellyMesh.m_ReferencePointParent == null) { return; }
+
+        jellyMesh.m_ReferencePointParent.gameObject.SetActive(active);
+        this.gameObject.SetActive(active);
+    }
     public void SetJellyMeshPosition(Vector3 position, bool resetVelocity)
     {
         if (jellyMesh == null) { return; }
         jellyMesh.SetPosition(position, resetVelocity);
+    }
+    public void RestJellyMeshScale()
+    {
+        if (jellyMesh == null) { return; }
+        //var s = 1f / jellyMesh.scaleHistory;
+        SetJellyMeshScale(1);
+    }
+    public void SetJellyMeshScale(float scaleDiff)
+    {
+        if (jellyMesh == null) { return; }
+        jellyMesh.Scale(scaleDiff);
     }
     public void SetJellyMeshKinematic(bool isKinematic, bool centralPointOnly)
     {

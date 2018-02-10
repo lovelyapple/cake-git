@@ -7,19 +7,14 @@ public class FieldObjectBase : MonoBehaviour
 {
 
     [SerializeField] MeshRenderer meshRenderer;
-    bool isPlayerInside = false;
     public bool IsUnvisble;
     protected Action<Collider> onTriggleEnterFix;
-    public bool IsPlayerInside()
-    {
-        return isPlayerInside;
-    }
+    protected Action<Collider> onTriggleStayFix;
     /// <summary>
     /// This function is called when the object becomes enabled and active.
     /// </summary>
     void OnEnable()
     {
-        isPlayerInside = false;
     }
     // Use this for initialization
     void Start()
@@ -37,10 +32,6 @@ public class FieldObjectBase : MonoBehaviour
     }
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player")
-        {
-            isPlayerInside = true;
-        }
 
         if (onTriggleEnterFix != null)
         {
@@ -49,16 +40,12 @@ public class FieldObjectBase : MonoBehaviour
     }
     void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (onTriggleStayFix != null)
         {
-            isPlayerInside = true;
+            onTriggleStayFix(other);
         }
     }
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "Player")
-        {
-            isPlayerInside = false;
-        }
     }
 }

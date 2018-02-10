@@ -2,19 +2,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/*
+ * charaDataとステータをほじするクラス
+ * index上0スタートだが、count上1スタートだけ注意
+ */
 public class CharacterData : MonoBehaviour
 {
     public int maxLevel { get; private set; }
-    public uint currentLevel { get; private set; }
+    [SerializeField] uint currentLevel;
     public bool IsDead { get { return currentLevel == 0; } }
+    [Header("今聞かない")]
     public List<uint> HpStatusList;
+    [Header("Jumpに影響を与える jumpPower = (1 - x) * 1000")]
     public List<float> WeightStatusList;
     public List<float> MoveSpeedStatusList;
 
     public void ResetStatusLevel()
     {
         maxLevel = HpStatusList.Count;
+        currentLevel = (uint)(maxLevel / 2);
 
         if (maxLevel != WeightStatusList.Count)
         {
@@ -28,7 +34,11 @@ public class CharacterData : MonoBehaviour
     }
     public void ChangeStatusLevelDiff(int levelDiff)
     {
-        currentLevel = (uint)Mathf.Clamp(currentLevel + levelDiff, 0, maxLevel);
+        currentLevel = (uint)Mathf.Clamp(currentLevel + levelDiff, 1, maxLevel);
+    }
+    public uint GetCurrentStatusLevel()
+    {
+        return currentLevel;
     }
     public uint GetHp()
     {
@@ -39,7 +49,7 @@ public class CharacterData : MonoBehaviour
         uint outData = 0;
         try
         {
-            outData = HpStatusList[(int)State];
+            outData = HpStatusList[(int)--State];
             return outData;
         }
         catch
@@ -56,7 +66,7 @@ public class CharacterData : MonoBehaviour
         float outData = 0f;
         try
         {
-            outData = WeightStatusList[(int)State];
+            outData = WeightStatusList[(int)--State];
             return outData;
         }
         catch
@@ -73,7 +83,7 @@ public class CharacterData : MonoBehaviour
         float outData = 0f;
         try
         {
-            outData = MoveSpeedStatusList[(int)State];
+            outData = MoveSpeedStatusList[(int)--State];
             return outData;
         }
         catch

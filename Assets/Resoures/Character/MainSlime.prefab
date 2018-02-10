@@ -19,6 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4588548828742608}
+  - component: {fileID: 114294259856568014}
   - component: {fileID: 114445712450593582}
   m_Layer: 0
   m_Name: MainSlime
@@ -39,7 +40,7 @@ GameObject:
   - component: {fileID: 114870500294680632}
   m_Layer: 0
   m_Name: SlimeCoreHitController
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -144,6 +145,19 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1688380482719208}
   m_Mesh: {fileID: 0}
+--- !u!114 &114294259856568014
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1161056717890278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4315a016a68f241b397fbe6514d6bbcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charaMeshController: {fileID: 114445712450593582}
+  colliderController: {fileID: 114870500294680632}
 --- !u!114 &114445712450593582
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -164,7 +178,9 @@ MonoBehaviour:
   hp: 0
   jumpPower: 0
   weight: 0
-  moveSpeedTest: 50
+  moveSpeedAdd: 50
+  facingDir: {x: 0, y: 1, z: 0}
+  parasitismingEnemy: {fileID: 0}
 --- !u!114 &114649615206213080
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -242,6 +258,7 @@ MonoBehaviour:
   m_SoftBodyPivotOffset: {x: 0, y: 0, z: 0}
   m_SoftBodyRotation: {x: 0, y: 0, z: 0}
   m_MeshScale: {x: 1, y: 1, z: 1}
+  scaleHistory: 1
   m_2DMode: 0
   m_RecalculateNormals: 0
   m_AttachNeighbors: 0
@@ -260,6 +277,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5569711795a04005b3966080d280005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetTrasform: {fileID: 0}
 --- !u!135 &135646515029071210
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -270,5 +288,5 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.3
+  m_Radius: 0.6
   m_Center: {x: 0, y: 0, z: 0}

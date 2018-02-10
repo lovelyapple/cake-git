@@ -1,45 +1,102 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class FieldManager : SingleToneBase<FieldManager>
 {
-    CharacterControllerJellyMesh mainChara;
-    List<AIFriendSlime> friendList;
+    MainSlimeController mainChara;
+    CharacterControllerJellyMesh _mainCharaJellyMeshController;
+    public CharacterControllerJellyMesh mainCharaJellyMeshCtrl
+    {
+        get
+        {
+            if (_mainCharaJellyMeshController == null)
+            {
+                _mainCharaJellyMeshController = mainChara.GetCharaMeshController();
+            }
+            return _mainCharaJellyMeshController;
+        }
+    }
+    Dictionary<uint, AIFriendSlime> friendList;
+    Dictionary<uint, AIEnemy> enemyList;
     [SerializeField] GameObject characterRoot;
     [SerializeField] GameObject dungeonRoot;
+    [SerializeField] CameraController mainCameraCtrl;
     FieldInfo currentFieldInto;
     FieldInfo currentFieldCache;
     [SerializeField] string loadDungeonName;
-    uint maxStats = 5;
+    [SerializeField] int debugWaitSec = 1;
+    public Vector3 cameraOffset = new Vector3(0, 0, -10f);
+    uint maxLoadStats = 5;
     string creatingMap = "フィールドデータロード中";
     string createMainChara = "メインキャラロード中";
     string createFreind = "スライム生成中";
     string createEnemy = "敵生成中";
+    uint defaultFriendLeftCount;//救えるフレンドの数
+    public uint savedFriendCount { get; private set; }//救ったスライムの数
+
+    public Action<uint> OnUpdateFriendCount;
+    public Action OnSaveOneFriend;
+    uint friendIdx = 0;//やらかした..くそ(挽回はできるけど、FieldObjectまで改造しまうのでとりあえずこれで)
+    uint enemyIdx = 0;
+
+    //
+    // マップロード関連
+    //
+
     public void CreateField(Action OnFinished, Action OnError)
     {
-        StartCoroutine(CreateFieldEnumerator(OnFinished, OnError));
+        StartCoroutine(CreateFieldAsync(OnFinished, OnError));
     }
-    IEnumerator CreateFieldEnumerator(Action OnFinished, Action OnError)
+    IEnumerator CreateFieldAsync(Action OnFinished, Action OnError)
     {
         yield return LoadDungeon();
         yield return LoadMainCharacter();
         yield return LoadFriendCharacter();
         yield return LoadEnemy();
         yield return RunLoadFadeOut();
-
+        if (OnFinished != null)
+        {
+            OnFinished();
+        }
+        RequestUpdateFieldInfo();
+        StateConfig.IsPausing = false;
     }
+    public void ReSetMap(Action OnFinished, Action OnError)
+    {
+        StartCoroutine(ReSetMapAsync(OnFinished, OnError));
+    }
+    IEnumerator ReSetMapAsync(Action OnFinished, Action OnError)
+    {
+        ClearFieldAll(true);
+        yield return LoadMainCharacter(true);
+        yield return LoadFriendCharacter(true);
+        yield return LoadEnemy(true);
+        if (OnFinished != null)
+        {
+            OnFinished();
+        }
+        RequestUpdateFieldInfo();
+        StateConfig.IsPausing = false;
+    }
+
+    //
+    //ダンジョンリソースのロード
+    //
+
+    //ダンジョンインスタンス作成
     public IEnumerator LoadDungeon()
     {
-        UpdateLoadWindow(1, maxStats, creatingMap);
+        UpdateLoadWindow(1, maxLoadStats, creatingMap);
 
         if (string.IsNullOrEmpty(loadDungeonName))
         {
             var go = ResourcesManager.Get().CreateInstance(FieldObjectIndex.TestDungeon, dungeonRoot.transform);
             if (go == null)
             {
-                ClearField();
+                ClearFieldAll();
                 yield break;
             }
             currentFieldInto = go.GetComponent<FieldInfo>();
@@ -50,7 +107,7 @@ public class FieldManager : SingleToneBase<FieldManager>
             var go = ResourcesManager.LoadSourcePrefab(loadDungeonName, SourceType.Dungeon);
             if (go == null)
             {
-                ClearField();
+                ClearFieldAll();
                 yield break;
             }
             currentFieldCache = go.GetComponent<FieldInfo>();
@@ -59,22 +116,26 @@ public class FieldManager : SingleToneBase<FieldManager>
 
             if (currentFieldInto != null)
             {
-                ClearField();
+                ClearFieldAll();
                 yield break;
             }
             currentFieldInto.transform.parent = dungeonRoot.transform;
         }
 
         UIUtility.SetActive(currentFieldInto.gameObject, true);
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(debugWaitSec);
     }
-    public IEnumerator LoadMainCharacter()
+    //メインキャラのインスタンス作成
+    public IEnumerator LoadMainCharacter(bool isReset = false)
     {
-        UpdateLoadWindow(2, maxStats, createMainChara);
+        if (!isReset)
+        {
+            UpdateLoadWindow(2, maxLoadStats, createMainChara);
+        }
 
         if (currentFieldInto == null)
         {
-            ClearField();
+            ClearFieldAll();
             yield break;
         }
 
@@ -82,56 +143,104 @@ public class FieldManager : SingleToneBase<FieldManager>
 
         if (startP == null)
         {
-            ClearField();
+            ClearFieldAll();
             yield break;
         }
 
         var charaObj = ResourcesManager.Get().CreateInstance(FieldObjectIndex.SlimeMainChara, characterRoot.transform);
         if (charaObj != null)
         {
-            mainChara = charaObj.GetComponent<CharacterControllerJellyMesh>();
-            mainChara.CreateCharacter();
-
-            if (mainChara == null)
+            mainChara = charaObj.GetComponent<MainSlimeController>();
+            charaObj.transform.position = currentFieldInto.GetStartPoint().gameObject.transform.position;
+            mainChara.GetCharaMeshController().CreateCharacter((g) =>
             {
-                ClearField();
-            }
-        }
-        yield return new WaitForSeconds(2);
+                if (mainChara != null)
+                {
+                    mainCameraCtrl.SetupCamera(g.m_CentralPoint.GameObject, cameraOffset);
+                }
+            });
 
+
+        }
+        yield return new WaitForSeconds(debugWaitSec);
     }
-    public IEnumerator LoadFriendCharacter()
+    //フレンドスライムの作成
+    public IEnumerator LoadFriendCharacter(bool isReset = false)
     {
-        UpdateLoadWindow(3, maxStats, createFreind);
-        yield return new WaitForSeconds(2);
-        yield break; //todo とりあえず、パス
+        if (!isReset)
+        {
+            UpdateLoadWindow(3, maxLoadStats, createFreind);
+            yield return new WaitForSeconds(debugWaitSec);
+        }
+
         if (currentFieldInto == null)
         {
-            ClearField();
+            ClearFieldAll();
             yield break;
         }
 
-        friendList = new List<AIFriendSlime>();
+        friendList = new Dictionary<uint, AIFriendSlime>();
+        friendIdx = 0;
+
         foreach (var friend in currentFieldInto.friendSlimeList)
         {
             var fObj = ResourcesManager.Get().CreateInstance(FieldObjectIndex.SlimeFriend, characterRoot.transform);
             if (fObj == null)
             {
-                ClearField();
+                ClearFieldAll();
                 yield break;
             }
 
+            fObj.transform.position = friend.gameObject.transform.position;
             var fAI = fObj.GetComponent<AIFriendSlime>();
-            friendList.Add(fAI);
+            fAI.CreateJellyMesh((g) =>
+            {
+                fAI.friendId = friendIdx;
+            });
+            friendList.Add(friendIdx, fAI);
+            friendIdx++;
         }
+        defaultFriendLeftCount = (uint)friendList.Count;
+        savedFriendCount = 0;
     }
-    public IEnumerator LoadEnemy()
+    //敵キャラの作成
+    public IEnumerator LoadEnemy(bool isReset = false)
     {
-        UpdateLoadWindow(4, maxStats, createEnemy);
-        yield return new WaitForSeconds(2);
-        UpdateLoadWindow(5, maxStats, createEnemy);
-        yield return new WaitForSeconds(1);
-        yield break;
+
+        if (!isReset)
+        {
+            UpdateLoadWindow(5, maxLoadStats, createEnemy);
+            yield return new WaitForSeconds(debugWaitSec);
+        }
+
+        if (currentFieldInto == null)
+        {
+            ClearFieldAll();
+            yield break;
+        }
+
+        enemyList = new Dictionary<uint, AIEnemy>();
+        enemyIdx = 0;
+
+        foreach (var enemy in currentFieldInto.enemySlimeList)
+        {
+            var fObj = ResourcesManager.Get().CreateInstance(FieldObjectIndex.SlimeEnemy, characterRoot.transform);
+            if (fObj == null)
+            {
+                ClearFieldAll();
+                yield break;
+            }
+
+            fObj.transform.position = enemy.gameObject.transform.position;
+            var fE = fObj.GetComponent<AIEnemy>();
+            fE.CreateJellyMesh((g) =>
+            {
+                fE.enemyId = enemyIdx;
+            });
+            enemyList.Add(enemyIdx, fE);
+            enemyIdx++;
+        }
+
     }
     public IEnumerator RunLoadFadeOut()
     {
@@ -150,7 +259,11 @@ public class FieldManager : SingleToneBase<FieldManager>
         loadWnd.SetSLiderValue(now, max, description);
     }
 
-    public CharacterControllerJellyMesh GetMainChara()
+    //
+    //ヘルパー
+    //
+
+    public MainSlimeController GetMainChara()
     {
         if (mainChara == null)
         {
@@ -160,16 +273,20 @@ public class FieldManager : SingleToneBase<FieldManager>
 
         return mainChara;
     }
-    public void ClearField()
+    public uint GetCurrentFriendCount()
     {
-        if (currentFieldInto != null)
+        return (uint)friendList.Values.Count(x => x != null && x.IsFree);
+    }
+    public void ClearFieldAll(bool isReset = false)
+    {
+        if (currentFieldInto != null && !isReset)
         {
             UIUtility.SetActive(currentFieldInto.gameObject, false);
             Destroy(currentFieldInto.gameObject);
             currentFieldInto = null;
         }
 
-        if (currentFieldCache != null)
+        if (currentFieldCache != null && !isReset)
         {
             currentFieldCache = null;
         }
@@ -183,13 +300,203 @@ public class FieldManager : SingleToneBase<FieldManager>
 
         if (friendList != null && friendList.Count > 0)
         {
-            foreach (var f in friendList)
+            foreach (var k in friendList.Keys)
             {
-                UIUtility.SetActive(f.gameObject, false);
-                Destroy(f.gameObject);
+                var f = friendList[k];
+                if (f != null)
+                {
+                    UIUtility.SetActive(f.gameObject, false);
+                    Destroy(f.gameObject);
+                }
             }
 
             friendList.Clear();
         }
+
+        if (enemyList != null && enemyList.Count > 0)
+        {
+            foreach (var k in enemyList.Keys)
+            {
+                var e = enemyList[k];
+                if (e != null)
+                {
+                    UIUtility.SetActive(e.gameObject, false);
+                    Destroy(e.gameObject);
+                }
+            }
+
+            enemyList.Clear();
+        }
     }
+
+    //
+    // スライム操作と情報の更新
+    //
+
+    /// マップの情報を更新する
+    public void RequestUpdateFieldInfo()
+    {
+        if (OnUpdateFriendCount != null)
+        {
+            OnUpdateFriendCount((uint)friendList.Count);
+        }
+
+        if (mainChara != null || mainCharaJellyMeshCtrl != null)
+        {
+            mainCharaJellyMeshCtrl.UpdateCharacterStatus();
+        }
+
+    }
+    /// フィールド上メインキャラがフレンドスライムを吸収する
+    public bool RequestCatchSLimeFromField(int diff)
+    {
+        if (mainCharaJellyMeshCtrl.IsCharaReachingMaxLevel() || mainCharaJellyMeshCtrl.IsCharaReachingMinLevel())
+        {
+            return false;
+        }
+
+        RequestUpdateFieldFriendCount();
+        RequestUpdateMainCharaSlimeCount(diff);
+        return true;
+    }
+    /// フィール上のスライム数更新
+    public void RequestUpdateFieldFriendCount()
+    {
+        if (OnUpdateFriendCount != null)
+        {
+            OnUpdateFriendCount(GetCurrentFriendCount());
+        }
+    }
+    /// メインキャラのスライム数更新
+    public void RequestUpdateMainCharaSlimeCount(int diff)
+    {
+        if (mainChara == null) { return; }
+
+        mainCharaJellyMeshCtrl.ChangeCharacterStatusLevel(diff);
+    }
+    /// メインキャラにダメージを与える
+    public void RequestDamageMainCharaSLime(int damage)
+    {
+        RequestUpdateMainCharaSlimeCount(damage);
+    }
+    /// スライムを一個解放する
+    /// 削除はAIの消失まで待つので、各自実行
+    public void RequestPutOneSlimeToCatchArea(AIFriendSlime ai)
+    {
+        if (friendList.ContainsKey(ai.friendId))
+        {
+            RequestUpdateFieldFriendCount();
+            savedFriendCount += 1;
+
+            if (OnSaveOneFriend != null)
+            {
+                OnSaveOneFriend();
+            }
+        }
+        else
+        {
+            Debug.Log("こんな友達持っていないよ");
+        }
+
+    }
+
+
+    /// フィールドデータ更新イベント登録
+    public void SetUpOnUpdateMainCharaStatusLevel(Action<CharacterData> onUpdate)
+    {
+        if (mainChara == null) { return; }
+
+        var mainJellyMeshCtrl = mainChara.GetCharaMeshController();
+
+        if (mainCameraCtrl == null) { return; }
+
+        mainJellyMeshCtrl.OnStatusChanged = onUpdate;
+    }
+    ///現在のフレンドがデフォルト値以上かどうか
+    public bool IsReachingMaxFriendAmount()
+    {
+        return friendList.Count > defaultFriendLeftCount;
+    }
+    /// フレンドスライムを一個作成
+    public AIFriendSlime CreateOneFriendSlime(Vector3 position, Action<AIFriendSlime> onResult)
+    {
+        var fObj = ResourcesManager.Get().CreateInstance(FieldObjectIndex.SlimeFriend, characterRoot.transform);
+        fObj.transform.position = position;
+
+        if (fObj == null) { return null; }
+
+        friendIdx++;
+        var fc = fObj.GetComponent<AIFriendSlime>();
+
+        fc.CreateJellyMesh((j) =>
+        {
+            fc.friendId = friendIdx;
+            j.SetPosition(position, true);
+            friendList.Add(friendIdx, fc);
+            RequestUpdateFieldInfo();
+            if (onResult != null)
+            {
+                onResult(fc);
+            }
+        });
+
+        return fc;
+    }
+    public void RemoveOneFriendSlime(uint id)
+    {
+        var f = friendList[id];
+
+        if (f != null)
+        {
+            Destroy(f.gameObject);
+            friendList[id] = null;
+            RequestUpdateFieldInfo();
+        }
+    }
+    /// 敵スライムを一個作成
+    public AIEnemy CreateOneEnemySlime(Vector3 position, Action<AIEnemy> onResult)
+    {
+        var fObj = ResourcesManager.Get().CreateInstance(FieldObjectIndex.SlimeEnemy, characterRoot.transform);
+        fObj.transform.position = position;
+
+        if (fObj == null) { return null; }
+
+        enemyIdx++;
+        var ec = fObj.GetComponent<AIEnemy>();
+
+        ec.CreateJellyMesh((j) =>
+        {
+            ec.enemyId = enemyIdx;
+            j.SetPosition(position, true);
+            enemyList.Add(enemyIdx, ec);
+            if (onResult != null)
+            {
+                onResult(ec);
+            }
+        });
+
+        return ec;
+    }
+    public void RemoveOneEnemySlime(uint id)
+    {
+        var e = enemyList[id];
+
+        if (e != null)
+        {
+            Destroy(e.gameObject);
+            enemyList[id] = null;
+        }
+    }
+    //
+    //ヘルパー
+    //
+
+    public FieldObjectBase GetCurrentFieldEndArea()
+    {
+        if (currentFieldInto == null) { return null; }
+        return currentFieldInto.GetEndArea();
+    }
+
+
+
 }
