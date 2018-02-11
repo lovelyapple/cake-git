@@ -13,12 +13,17 @@ public class SoundManager : SingleToneBase<SoundManager>
     [SerializeField] AudioClip throwOut;
     [SerializeField] AudioClip releaseFriend;
     [SerializeField] AudioClip catchFriend;
+    [SerializeField] AudioClip damage;
     [SerializeField] SoundController seCtrlPrefab;
     public List<SoundController> soundCtrlList = new List<SoundController>();
     public void StartBgm(bool active)
     {
         if (bgm != null)
             bgm.mute = active;
+    }
+    public void PlayOneShotSe_Damage()
+    {
+        PlayOneShotSe(damage);
     }
     public void PlayOneShotSe_Jump()
     {

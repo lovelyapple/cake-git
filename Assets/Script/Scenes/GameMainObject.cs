@@ -49,11 +49,14 @@ public class GameMainObject : SingleToneBase<GameMainObject>
     GameState gameState = GameState.Title;
     void Start()
     {
-        WindowManager.Get().ChecktInitWindowList();
-        WindowManager.CreateOpenWindow(WindowIndex.TitleWindow, (w) =>
-         {
-             gameState = GameState.Title;
-         });
+        if (gameMode != GameMode.Debug)
+        {
+            WindowManager.Get().ChecktInitWindowList();
+            WindowManager.CreateOpenWindow(WindowIndex.TitleWindow, (w) =>
+             {
+                 gameState = GameState.Title;
+             });
+        }
     }
     /// <summary>
     /// Update is called every frame, if the MonoBehaviour is enabled.
