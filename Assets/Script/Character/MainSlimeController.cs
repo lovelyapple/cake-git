@@ -10,7 +10,7 @@ public class MainSlimeController : JellyMeshController
     }
     void Update()
     {
-        if (jellyMesh != null && !StateConfig.IsPausing)
+        if (jellyMesh != null && !StateConfig.IsPausing && !IsDead())
         {
             UpdateCharacterInput();
         }
