@@ -87,8 +87,12 @@ public class AIEnemy : AIBase
             else
             {
                 dt = damageTime;
-                FieldManager.Get().RequestDamageMainCharaSLime(-1);
                 SoundManager.Get().PlayOneShotSe_Damage();
+
+                if (!mainChara.IsDead())
+                {
+                    FieldManager.Get().RequestDamageMainCharaSLime(-1);
+                }
             }
         }
 

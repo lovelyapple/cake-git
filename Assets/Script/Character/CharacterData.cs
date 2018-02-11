@@ -34,7 +34,7 @@ public class CharacterData : MonoBehaviour
     }
     public void ChangeStatusLevelDiff(int levelDiff)
     {
-        currentLevel = (uint)Mathf.Clamp(currentLevel + levelDiff, 1, maxLevel);
+        currentLevel = (uint)Mathf.Clamp(currentLevel + levelDiff, 0, maxLevel);
     }
     public uint GetCurrentStatusLevel()
     {

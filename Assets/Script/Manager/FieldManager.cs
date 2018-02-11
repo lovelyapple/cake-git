@@ -359,7 +359,11 @@ public class FieldManager : SingleToneBase<FieldManager>
     /// フィールド上メインキャラがフレンドスライムを吸収する
     public bool RequestCatchSLimeFromField(int diff)
     {
-        if (mainChara.IsCharaReachingMaxLevel() || mainChara.IsCharaReachingMinLevel())
+        if (diff > 0 && mainChara.IsCharaReachingMaxLevel())
+        {
+            return false;
+        }
+        else if (diff < 0 && mainChara.IsCharaReachingMinLevel())
         {
             return false;
         }
