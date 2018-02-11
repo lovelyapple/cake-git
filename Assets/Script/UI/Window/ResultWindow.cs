@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class ResultWindow : WindowBase
 {
+    [SerializeField] Text titleLabel;
     [SerializeField] Text savedSlimeCountLabel;
     public void OnClickRestart()
     {
@@ -18,11 +19,17 @@ public class ResultWindow : WindowBase
             Close();
         }, null);
     }
-    public void SetUp(uint savedSlimeCount)
+    public void SetUp(uint savedSlimeCount, bool isClear = true)
     {
-        if (savedSlimeCountLabel != null)   
-        {  
+        if (savedSlimeCountLabel != null)
+        {
             savedSlimeCountLabel.text = savedSlimeCount.ToString();
         }
+
+        if (titleLabel != null)
+        {
+            titleLabel.text = isClear ? StringTable.MissionClear : StringTable.MissionFailed;
+        }
+
     }
 }

@@ -106,14 +106,31 @@ public class JellyMeshController : MonoBehaviour
             OnStatusChanged(charaData);
         }
     }
+    public bool IsDead()
+    {
+        if (charaData == null) { return false; }
+        return charaData.IsDead;
+    }
     /// キャラクタのステータスレベルを変更
     /// targetState変更したいステータスレベル
     public void ChangeCharacterStatusLevel(int levelDiff)
     {
-        if (charaData == null) { return; }
+        if (charaData == null || IsDead()) { return; }
 
         charaData.ChangeStatusLevelDiff(levelDiff);
-        UpdateCharacterStatus();
+
+        if (!IsDead())
+        {
+            UpdateCharacterStatus();
+        }
+        else
+        {
+            WindowManager.CreateOpenWindow(WindowIndex.ResultWindow, (w) =>
+             {
+                 var wnd = w as ResultWindow;
+                 wnd.SetUp(FieldManager.Get().savedFriendCount, false);
+             });
+        }
     }
     public bool IsCharaReachingMaxLevel()
     {
