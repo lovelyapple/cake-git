@@ -78,7 +78,7 @@ public class FieldManager : SingleToneBase<FieldManager>
     }
     public void LoadFieldUI()
     {
-        WindowManager.Get().CreateOpenWindow(WindowIndex.FieldMenu, (w) =>
+        WindowManager.CreateOpenWindow(WindowIndex.FieldMenu, (w) =>
         {
             var fieldMenu = w as FieldMenu;
             fieldMenu.SetupFieldData();
@@ -160,7 +160,7 @@ public class FieldManager : SingleToneBase<FieldManager>
                 if (mainChara != null)
                 {
                     mainCameraCtrl.SetupCamera(g.m_CentralPoint.GameObject, cameraOffset);
-                    var wnd = WindowManager.Get().GetWindow(WindowIndex.FieldMenu) as FieldMenu;
+                    var wnd = WindowManager.GetWindow(WindowIndex.FieldMenu) as FieldMenu;
                     if (wnd != null)
                     {
                         wnd.SetupFieldData();
@@ -253,17 +253,17 @@ public class FieldManager : SingleToneBase<FieldManager>
     }
     public IEnumerator RunLoadFadeOut()
     {
-        if (!WindowManager.Get().IsWindowActive(WindowIndex.LoadWindow)) { yield break; }
+        if (!WindowManager.IsWindowActive(WindowIndex.LoadWindow)) { yield break; }
 
-        var loadWnd = WindowManager.Get().GetWindow(WindowIndex.LoadWindow) as LoadWindow;
+        var loadWnd = WindowManager.GetWindow(WindowIndex.LoadWindow) as LoadWindow;
 
         loadWnd.RunFadeOut();
     }
     void UpdateLoadWindow(uint now, uint max, string description)
     {
-        if (!WindowManager.Get().IsWindowActive(WindowIndex.LoadWindow)) { return; }
+        if (!WindowManager.IsWindowActive(WindowIndex.LoadWindow)) { return; }
 
-        var loadWnd = WindowManager.Get().GetWindow(WindowIndex.LoadWindow) as LoadWindow;
+        var loadWnd = WindowManager.GetWindow(WindowIndex.LoadWindow) as LoadWindow;
 
         loadWnd.SetSLiderValue(now, max, description);
     }

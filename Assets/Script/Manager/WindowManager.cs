@@ -44,7 +44,12 @@ public class WindowManager : SingleToneBase<WindowManager>
             windowList.Add(null);
         }
     }
-    public void CreateOpenWindow(WindowIndex index, Action<WindowBase> onLoad)
+    public static void CreateOpenWindow(WindowIndex index, Action<WindowBase> onLoad)
+    {
+        if (WindowManager.Get() == null) { return; }
+        WindowManager.Get()._CreateOpenWindow(index, onLoad);
+    }
+    public void _CreateOpenWindow(WindowIndex index, Action<WindowBase> onLoad)
     {
         if (UIWindowRoot == null)
         {
@@ -87,7 +92,12 @@ public class WindowManager : SingleToneBase<WindowManager>
             onLoad(windowList[(int)index]);
         }
     }
-    public bool IsWindowActive(WindowIndex index)
+    public static bool IsWindowActive(WindowIndex index)
+    {
+        if (WindowManager.Get() == null) { return false; }
+        return WindowManager.Get()._IsWindowActive(index);
+    }
+    public bool _IsWindowActive(WindowIndex index)
     {
         try
         {
@@ -102,7 +112,12 @@ public class WindowManager : SingleToneBase<WindowManager>
             return false;
         }
     }
-    public WindowBase GetWindow(WindowIndex index)
+    public static WindowBase GetWindow(WindowIndex index)
+    {
+        if (WindowManager.Get() == null) { return null; }
+        return WindowManager.Get()._GetWindow(index);
+    }
+    public WindowBase _GetWindow(WindowIndex index)
     {
         try
         {
@@ -113,7 +128,12 @@ public class WindowManager : SingleToneBase<WindowManager>
             return null;
         }
     }
-    public void CloseWindow(WindowIndex index)
+    public static void CloseWindow(WindowIndex index)
+    {
+        if (WindowManager.Get() == null) { return; }
+        WindowManager.Get()._CloseWindow(index);
+    }
+    public void _CloseWindow(WindowIndex index)
     {
         if (windowList[(int)index] == null)
         {
