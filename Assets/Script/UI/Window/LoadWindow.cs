@@ -45,7 +45,14 @@ public class LoadWindow : WindowBase
             Debug.LogError(" stateEnd " + stateEnd);
         }
     }
-
+    public override void Close()
+    {
+        base.Close();
+        if (OnClose != null)
+        {
+            OnClose();
+        }
+    }
     // Update is called once per frame
     void Update()
     {

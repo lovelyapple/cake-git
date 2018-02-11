@@ -4,19 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.SceneManagement;
-public enum WindowIndex
-{
-    TitleWindow,
-    LoadWindow,
-    ResultWindow,
-    Max,
-}
+
 public enum FieldObjectIndex
 {
     SlimeMainChara,
     SlimeCharacterData00,
     SlimeCharacterCollderController,
     SlimeFriend,
+    SlimeEnemy,
     TestDungeon,
 }
 public enum SourceType
@@ -25,122 +20,6 @@ public enum SourceType
 }
 public class ResourcesManager : SingleToneBase<ResourcesManager>
 {
-    //============= WindowManager===================//
-    [SerializeField] GameObject UIWindowRoot;
-
-    Dictionary<WindowIndex, string> windowPathDict = new Dictionary<WindowIndex, string>()
-    {
-        {WindowIndex.TitleWindow,"Assets/ExternalResources/UI/Window/TitleWindow.prefab"},
-        {WindowIndex.LoadWindow,"Assets/ExternalResources/UI/Window/LoadWindow.prefab"},
-        {WindowIndex.ResultWindow,"Assets/ExternalResources/UI/Window/ResultWIndow.prefab"},
-    };
-
-    //サイズ分確保
-    List<WindowBase> windowList;
-    public void ChecktInitWindowList()
-    {
-        if (windowList == null)
-        {
-            InitWindowList();
-        }
-    }
-    void InitWindowList()
-    {
-        windowList = new List<WindowBase>();
-
-        for (int idx = 0, idMax = (int)(WindowIndex.Max); idx < idMax; idx++)
-        {
-            windowList.Add(null);
-        }
-    }
-    public void CreateOpenWindow(WindowIndex index, Action<WindowBase> onLoad)
-    {
-        if (UIWindowRoot == null)
-        {
-            Debug.LogError("there is no root for Window UI");
-            return;
-        }
-
-        if (windowList[(int)index] == null)
-        {
-            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(windowPathDict[index]);
-
-            if (prefab == null)
-            {
-                Debug.LogError("could not find window Prefab " + index.ToString());
-                return;
-            }
-
-            var windowInstance = GameObject.Instantiate(prefab, UIWindowRoot.transform).GetComponent<WindowBase>();
-
-            if (windowInstance == null)
-            {
-                Debug.LogError("could not fine WIndowBase in " + index.ToString());
-                return;
-            }
-
-            windowList[(int)index] = windowInstance;
-        }
-        else
-        {
-            if (windowList[(int)index].gameObject.activeSelf == true)
-            {
-                Debug.LogWarning(" window is active " + index.ToString());
-            }
-        }
-
-        windowList[(int)index].Open();
-
-        if (onLoad != null)
-        {
-            onLoad(windowList[(int)index]);
-        }
-    }
-    public bool IsWindowActive(WindowIndex index)
-    {
-        try
-        {
-            var w = windowList[(int)index];
-
-            if (w == null) { return false; }
-
-            return w.gameObject.activeInHierarchy;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-    public WindowBase GetWindow(WindowIndex index)
-    {
-        try
-        {
-            return windowList[(int)index];
-        }
-        catch
-        {
-            return null;
-        }
-    }
-    public void CloseWindow(WindowIndex index)
-    {
-        if (windowList[(int)index] == null)
-        {
-            Debug.LogWarning("could not find wnd Instace when close " + index.ToString());
-            return;
-        }
-
-        windowList[(int)index].Close();
-    }
-    public void ClearAll()
-    {
-        foreach (var wnd in windowList)
-        {
-            GameObject.Destroy(wnd.gameObject);
-        }
-        InitWindowList();
-    }
-    //============= WindowManager===================//
 
     //============= normal Load ====================//
     [SerializeField] GameObject FieldObjectRoot;
@@ -148,9 +27,10 @@ public class ResourcesManager : SingleToneBase<ResourcesManager>
     {
         {FieldObjectIndex.SlimeMainChara, "Assets/Resoures/Character/MainSlime.prefab"},
         {FieldObjectIndex.SlimeCharacterData00, "Assets/Resoures/CharacterData/CharacterData_Slime00.prefab"},
-        {FieldObjectIndex.SlimeCharacterCollderController, "Assets/Resoures/CharacterData/SlimeCoreHitController.prefab"},
+        {FieldObjectIndex.SlimeCharacterCollderController, "Assets/Resoures/Character/SlimeCoreHitController.prefab"},
         {FieldObjectIndex.TestDungeon, "Assets/Resoures/Dungeon/Dungeon00.prefab"},
-        {FieldObjectIndex.SlimeFriend,"Assets/Resoures/CharacterData/FriendSlime.prefab"},
+        {FieldObjectIndex.SlimeFriend,"Assets/Resoures/Character/FriendSlime.prefab"},
+        {FieldObjectIndex.SlimeEnemy,"Assets/Resoures/Character/EnemySlime.prefab"},
     };
     Dictionary<FieldObjectIndex, GameObject> fieldObjectPrefabHolder = new Dictionary<FieldObjectIndex, GameObject>();
     public GameObject CreateInstance(FieldObjectIndex index, Transform parent = null, bool saveCache = true)
