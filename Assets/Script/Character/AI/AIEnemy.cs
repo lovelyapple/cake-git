@@ -92,6 +92,7 @@ public class AIEnemy : AIBase
                 if (!mainChara.IsDead())
                 {
                     FieldManager.Get().RequestDamageMainCharaSLime(-1);
+                    FxManager.Get().CreateFx_Damage(mainChara.GetMeshPosition());
                 }
             }
         }
