@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ResultWindow : WindowBase
+public class FriendSlimeStartPoint : FieldObjectBase
 {
-	public void OnClickRestart()
-	{
-		
-	}
-
+	
 }
