@@ -88,9 +88,12 @@ public class AIEnemy : AIBase
             {
                 dt = damageTime;
                 FieldManager.Get().RequestDamageMainCharaSLime(-1);
+                SoundManager.Get().PlayOneShotSe_Damage();
             }
         }
+
     }
+
     protected override void OnTriggerEnterCheckFix(Collider col)
     {
         var tag = col.gameObject.tag;

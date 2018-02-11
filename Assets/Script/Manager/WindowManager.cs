@@ -20,8 +20,8 @@ public class WindowManager : SingleToneBase<WindowManager>
     Dictionary<WindowIndex, string> windowPathDict = new Dictionary<WindowIndex, string>()
     {
         {WindowIndex.TitleWindow,"Assets/ExternalResources/UI/Window/Part_TitleMenu/TitleWindow.prefab"},
-        {WindowIndex.LoadWindow,"Assets/ExternalResources/UI/Window/LoadWindow.prefab"},
-        {WindowIndex.ResultWindow,"Assets/ExternalResources/UI/Window/ResultWIndow.prefab"},
+        {WindowIndex.LoadWindow,"Assets/ExternalResources/UI/Window/Part_LoadWindow/LoadWindow.prefab"},
+        {WindowIndex.ResultWindow,"Assets/ExternalResources/UI/Window/Part_ResultWIndow/ResultWIndow.prefab"},
         {WindowIndex.PauseWindow,"Assets/ExternalResources/UI/Window/Part_PauseMenu/PauseWindow.prefab"},
         {WindowIndex.FieldMenu,"Assets/ExternalResources/UI/Window/Part_FieldMenu/FieldMenu.prefab"},
     };

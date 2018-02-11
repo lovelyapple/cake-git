@@ -347,7 +347,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1237714072}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 463.45218, y: 196.14496, z: -7.760968}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1490098762}
@@ -372,6 +372,7 @@ MonoBehaviour:
   throwOut: {fileID: 8300000, guid: 986a8cc0338c548c3b2b9e6f0b24e0ce, type: 3}
   releaseFriend: {fileID: 8300000, guid: c4080a7420cd14952b1b0227ebada765, type: 3}
   catchFriend: {fileID: 8300000, guid: 53f414468937a452aab2820dd8be2ce7, type: 3}
+  damage: {fileID: 8300000, guid: ed9019e67c30848b4ae5e8e44afba84f, type: 3}
   seCtrlPrefab: {fileID: 114538364133701412, guid: 52beadc762588401483f602b72b72d83,
     type: 2}
   soundCtrlList: []
