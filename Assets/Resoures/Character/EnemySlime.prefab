@@ -165,7 +165,6 @@ MonoBehaviour:
   hp: 0
   jumpPower: 0
   weight: 0
-  moveSpeedAdd: 50
   facingDir: {x: 0, y: 1, z: 0}
   parasitismingEnemy: {fileID: 0}
 --- !u!114 &114649615206213080
@@ -281,12 +280,10 @@ MonoBehaviour:
   friendId: 0
   actionState: 0
   searchRange: 2
-  releaseRange: 2.5
   coolingTime: 5
   attackingTime: 2
   damageTime: 2
   jumpPower: 350
-  pushForce: 800
   enemyId: 0
   catchingMainCara: 0
   ct: 0
