@@ -83,6 +83,12 @@ public class FieldManager : SingleToneBase<FieldManager>
             var fieldMenu = w as FieldMenu;
             fieldMenu.SetupFieldData();
             FieldManager.Get().RequestUpdateFieldInfo();
+
+            var loadWnd = WindowManager.GetWindow(WindowIndex.LoadWindow) as LoadWindow;
+            if(loadWnd != null && WindowManager.IsWindowActive(WindowIndex.LoadWindow))
+            {
+                loadWnd.MoveToTop();
+            }
         });
     }
     //
