@@ -31,5 +31,6 @@ public class ResultWindow : WindowBase
             titleLabel.text = isClear ? StringTable.MissionClear : StringTable.MissionFailed;
         }
 
+        StateConfig.IsPausing = true;
     }
 }

@@ -390,7 +390,8 @@ public class FieldManager : SingleToneBase<FieldManager>
     /// メインキャラにダメージを与える
     public void RequestDamageMainCharaSLime(int damage)
     {
-        RequestUpdateMainCharaSlimeCount(damage);
+        if (mainChara == null) { return; }
+        mainChara.RequestDamageCharacter(damage);
     }
     /// スライムを一個解放する
     /// 削除はAIの消失まで待つので、各自実行

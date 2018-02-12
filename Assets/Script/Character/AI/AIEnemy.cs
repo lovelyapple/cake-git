@@ -13,12 +13,11 @@ public class AIEnemy : AIBase
     public ActionState actionState = ActionState.StandBy;
     MainSlimeController mainChara;
     [SerializeField] float searchRange = 2f;//todo charaData化
-    [SerializeField] float releaseRange = 2.5f;
     [SerializeField] float coolingTime = 5f;
     [SerializeField] float attackingTime = 2f;
     [SerializeField] float damageTime = 2f;
     [SerializeField] float jumpPower = 350f;
-    public float pushForce = 2200f;
+
     public uint enemyId;
     public bool catchingMainCara = false;
 
@@ -46,7 +45,7 @@ public class AIEnemy : AIBase
                 if (range <= searchRange)
                 {
                     vec.Normalize();
-                    vec.y += 0.3f;
+                    vec.y += GameSettingTable.EnemyAttackOffesetY;
                     charaMeshController.JellyMeshAddForce(vec * jumpPower, false);
                     actionState = ActionState.Attacking;
                     ct = coolingTime;
@@ -77,7 +76,7 @@ public class AIEnemy : AIBase
             if (dt > 0)
             {
                 dt -= Time.deltaTime;
-                if (releaseRange < range)
+                if (GameSettingTable.EnemyReleaseRange < range)
                 {
                     catchingMainCara = false;
                     mainChara.parasitismingEnemy = null;
@@ -87,12 +86,10 @@ public class AIEnemy : AIBase
             else
             {
                 dt = damageTime;
-                SoundManager.Get().PlayOneShotSe_Damage();
 
                 if (!mainChara.IsDead())
                 {
-                    FieldManager.Get().RequestDamageMainCharaSLime(-1);
-                    FxManager.Get().CreateFx_Damage(mainChara.GetMeshPosition());
+                    FieldManager.Get().RequestDamageMainCharaSLime(1);
                 }
             }
         }
@@ -123,7 +120,7 @@ public class AIEnemy : AIBase
         var power = vel.magnitude;
         vel.Normalize();
 
-        var finDir = dir * pushForce;
+        var finDir = dir * GameSettingTable.EnemyPowerThrowOut;
         //todo これ使えばいいけど
         charaMeshController.JellyMeshAddForce(finDir, false);
         catchingMainCara = false;

@@ -7,27 +7,28 @@ public class DamageArea : FieldObjectBase
     /// <summary>
     /// Update is called every frame, if the MonoBehaviour is enabled.
     /// </summary>
-	float secOne = 1000f;
-	float timeRemaining = 1000f;
+	float secOne = 2f;
+    float timeRemaining = 2f;
+    /// <summary>
+    /// This function is called when the object becomes enabled and active.
+    /// </summary>
+    void OnEnable()
+    {
+        if (base.onTriggleEnterFix == null)
+        {
+            onTriggleEnterFix = CheckPlayerIn;
+        }
+    }
     void Update()
     {
-        // if (IsPlayerInside())
-        // {
-        //     var chara = FieldManager.Get().GetMainChara();
 
-        //     if (chara != null)
-        //     {
-		// 		if(timeRemaining <= 0f)
-		// 		{
-		// 			chara.ChangeCharacterStatusLevel(-1);
-		// 			timeRemaining = secOne;
-		// 		}
-		// 		else
-		// 		{
-		// 			timeRemaining -= Time.deltaTime * secOne;
-		// 		}
-        //     }
-        // }
+    }
+    void CheckPlayerIn(Collider col)
+    {
+        if (col.gameObject.tag == "Player")
+        {
+            FieldManager.Get().RequestDamageMainCharaSLime(1);
+        }
     }
 
 }

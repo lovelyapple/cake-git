@@ -20,8 +20,8 @@ public class JellyMeshController : MonoBehaviour
     [SerializeField] protected uint hp;
     [SerializeField] protected float jumpPower;
     [SerializeField] protected float weight;
-    [Range(5f, 100f)]
-    public float moveSpeedAdd = 50f;
+
+    float? damageCoolingTime;
     public Action<CharacterData> OnStatusChanged = null;
     public CharacterData charaData { get; private set; }
     Rigidbody jellyMeshRigidbody;
@@ -99,7 +99,7 @@ public class JellyMeshController : MonoBehaviour
         weight = charaData.GetWeight();
         hp = charaData.GetHp();
         moveSpeed = charaData.GetMoveSpeed();
-        jumpPower = (1 - charaData.GetWeight()) * 1000;
+        jumpPower = (1 - charaData.GetWeight()) * GameSettingTable.CharacStatusWeightMax;
 
         if (OnStatusChanged != null)
         {
@@ -111,11 +111,44 @@ public class JellyMeshController : MonoBehaviour
         if (charaData == null) { return false; }
         return charaData.IsDead;
     }
+    // キャラにダメーじを加える
+    public void RequestDamageCharacter(int damage)
+    {
+        if (damageCoolingTime.HasValue) { return; }
+
+        StartCoroutine(IeDamageChara(damage));
+    }
+    IEnumerator IeDamageChara(int damage)
+    {
+        if (!ChangeCharacterStatusLevel(-damage))
+        {
+            yield break;
+        }
+
+        var jumpX = UnityEngine.Random.Range(-1, 1) > 0 ? 1 : -1;
+        var jumpDir = new Vector3(jumpX, 1f, 0);
+        jumpDir = jumpDir.normalized * GameSettingTable.CharaDamagedDumpPower;
+        JellyMeshAddForce(jumpDir, false);
+
+        FxManager.Get().CreateFx_Damage(GetMeshPosition());
+        damageCoolingTime = GameSettingTable.CharaDamageCoolingTime;
+        SoundManager.Get().PlayOneShotSe_Damage();
+
+        while (damageCoolingTime.HasValue)
+        {
+            damageCoolingTime -= Time.deltaTime;
+            if (damageCoolingTime.Value <= 0)
+            {
+                damageCoolingTime = null;
+            }
+            yield return null;
+        }
+    }
     /// キャラクタのステータスレベルを変更
     /// targetState変更したいステータスレベル
-    public void ChangeCharacterStatusLevel(int levelDiff)
+    public bool ChangeCharacterStatusLevel(int levelDiff)
     {
-        if (charaData == null || IsDead()) { return; }
+        if (charaData == null || IsDead()) { return false; }
 
         charaData.ChangeStatusLevelDiff(levelDiff);
 
@@ -131,6 +164,7 @@ public class JellyMeshController : MonoBehaviour
                  wnd.SetUp(FieldManager.Get().savedFriendCount, false);
              });
         }
+        return true;
     }
     public bool IsCharaReachingMaxLevel()
     {
@@ -154,12 +188,12 @@ public class JellyMeshController : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.D) && GetJellyMeshVelocity().x < moveSpeed)//これ速度だぜ！
             {
-                JellyMeshAddForce(Vector3.right * moveSpeedAdd, false);
+                JellyMeshAddForce(Vector3.right * GameSettingTable.CharaStatusSpeedAdd, false);
                 facingDir = Vector3.right;
             }
             else if (Input.GetKey(KeyCode.A) && GetJellyMeshVelocity().x > -moveSpeed)
             {
-                JellyMeshAddForce(Vector3.left * moveSpeedAdd, false);
+                JellyMeshAddForce(Vector3.left * GameSettingTable.CharaStatusSpeedAdd, false);
                 facingDir = Vector3.left;
             }
             if (Input.GetKeyDown(KeyCode.Space))
@@ -183,12 +217,9 @@ public class JellyMeshController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.J))
         {
             var pos = colliderController.transform.position;
-            pos.y += 1.0f;//test todo なんか距離とった方がいいな
+            pos.y += 1.0f;//頭上に持ってくる
 
             var vel = GetJellyMeshVelocity();
-            var isparaNull = parasitismingEnemy == null;
-            var isCurrentStatusabove = charaData.GetCurrentStatusLevel() > 1;
-            var isReachMax = FieldManager.Get().IsReachingMaxFriendAmount();
             if (parasitismingEnemy == null && charaData.GetCurrentStatusLevel() > 1 && !FieldManager.Get().IsReachingMaxFriendAmount())
             {
                 var ai = FieldManager.Get().CreateOneFriendSlime(pos, (i) =>
@@ -202,10 +233,10 @@ public class JellyMeshController : MonoBehaviour
                 FieldManager.Get().RemoveOneEnemySlime(parasitismingEnemy.enemyId);
                 parasitismingEnemy = null;
 
-                facingDir.y += 1.0f;
+                facingDir.y += 1.0f;//斜め上に向く
                 facingDir.Normalize();
 
-                var setPos = GetMeshPosition() + facingDir * 1.2f;
+                var setPos = GetMeshPosition() + facingDir;
                 FieldManager.Get().CreateOneEnemySlime(setPos, (i) =>
                  {
                      i.PushOutThisSlime(facingDir, vel);
