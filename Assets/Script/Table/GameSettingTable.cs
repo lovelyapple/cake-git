@@ -10,8 +10,11 @@ public static class GameSettingTable
     //
     //変更してはいけないもの
     //
+    
     ///キャラステータス：重さを計算するための係数
     public static float CharacStatusWeightMax { get { return 1000; } }
+    ///ジョイスティックがスタート地点から離れられる最大距離
+    public static float JoyPadMaxRange { get { return 100f; } }
 
     //
     //変更していいもの
@@ -27,6 +30,6 @@ public static class GameSettingTable
     public static float EnemyPowerThrowOut { get { return 300f; } }
     ///敵：攻撃時にジャンプする方向ベクトル高さオフセット
     public static float EnemyAttackOffesetY { get { return 0.3f; } }
-	///敵：メインキャラを捕まった後、くっ付いとく最大距離
+    ///敵：メインキャラを捕まった後、くっ付いとく最大距離
     public static float EnemyReleaseRange { get { return 2.5f; } }
 }

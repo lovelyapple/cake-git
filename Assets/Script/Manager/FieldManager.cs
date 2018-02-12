@@ -284,7 +284,7 @@ public class FieldManager : SingleToneBase<FieldManager>
 
         return mainChara;
     }
-    public uint GetCurrentFriendCount()
+    public uint GetCurrentFriendCountOnField()
     {
         return (uint)friendList.Values.Count(x => x != null && x.IsFree);
     }
@@ -349,7 +349,7 @@ public class FieldManager : SingleToneBase<FieldManager>
     {
         if (OnUpdateFriendCount != null)
         {
-            OnUpdateFriendCount(GetCurrentFriendCount());
+            OnUpdateFriendCount(GetCurrentFriendCountOnField());
         }
 
         if (mainChara != null)
@@ -379,7 +379,7 @@ public class FieldManager : SingleToneBase<FieldManager>
     {
         if (OnUpdateFriendCount != null)
         {
-            OnUpdateFriendCount(GetCurrentFriendCount());
+            OnUpdateFriendCount(GetCurrentFriendCountOnField());
         }
     }
     /// メインキャラのスライム数更新
@@ -431,7 +431,7 @@ public class FieldManager : SingleToneBase<FieldManager>
     ///現在のフレンドがデフォルト値以上かどうか
     public bool IsReachingMaxFriendAmount()
     {
-        return GetCurrentFriendCount() >= defaultFriendLeftCount;
+        return GetCurrentFriendCountOnField() >= defaultFriendLeftCount;
     }
     /// フレンドスライムを一個作成
     public AIFriendSlime CreateOneFriendSlime(Vector3 position, Action<AIFriendSlime> onResult)
@@ -512,7 +512,4 @@ public class FieldManager : SingleToneBase<FieldManager>
         if (currentFieldInto == null) { return null; }
         return currentFieldInto.GetEndArea();
     }
-
-
-
 }

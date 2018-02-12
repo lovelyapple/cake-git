@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEditor.EventSystems;
 
-public class FieldMenu : WindowBase
+public partial class FieldMenu : WindowBase
 {
     [SerializeField] Slider hpGageSlider;
     [SerializeField] Text friendSlimeLfet;
+    [SerializeField] GameObject JoyPadObj;
 
     void OnDisable()
     {
@@ -35,4 +37,5 @@ public class FieldMenu : WindowBase
         FieldManager.Get().SetUpOnUpdateMainCharaStatusLevel(OnUpdateHpSlider);
         FieldManager.Get().OnUpdateFriendCount += OnUpdateFriendSlimeLeftCount;
     }
+    
 }
