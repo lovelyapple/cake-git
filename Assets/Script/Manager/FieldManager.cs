@@ -18,10 +18,6 @@ public class FieldManager : SingleToneBase<FieldManager>
     [SerializeField] int debugWaitSec = 1;
     public Vector3 cameraOffset = new Vector3(0, 0, -10f);
     uint maxLoadStats = 5;
-    string creatingMap = "フィールドデータロード中";
-    string createMainChara = "メインキャラロード中";
-    string createFreind = "スライム生成中";
-    string createEnemy = "敵生成中";
     uint defaultFriendLeftCount;//救えるフレンドの数
     public uint savedFriendCount { get; private set; }//救ったスライムの数
 
@@ -85,7 +81,7 @@ public class FieldManager : SingleToneBase<FieldManager>
             FieldManager.Get().RequestUpdateFieldInfo();
 
             var loadWnd = WindowManager.GetWindow(WindowIndex.LoadWindow) as LoadWindow;
-            if(loadWnd != null && WindowManager.IsWindowActive(WindowIndex.LoadWindow))
+            if (loadWnd != null && WindowManager.IsWindowActive(WindowIndex.LoadWindow))
             {
                 loadWnd.MoveToTop();
             }
@@ -98,7 +94,7 @@ public class FieldManager : SingleToneBase<FieldManager>
     //ダンジョンインスタンス作成
     public IEnumerator LoadDungeon()
     {
-        UpdateLoadWindow(1, maxLoadStats, creatingMap);
+        UpdateLoadWindow(1, maxLoadStats, StringTable.LoadPhaseCreateMap);
 
         if (string.IsNullOrEmpty(loadDungeonName))
         {
@@ -139,7 +135,7 @@ public class FieldManager : SingleToneBase<FieldManager>
     {
         if (!isReset)
         {
-            UpdateLoadWindow(2, maxLoadStats, createMainChara);
+            UpdateLoadWindow(2, maxLoadStats, StringTable.LoadPhaseCreateMainChara);
         }
 
         if (currentFieldInto == null)
@@ -181,7 +177,7 @@ public class FieldManager : SingleToneBase<FieldManager>
     {
         if (!isReset)
         {
-            UpdateLoadWindow(3, maxLoadStats, createFreind);
+            UpdateLoadWindow(3, maxLoadStats, StringTable.LoadPhaseCreateFriend);
             yield return new WaitForSeconds(debugWaitSec);
         }
 
@@ -224,7 +220,7 @@ public class FieldManager : SingleToneBase<FieldManager>
 
         if (!isReset)
         {
-            UpdateLoadWindow(5, maxLoadStats, createEnemy);
+            UpdateLoadWindow(5, maxLoadStats, StringTable.LoadPhaseCreateEnemy);
             yield return new WaitForSeconds(debugWaitSec);
         }
 
