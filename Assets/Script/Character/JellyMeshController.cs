@@ -10,7 +10,7 @@ using UnityEngine;
  * charaDataに保存される。
  * データの操作はCharacterDataで管理する。
  */
-public class JellyMeshController : MonoBehaviour
+public  partial class JellyMeshController : MonoBehaviour
 {
     [SerializeField] protected CharacterData slimeDataPrefab;
     [SerializeField] protected JellyMesh jellyMesh;
@@ -177,75 +177,7 @@ public class JellyMeshController : MonoBehaviour
         if (charaData == null) { return true; }
         return charaData.GetCurrentStatusLevel() == 1;//最小
     }
-    //
-    //操作関連(todo 1.3で分ける)
-    //
-
-    public void UpdateCharacterInput()
-    {
-        if (jellyMesh == null || !jellyMesh.IsMeshCreated) { return; }
-        if (JellyMeshIsGrounded(LayerUtility.FieldEnvObjectMask, 1))
-        {
-            if (Input.GetKey(KeyCode.D) && GetJellyMeshVelocity().x < moveSpeed)//これ速度だぜ！
-            {
-                JellyMeshAddForce(Vector3.right * GameSettingTable.CharaStatusSpeedAdd, false);
-                facingDir = Vector3.right;
-            }
-            else if (Input.GetKey(KeyCode.A) && GetJellyMeshVelocity().x > -moveSpeed)
-            {
-                JellyMeshAddForce(Vector3.left * GameSettingTable.CharaStatusSpeedAdd, false);
-                facingDir = Vector3.left;
-            }
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                JellyMeshAddForce(Vector3.up * jumpPower, false);
-                SoundManager.Get().PlayOneShotSe_Jump();
-            }
-        }
-        else
-        {
-            if (Input.GetKey(KeyCode.D))
-            {
-                facingDir = Vector3.right;
-            }
-            else if (Input.GetKey(KeyCode.A))
-            {
-                facingDir = Vector3.left;
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            var pos = colliderController.transform.position;
-            pos.y += 1.0f;//頭上に持ってくる
-
-            var vel = GetJellyMeshVelocity();
-            if (parasitismingEnemy == null && charaData.GetCurrentStatusLevel() > 1 && !FieldManager.Get().IsReachingMaxFriendAmount())
-            {
-                var ai = FieldManager.Get().CreateOneFriendSlime(pos, (i) =>
-                 {
-                     FieldManager.Get().RequestCatchSLimeFromField(-1);
-                     i.PushOutThisSlime(Vector3.zero, facingDir, vel);
-                 });
-            }
-            else if (parasitismingEnemy != null)
-            {
-                FieldManager.Get().RemoveOneEnemySlime(parasitismingEnemy.enemyId);
-                parasitismingEnemy = null;
-
-                facingDir.y += 1.0f;//斜め上に向く
-                facingDir.Normalize();
-
-                var setPos = GetMeshPosition() + facingDir;
-                FieldManager.Get().CreateOneEnemySlime(setPos, (i) =>
-                 {
-                     i.PushOutThisSlime(facingDir, vel);
-                 });
-
-
-            }
-        }
-    }
+    
     //JellyMeshのヘルパー(todo 1.2で分けたい)
     public Vector3 GetJellyMeshVelocity()
     {

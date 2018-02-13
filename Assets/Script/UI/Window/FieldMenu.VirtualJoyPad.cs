@@ -71,6 +71,7 @@ public partial class FieldMenu
         }
 
         targetImage.transform.position = calPos;
+        InputUtilityManager.Get().OnInputMove(calPos - startPoint.Value);
     }
     public void OnPointUp()
     {
@@ -100,6 +101,28 @@ public partial class FieldMenu
         colF.a = 0f;
         targetImage.color = colF;
         coroutineRunFadeOut = null;
+    }
+    public void OnClickActionButton()
+    {
+        try
+        {
+            InputUtilityManager.Get().OnClickAction();
+        }
+        catch
+        {
+            Debug.LogError("fail to send msg to InputManager");
+        }
+    }
+    public void OnClickJumpButton()
+    {
+        try
+        {
+            InputUtilityManager.Get().OnClickJump();
+        }
+        catch
+        {
+            Debug.LogError("fail to send msg to InputManager");
+        }
     }
     // void OnGUI()
     // {
