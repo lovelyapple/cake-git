@@ -6,13 +6,11 @@ public class MainSlimeController : JellyMeshController
 {
     void OnEnable()
     {
-        
-    }
-    void Update()
-    {
-        if (jellyMesh != null && !StateConfig.IsPausing && !IsDead())
-        {
-            UpdateCharacterInput();
-        }
+        InputUtilityManager.Get().OnClickActionEvent = null;
+        InputUtilityManager.Get().OnClickJumpEvent = null;
+        InputUtilityManager.Get().OnInputMoveEvent = null;
+        InputUtilityManager.Get().OnClickActionEvent = OnClickAction;
+        InputUtilityManager.Get().OnClickJumpEvent = OnClickJump;
+        InputUtilityManager.Get().OnInputMoveEvent = OnMove;
     }
 }

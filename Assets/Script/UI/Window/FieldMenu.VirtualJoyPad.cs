@@ -71,6 +71,7 @@ public partial class FieldMenu
         }
 
         targetImage.transform.position = calPos;
+        InputUtilityManager.Get().OnInputMove(calPos - startPoint.Value);
     }
     public void OnPointUp()
     {
@@ -100,6 +101,14 @@ public partial class FieldMenu
         colF.a = 0f;
         targetImage.color = colF;
         coroutineRunFadeOut = null;
+    }
+    public void OnClickActionButton()
+    {
+        InputUtilityManager.Get().OnClickAction();
+    }
+    public void OnClickJumpButton()
+    {
+        InputUtilityManager.Get().OnClickJump();
     }
     // void OnGUI()
     // {

@@ -50,9 +50,5 @@ public class FxManager : SingleToneBase<FxManager>
     /// </summary>
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            CreateFx_Damage(Vector3.zero);
-        }
     }
 }
