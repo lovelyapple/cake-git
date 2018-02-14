@@ -49,23 +49,36 @@ public class InputUtilityManager : SingleToneBase<InputUtilityManager>
     void Update()
     {
 #if UNITY_STANDALONE
+        if (StateConfig.IsPausing) { return; }
         if (Input.GetKey(KeyCode.A))
         {
-            OnInputMove(new Vector3(-1f, 0, 0));
+            if (OnInputMoveEvent != null)
+            {
+                OnInputMoveEvent(new Vector3(-1f, 0, 0));
+            }
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            OnInputMove(new Vector3(1f, 0, 0));
+            if (OnInputMoveEvent != null)
+            {
+                OnInputMoveEvent(new Vector3(1f, 0, 0));
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            OnClickJump();
+            if (OnClickJumpEvent != null)
+            {
+                OnClickJumpEvent();
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.J))
         {
-            OnClickAction();
+            if (OnClickActionEvent != null)
+            {
+                OnClickActionEvent();
+            }
         }
 #endif
     }

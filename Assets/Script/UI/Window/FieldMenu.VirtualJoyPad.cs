@@ -104,25 +104,11 @@ public partial class FieldMenu
     }
     public void OnClickActionButton()
     {
-        try
-        {
-            InputUtilityManager.Get().OnClickAction();
-        }
-        catch
-        {
-            Debug.LogError("fail to send msg to InputManager");
-        }
+        InputUtilityManager.Get().OnClickAction();
     }
     public void OnClickJumpButton()
     {
-        try
-        {
-            InputUtilityManager.Get().OnClickJump();
-        }
-        catch
-        {
-            Debug.LogError("fail to send msg to InputManager");
-        }
+        InputUtilityManager.Get().OnClickJump();
     }
     // void OnGUI()
     // {
