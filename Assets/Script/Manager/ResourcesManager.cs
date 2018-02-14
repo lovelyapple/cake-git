@@ -25,12 +25,12 @@ public class ResourcesManager : SingleToneBase<ResourcesManager>
     [SerializeField] GameObject FieldObjectRoot;
     Dictionary<FieldObjectIndex, string> fieldObjectPathDict = new Dictionary<FieldObjectIndex, string>()
     {
-        {FieldObjectIndex.SlimeMainChara, "Assets/Resoures/Character/MainSlime.prefab"},
-        {FieldObjectIndex.SlimeCharacterData00, "Assets/Resoures/CharacterData/CharacterData_Slime00.prefab"},
-        {FieldObjectIndex.SlimeCharacterCollderController, "Assets/Resoures/Character/SlimeCoreHitController.prefab"},
-        {FieldObjectIndex.TestDungeon, "Assets/Resoures/Dungeon/Dungeon00.prefab"},
-        {FieldObjectIndex.SlimeFriend,"Assets/Resoures/Character/FriendSlime.prefab"},
-        {FieldObjectIndex.SlimeEnemy,"Assets/Resoures/Character/EnemySlime.prefab"},
+        {FieldObjectIndex.SlimeMainChara, "Assets/Resources/Character/MainSlime.prefab"},
+        {FieldObjectIndex.SlimeCharacterData00, "Assets/Resources/CharacterData/CharacterData_Slime00.prefab"},
+        {FieldObjectIndex.SlimeCharacterCollderController, "Assets/Resources/Character/SlimeCoreHitController.prefab"},
+        {FieldObjectIndex.TestDungeon, "Assets/Resources/Dungeon/Dungeon00.prefab"},
+        {FieldObjectIndex.SlimeFriend,"Assets/Resources/Character/FriendSlime.prefab"},
+        {FieldObjectIndex.SlimeEnemy,"Assets/Resources/Character/EnemySlime.prefab"},
     };
     Dictionary<FieldObjectIndex, GameObject> fieldObjectPrefabHolder = new Dictionary<FieldObjectIndex, GameObject>();
     public GameObject CreateInstance(FieldObjectIndex index, Transform parent = null, bool saveCache = true)
