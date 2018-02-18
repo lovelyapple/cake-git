@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using UnityEngine.SceneManagement;
 
 public enum FieldObjectIndex
@@ -25,12 +24,18 @@ public class ResourcesManager : SingleToneBase<ResourcesManager>
     [SerializeField] GameObject FieldObjectRoot;
     Dictionary<FieldObjectIndex, string> fieldObjectPathDict = new Dictionary<FieldObjectIndex, string>()
     {
-        {FieldObjectIndex.SlimeMainChara, "Assets/Resources/Character/MainSlime.prefab"},
-        {FieldObjectIndex.SlimeCharacterData00, "Assets/Resources/CharacterData/CharacterData_Slime00.prefab"},
-        {FieldObjectIndex.SlimeCharacterCollderController, "Assets/Resources/Character/SlimeCoreHitController.prefab"},
-        {FieldObjectIndex.TestDungeon, "Assets/Resources/Dungeon/Dungeon00.prefab"},
-        {FieldObjectIndex.SlimeFriend,"Assets/Resources/Character/FriendSlime.prefab"},
-        {FieldObjectIndex.SlimeEnemy,"Assets/Resources/Character/EnemySlime.prefab"},
+        // {FieldObjectIndex.SlimeMainChara, "Assets/Resources/Character/MainSlime.prefab"},
+        // {FieldObjectIndex.SlimeCharacterData00, "Assets/Resources/CharacterData/CharacterData_Slime00.prefab"},
+        // {FieldObjectIndex.SlimeCharacterCollderController, "Assets/Resources/Character/SlimeCoreHitController.prefab"},
+        // {FieldObjectIndex.TestDungeon, "Assets/Resources/Dungeon/Dungeon00.prefab"},
+        // {FieldObjectIndex.SlimeFriend,"Assets/Resources/Character/FriendSlime.prefab"},
+        // {FieldObjectIndex.SlimeEnemy,"Assets/Resources/Character/EnemySlime.prefab"},
+        {FieldObjectIndex.SlimeMainChara, "Character/MainSlime"},
+        {FieldObjectIndex.SlimeCharacterData00, "CharacterData/CharacterData_Slime00"},
+        {FieldObjectIndex.SlimeCharacterCollderController, "Character/SlimeCoreHitController"},
+        {FieldObjectIndex.TestDungeon, "Dungeon/Dungeon00"},
+        {FieldObjectIndex.SlimeFriend,"Character/FriendSlime"},
+        {FieldObjectIndex.SlimeEnemy,"Character/EnemySlime"},
     };
     Dictionary<FieldObjectIndex, GameObject> fieldObjectPrefabHolder = new Dictionary<FieldObjectIndex, GameObject>();
     public GameObject CreateInstance(FieldObjectIndex index, Transform parent = null, bool saveCache = true)
@@ -40,7 +45,7 @@ public class ResourcesManager : SingleToneBase<ResourcesManager>
             parent = FieldObjectRoot.transform;
         }
 
-        GameObject prefab;
+        GameObject prefab = null;
         if (fieldObjectPrefabHolder.ContainsKey(index) && fieldObjectPrefabHolder[index] != null)
         {
             prefab = fieldObjectPrefabHolder[index];
@@ -48,7 +53,7 @@ public class ResourcesManager : SingleToneBase<ResourcesManager>
         }
         else
         {
-            prefab = AssetDatabase.LoadAssetAtPath<GameObject>(fieldObjectPathDict[index]);
+            prefab = Resources.Load<GameObject>(fieldObjectPathDict[index]);
 
             if (prefab == null)
             {
@@ -86,7 +91,7 @@ public class ResourcesManager : SingleToneBase<ResourcesManager>
                 break;
         }
 
-        return AssetDatabase.LoadAssetAtPath<GameObject>(loadPath);
+        return null;//EditorResourceLoader.LoadResource(loadPath);
     }
     public static T CreateGetComponent<T>(GameObject prefab) where T : class
     {

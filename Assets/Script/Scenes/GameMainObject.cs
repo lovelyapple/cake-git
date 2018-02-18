@@ -49,9 +49,9 @@ public class GameMainObject : SingleToneBase<GameMainObject>
     GameState gameState = GameState.Title;
     void Start()
     {
+        WindowManager.Get().ChecktInitWindowList();
         if (gameMode != GameMode.Debug)
-        {
-            WindowManager.Get().ChecktInitWindowList();
+        {       
             WindowManager.CreateOpenWindow(WindowIndex.TitleWindow, (w) =>
              {
                  gameState = GameState.Title;

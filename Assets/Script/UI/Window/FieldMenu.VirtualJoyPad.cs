@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEditor;
 public partial class FieldMenu
 {
     [SerializeField] Image targetImage;
@@ -26,12 +25,11 @@ public partial class FieldMenu
     public void OnPointDown()
     {
 #if UNITY_STANDALONE
-        startPoint = Input.mousePosition;
-#elif UNITY_IOS
+        startPoint = Input.mousePosition; 
+#else
         var t = Input.GetTouch(0);
-        startPoint.x = t.position.x;
-        startPoint.y = t.position.y;
-        startPoint.z = 0;
+        var Vec = new Vector3(t.position.x, t.position.y, 0);
+        startPoint = Vec;
 #endif
 
         if (coroutineRunFadeOut != null)
@@ -51,11 +49,10 @@ public partial class FieldMenu
 
 #if UNITY_STANDALONE
         nowPos = Input.mousePosition;
-#elif UNITY_IOS
-		var t = Input.GetTouch(0);
-		nowPos.x = t.position.x;
-        nowPos.y = t.position.y;
-        nowPos.z = 0;
+#else
+        var t = Input.GetTouch(0);
+        var Vec = new Vector3(t.position.x, t.position.y, 0);
+        nowPos = Vec;
 #endif
         var diff = nowPos - startPoint.Value;
 

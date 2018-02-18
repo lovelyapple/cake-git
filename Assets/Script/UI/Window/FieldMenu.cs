@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEditor.EventSystems;
 
 public partial class FieldMenu : WindowBase
 {
@@ -37,5 +36,11 @@ public partial class FieldMenu : WindowBase
         FieldManager.Get().SetUpOnUpdateMainCharaStatusLevel(OnUpdateHpSlider);
         FieldManager.Get().OnUpdateFriendCount += OnUpdateFriendSlimeLeftCount;
     }
-    
+    public void OnClickPause()
+    {
+        WindowManager.CreateOpenWindow(WindowIndex.PauseWindow, (w) =>
+         {
+             StateConfig.IsPausing = true;
+         });
+    }
 }

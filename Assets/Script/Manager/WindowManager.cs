@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using UnityEngine.SceneManagement;
 public enum WindowIndex
 {
@@ -19,15 +18,20 @@ public class WindowManager : SingleToneBase<WindowManager>
 
     Dictionary<WindowIndex, string> windowPathDict = new Dictionary<WindowIndex, string>()
     {
-        {WindowIndex.TitleWindow,"Assets/Resources/UI/Window/Part_TitleMenu/TitleWindow.prefab"},
-        {WindowIndex.LoadWindow,"Assets/Resources/UI/Window/Part_LoadWindow/LoadWindow.prefab"},
-        {WindowIndex.ResultWindow,"Assets/Resources/UI/Window/Part_ResultWIndow/ResultWIndow.prefab"},
-        {WindowIndex.PauseWindow,"Assets/Resources/UI/Window/Part_PauseMenu/PauseWindow.prefab"},
-        {WindowIndex.FieldMenu,"Assets/Resources/UI/Window/Part_FieldMenu/FieldMenu.prefab"},
+        // {WindowIndex.TitleWindow,"Assets/Resources/UI/Window/Part_TitleMenu/TitleWindow.prefab"},
+        // {WindowIndex.LoadWindow,"Assets/Resources/UI/Window/Part_LoadWindow/LoadWindow.prefab"},
+        // {WindowIndex.ResultWindow,"Assets/Resources/UI/Window/Part_ResultWIndow/ResultWIndow.prefab"},
+        // {WindowIndex.PauseWindow,"Assets/Resources/UI/Window/Part_PauseMenu/PauseWindow.prefab"},
+        // {WindowIndex.FieldMenu,"Assets/Resources/UI/Window/Part_FieldMenu/FieldMenu.prefab"},
+        {WindowIndex.TitleWindow,"UI/Window/Part_TitleMenu/TitleWindow"},
+        {WindowIndex.LoadWindow,"UI/Window/Part_LoadWindow/LoadWindow"},
+        {WindowIndex.ResultWindow,"UI/Window/Part_ResultWIndow/ResultWIndow"},
+        {WindowIndex.PauseWindow,"UI/Window/Part_PauseMenu/PauseWindow"},
+        {WindowIndex.FieldMenu,"UI/Window/Part_FieldMenu/FieldMenu"},
     };
 
     //サイズ分確保
-    List<WindowBase> windowList;
+    List<WindowBase> windowList;//= new List<WindowBase>();
     public void ChecktInitWindowList()
     {
         if (windowList == null)
@@ -59,7 +63,10 @@ public class WindowManager : SingleToneBase<WindowManager>
 
         if (windowList[(int)index] == null)
         {
-            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(windowPathDict[index]);
+
+            //GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(windowPathDict[index]);
+            var loadPath = windowPathDict[index];
+            GameObject prefab = Resources.Load<GameObject>(windowPathDict[index]);
 
             if (prefab == null)
             {
